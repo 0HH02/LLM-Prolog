@@ -1,0 +1,1118 @@
+
+======================================================================
+PROCESANDO PROBLEMA 5: "Miroslav Venhoda was a Czech choral conductor who specialized in the performance..."
+======================================================================
+
+--- CICLO DE REFINAMIENTO 1 / 3 ---
+INFO: Checkpoint no encontrado: checkpoints/mfsa_kr_store_Miroslav_Venhoda_was_a_Czech_choral_conductor_who_.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando MFSA ---
+
+--- Iniciando Formalización Semántica y Axiomatización (MFSA) ---
+Descripción del Problema (NL): Miroslav Venhoda was a Czech choral conductor who specialized in the performance of Renaissance and Baroque music.
+Any choral conductor is a musician.
+Some musicians love music.
+Miroslav Venhoda published a book in 1946 called Method of Studying Gregorian Chant. ¿Podemos conlcuir que: Miroslav Venhoda loved music.?
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (initial_analysis_miroslav_venhoda_was) ---
+Prompt: 
+        Analiza la siguiente descripción del problema en lenguaje natural.
+        1. Identifica las entidades clave, sus propiedades y las relaciones entre ellas (reificación).
+        2. Reformula el problema en un lenguaje lógico más formal pero sin usar símbolos lógicos. Solo con el objetivo de abstraer mejor el problema.
+        3. ¿Cuál es la pregunta principal o la proposición que se busca probar (objetivo en lenguaje natural)?
+        4. ¿Detectas alguna ambigüedad, vaguedad o información faltante que requiera aclaración del usuario? Si es así, enuméralas. Si no, indica "Ninguna ambigüedad aparente".
+
+        Descripción del Problema: "Miroslav Venhoda was a Czech choral conductor who specialized in the performance of Renaissance and Baroque music.
+Any choral conductor is a musician.
+Some musicians love music.
+Miroslav Venhoda published a book in 1946 called Method of Studying Gregorian Chant. ¿Podemos conlcuir que: Miroslav Venhoda loved music.?"
+
+        Proporciona tu análisis de forma estructurada:
+        Entidades y Relaciones: [Tu respuesta]
+        Reformulación: [Tu respuesta]
+        Objetivo Principal (Lenguaje Natural): [Tu respuesta]
+        Ambigüedades: [Tu respuesta]
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: Aquí tienes el análisis de la descripción del problema:
+
+**Entidades y Relaciones:**
+*   **Entidades:** Miroslav Venhoda, Choral conductor (Director coral), Musician (Músico), Music (Música), Book (Libro), Gregorian Chant (Canto gregoriano).
+*   **Relaciones / Propiedades:**
+    *   Miroslav Venhoda *es un* Choral conductor.
+    *   Todo Choral conductor *es un* Musician.
+    *   Algunos Musicians *tienen la propiedad de* Amar la Música.
+    *   Miroslav Venhoda *realizó la acción de* Publicar un Book. (El libro tiene el título "Method of Studying Gregorian Chant" y fue publicado en 1946).
+    *   (Relaciones/propiedades adicionales no centrales para la conclusión lógica solicitada: Miroslav Venhoda es checo, se especializó en música renacentista y barroca).
+
+**Reformulación:**
+1.  Hay un individuo específico llamado Miroslav Venhoda.
+2.  Miroslav Venhoda pertenece a la categoría de Directores corales.
+3.  Pertenecer a la categoría de Director coral implica pertenecer a la categoría de Músico.
+4.  Existe al menos un individuo en la categoría de Músico que tiene la propiedad de Amar la Música.
+5.  Miroslav Venhoda realizó la acción de Publicar un libro sobre Canto gregoriano en 1946.
+
+**Objetivo Principal (Lenguaje Natural):**
+El objetivo principal es determinar si, basándose únicamente en la información proporcionada, se puede concluir lógicamente que Miroslav Venhoda amaba la música.
+
+**Ambigüedades:**
+La principal ambigüedad o, más precisamente, la información faltante crítica para la deducción es:
+*   La afirmación "Some musicians love music" (Algunos músicos aman la música) es una declaración existencial. Garantiza la existencia de al menos un músico que ama la música, pero *no* especifica cuáles músicos la aman. No nos dice que *todos* los músicos la aman, ni que *la mayoría* la aman, ni que *un músico específico* (como Miroslav Venhoda, a pesar de ser músico) la ama. Por lo tanto, no podemos inferir que Miroslav Venhoda, solo por ser músico, pertenece al subconjunto de músicos que aman la música.
+
+-------------------------------------------------------------------
+
+
+MFSA LLM-KGE - Reformulación: **
+*   **Entidades:** Miroslav Venhoda, Choral conductor (Director coral), Musician (Músico), Music (Música), Book (Libro), Gregorian Chant (Canto gregoriano).
+*   **Relaciones / Propiedades:**
+    *   Miroslav Venhoda *es un* Choral conductor.
+    *   Todo Choral conductor *es un* Musician.
+    *   Algunos Musicians *tienen la propiedad de* Amar la Música.
+    *   Miroslav Venhoda *realizó la acción de* Publicar un Book. (El libro tiene el título "Method of Studying Gregorian Chant" y fue publicado en 1946).
+    *   (Relaciones/propiedades adicionales no centrales para la conclusión lógica solicitada: Miroslav Venhoda es checo, se especializó en música renacentista y barroca).
+
+**
+MFSA LLM-KGE - Entidades/Relaciones: **
+1.  Hay un individuo específico llamado Miroslav Venhoda.
+2.  Miroslav Venhoda pertenece a la categoría de Directores corales.
+3.  Pertenecer a la categoría de Director coral implica pertenecer a la categoría de Músico.
+4.  Existe al menos un individuo en la categoría de Músico que tiene la propiedad de Amar la Música.
+5.  Miroslav Venhoda realizó la acción de Publicar un libro sobre Canto gregoriano en 1946.
+
+**
+MFSA LLM-KGE - Objetivo NL: **
+El objetivo principal es determinar si, basándose únicamente en la información proporcionada, se puede concluir lógicamente que Miroslav Venhoda amaba la música.
+
+**
+MFSA LLM-KGE - Ambigüedades: ['**', 'La principal ambigüedad o, más precisamente, la información faltante crítica para la deducción es:', '*   La afirmación "Some musicians love music" (Algunos músicos aman la música) es una declaración existencial. Garantiza la existencia de al menos un músico que ama la música, pero *no* especifica cuáles músicos la aman. No nos dice que *todos* los músicos la aman, ni que *la mayoría* la aman, ni que *un músico específico* (como Miroslav Venhoda, a pesar de ser músico) la ama. Por lo tanto, no podemos inferir que Miroslav Venhoda, solo por ser músico, pertenece al subconjunto de músicos que aman la música.']
+
+--- SOLICITUD DE DESAMBIGUACIÓN ---
+El sistema ha detectado las siguientes ambigüedades o puntos que requieren aclaración:
+- **
+- La principal ambigüedad o, más precisamente, la información faltante crítica para la deducción es:
+- *   La afirmación "Some musicians love music" (Algunos músicos aman la música) es una declaración existencial. Garantiza la existencia de al menos un músico que ama la música, pero *no* especifica cuáles músicos la aman. No nos dice que *todos* los músicos la aman, ni que *la mayoría* la aman, ni que *un músico específico* (como Miroslav Venhoda, a pesar de ser músico) la ama. Por lo tanto, no podemos inferir que Miroslav Venhoda, solo por ser músico, pertenece al subconjunto de músicos que aman la música.
+Por favor, proporciona tus aclaraciones o escribe 'continuar' si no son relevantes: MFSA: Descripción del problema actualizada tras desambiguación.
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (general) ---
+Prompt: 
+        Analiza la siguiente descripción del problema en lenguaje natural y reformula la sentencia en lógica de predicado para asegurar la comprensión.
+        Solamente responde con la reformulación, no des explicaciones ni comentarios.
+        Ten en cuenta que todo predicado debe tener argumentos.
+            
+        EJEMPLOS:
+        sentence: All people who regularly drink coffee are dependent on caffeine.
+        reformulation: ∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+
+        sentence: Sam is doing a project.
+        reformulation: ∃x (Project(x) ∧ Do(sam, x))
+
+        sentence: No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+        reformulation: ∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+
+        sentence: If Sam does a project written in Python, he will not use a Mac.
+        reformulation: ∀x (Project(x) ∧ WrittenIn(x, python) ∧ Do(sam, x) → ¬Use(sam, mac))
+
+        sentence: All social media applications containing chat features are software.
+        reformulation: ∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+
+        sentence: **
+El objetivo principal es determinar si, basándose únicamente en la información proporcionada, se puede concluir lógicamente que Miroslav Venhoda amaba la música.
+
+**
+        reformulation:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: AmabaMusica(miroslavVenhoda)
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini JSON (general) ---
+Prompt: 
+        Traduce la siguiente declaración en lenguaje natural a una única cláusula de Horn formal.
+        Omite detalles o datos que estén implicados en la resolución del problema porque la tarea final es solamente determinar la cláusula o afirmación que se quiere verificar.
+        Formato de Cláusula de Horn:
+        - Hechos: predicado(termino1, terminoConstant).
+        - Reglas: cabeza(X, Y) :- cuerpo1(X, Z), cuerpo2(Z, Y).
+        Usa variables en mayúsculas (ej: X, Y, Z) y constantes en minúsculas o como strings citados si es necesario.
+        Cada regla debe tener una cabeza y un cuerpo. No puede haber cuerpo sin cabeza.
+        Ten en cuenta que cada predicado debe vener con al menos un argumento, de lo contrario no ess un hecho válido.
+        Dame la respuesta como una lista de strings, cada string es una cláusula de Horn.
+        No utilices símbolos dentro de las cláusulas como comillas para enucniar nombres propios, esto tiene que parsear bien.
+
+
+        EJEMPLOS:
+        sentence: All people who regularly drink coffee are dependent on caffeine.
+        reformulation: ∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+        horn_clause: ["is_dependent_on(X, caffeine) :- drink_regularly(X, coffee)."]
+
+        sentence: Sam is doing a project.
+        reformulation: ∃x (Project(x) ∧ Do(sam, x))
+        horn_clause: ["project(cs101_assignment).", "do(sam, cs101_assignment)."]
+
+
+        sentence: No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+        reformulation: ∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+        horn_clause: ["aware_that_drug(X, caffeine) :- \+ want_to_be_addicted_to(X, caffeine)."]
+
+
+        sentence: If Sam does a project written in Python, he will not use a Mac.
+        reformulation: ∀x (Project(x) ∧ WrittenIn(x, python) ∧ Do(sam, x) → ¬Use(sam, mac))
+        horn_clause: ["\+ use(sam, mac) :- project(X), written_in(X, python), do(sam, X)."]
+        
+        sentence: All social media applications containing chat features are software.
+        reformulation: ∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+        horn_clause: ["software(X) :- social_media(X), application(X), contain(X, chat_feature)."]
+
+        
+        Declaración a traducir: "AmabaMusica(miroslavVenhoda)"
+        Contexto del problema (si ayuda): "Miroslav Venhoda was a Czech choral conductor who specialized in the performance of Renaissance and Baroque music.
+Any choral conductor is a musician.
+Some musicians love music.
+Miroslav Venhoda published a book in 1946 called Method of Studying Gregorian Chant. ¿Podemos conlcuir que: Miroslav Venhoda loved music.?
+Aclaración del Usuario: "
+
+        horn_clause:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta JSON de Gemini: [
+  "amaba_musica(miroslav_venhoda)."
+]
+
+-------------------------------------------------------------------
+
+
+MFSA: Cláusula Objetivo Formalizada: amaba_musica(miroslav_venhoda).
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (formalize_in_logic_miroslav_venhoda_was) ---
+Prompt: 
+        Analiza la siguiente descripción del problema en lenguaje natural y reformula la sentencia en lógica de predicado para asegurar la comprensión.
+        Solamente responde con la reformulación, no des explicaciones ni comentarios.
+        Ten en cuenta que todo predicado debe tener argumentos.
+            
+        EJEMPLOS:
+        sentence: All people who regularly drink coffee are dependent on caffeine.
+        reformulation: ∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+
+        sentence: Sam is doing a project.
+        reformulation: ∃x (Project(x) ∧ Do(sam, x))
+
+        sentence: No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+        reformulation: ∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+
+        sentence: If Sam does a project written in Python, he will not use a Mac.
+        reformulation: ∀x (Project(x) ∧ WrittenIn(x, python) ∧ Do(sam, x) → ¬Use(sam, mac))
+
+        sentence: All social media applications containing chat features are software.
+        reformulation: ∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+
+        sentence: Miroslav Venhoda was a Czech choral conductor who specialized in the performance of Renaissance and Baroque music
+        reformulation:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: IsCzech(miroslavVenhoda) ∧ IsChoralConductor(miroslavVenhoda) ∧ SpecializedIn(miroslavVenhoda, renaissanceAndBaroquePerformance)
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini JSON (formalize_statement_miroslav_venhoda_was) ---
+Prompt: 
+        Traduce la siguiente declaración en lenguaje natural a una única cláusula de Horn formal.
+        Omite detalles o datos que estén implicados en la resolución del problema porque la tarea final es solamente determinar la cláusula o afirmación que se quiere verificar.
+        Formato de Cláusula de Horn:
+        - Hechos: predicado(termino1, terminoConstant).
+        - Reglas: cabeza(X, Y) :- cuerpo1(X, Z), cuerpo2(Z, Y).
+        Usa variables en mayúsculas (ej: X, Y, Z) y constantes en minúsculas o como strings citados si es necesario.
+        Cada regla debe tener una cabeza y un cuerpo. No puede haber cuerpo sin cabeza.
+        Ten en cuenta que cada predicado debe vener con al menos un argumento, de lo contrario no ess un hecho válido.
+        Dame la respuesta como una lista de strings, cada string es una cláusula de Horn.
+        No utilices símbolos dentro de las cláusulas como comillas para enucniar nombres propios, esto tiene que parsear bien.
+
+
+        EJEMPLOS:
+        sentence: All people who regularly drink coffee are dependent on caffeine.
+        reformulation: ∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+        horn_clause: ["is_dependent_on(X, caffeine) :- drink_regularly(X, coffee)."]
+
+        sentence: Sam is doing a project.
+        reformulation: ∃x (Project(x) ∧ Do(sam, x))
+        horn_clause: ["project(cs101_assignment).", "do(sam, cs101_assignment)."]
+
+
+        sentence: No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+        reformulation: ∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+        horn_clause: ["aware_that_drug(X, caffeine) :- \+ want_to_be_addicted_to(X, caffeine)."]
+
+
+        sentence: If Sam does a project written in Python, he will not use a Mac.
+        reformulation: ∀x (Project(x) ∧ WrittenIn(x, python) ∧ Do(sam, x) → ¬Use(sam, mac))
+        horn_clause: ["\+ use(sam, mac) :- project(X), written_in(X, python), do(sam, X)."]
+        
+        sentence: All social media applications containing chat features are software.
+        reformulation: ∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+        horn_clause: ["software(X) :- social_media(X), application(X), contain(X, chat_feature)."]
+
+        
+        Declaración a traducir: "IsCzech(miroslavVenhoda) ∧ IsChoralConductor(miroslavVenhoda) ∧ SpecializedIn(miroslavVenhoda, renaissanceAndBaroquePerformance)"
+        Contexto del problema (si ayuda): "**
+1.  Hay un individuo específico llamado Miroslav Venhoda.
+2.  Miroslav Venhoda pertenece a la categoría de Directores corales.
+3.  Pertenecer a la categoría de Director coral implica pertenecer a la categoría de Músico.
+4.  Existe al menos un individuo en la categoría de Músico que tiene la propiedad de Amar la Música.
+5.  Miroslav Venhoda realizó la acción de Publicar un libro sobre Canto gregoriano en 1946.
+
+**"
+
+        horn_clause:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta JSON de Gemini: [
+  "is_czech(miroslav_venhoda).",
+  "is_choral_conductor(miroslav_venhoda).",
+  "specialized_in(miroslav_venhoda, renaissance_and_baroque_performance)."
+]
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (formalize_in_logic_
+any_choral_conducto) ---
+Prompt: 
+        Analiza la siguiente descripción del problema en lenguaje natural y reformula la sentencia en lógica de predicado para asegurar la comprensión.
+        Solamente responde con la reformulación, no des explicaciones ni comentarios.
+        Ten en cuenta que todo predicado debe tener argumentos.
+            
+        EJEMPLOS:
+        sentence: All people who regularly drink coffee are dependent on caffeine.
+        reformulation: ∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+
+        sentence: Sam is doing a project.
+        reformulation: ∃x (Project(x) ∧ Do(sam, x))
+
+        sentence: No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+        reformulation: ∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+
+        sentence: If Sam does a project written in Python, he will not use a Mac.
+        reformulation: ∀x (Project(x) ∧ WrittenIn(x, python) ∧ Do(sam, x) → ¬Use(sam, mac))
+
+        sentence: All social media applications containing chat features are software.
+        reformulation: ∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+
+        sentence: 
+Any choral conductor is a musician
+        reformulation:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: ∀x (ChoralConductor(x) → Musician(x))
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini JSON (formalize_statement_
+any_choral_conducto) ---
+Prompt: 
+        Traduce la siguiente declaración en lenguaje natural a una única cláusula de Horn formal.
+        Omite detalles o datos que estén implicados en la resolución del problema porque la tarea final es solamente determinar la cláusula o afirmación que se quiere verificar.
+        Formato de Cláusula de Horn:
+        - Hechos: predicado(termino1, terminoConstant).
+        - Reglas: cabeza(X, Y) :- cuerpo1(X, Z), cuerpo2(Z, Y).
+        Usa variables en mayúsculas (ej: X, Y, Z) y constantes en minúsculas o como strings citados si es necesario.
+        Cada regla debe tener una cabeza y un cuerpo. No puede haber cuerpo sin cabeza.
+        Ten en cuenta que cada predicado debe vener con al menos un argumento, de lo contrario no ess un hecho válido.
+        Dame la respuesta como una lista de strings, cada string es una cláusula de Horn.
+        No utilices símbolos dentro de las cláusulas como comillas para enucniar nombres propios, esto tiene que parsear bien.
+
+
+        EJEMPLOS:
+        sentence: All people who regularly drink coffee are dependent on caffeine.
+        reformulation: ∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+        horn_clause: ["is_dependent_on(X, caffeine) :- drink_regularly(X, coffee)."]
+
+        sentence: Sam is doing a project.
+        reformulation: ∃x (Project(x) ∧ Do(sam, x))
+        horn_clause: ["project(cs101_assignment).", "do(sam, cs101_assignment)."]
+
+
+        sentence: No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+        reformulation: ∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+        horn_clause: ["aware_that_drug(X, caffeine) :- \+ want_to_be_addicted_to(X, caffeine)."]
+
+
+        sentence: If Sam does a project written in Python, he will not use a Mac.
+        reformulation: ∀x (Project(x) ∧ WrittenIn(x, python) ∧ Do(sam, x) → ¬Use(sam, mac))
+        horn_clause: ["\+ use(sam, mac) :- project(X), written_in(X, python), do(sam, X)."]
+        
+        sentence: All social media applications containing chat features are software.
+        reformulation: ∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+        horn_clause: ["software(X) :- social_media(X), application(X), contain(X, chat_feature)."]
+
+        
+        Declaración a traducir: "∀x (ChoralConductor(x) → Musician(x))"
+        Contexto del problema (si ayuda): "**
+1.  Hay un individuo específico llamado Miroslav Venhoda.
+2.  Miroslav Venhoda pertenece a la categoría de Directores corales.
+3.  Pertenecer a la categoría de Director coral implica pertenecer a la categoría de Músico.
+4.  Existe al menos un individuo en la categoría de Músico que tiene la propiedad de Amar la Música.
+5.  Miroslav Venhoda realizó la acción de Publicar un libro sobre Canto gregoriano en 1946.
+
+**"
+
+        horn_clause:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta JSON de Gemini: [
+  "musician(X) :- choral_conductor(X)."
+]
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (formalize_in_logic_
+some_musicians_love) ---
+Prompt: 
+        Analiza la siguiente descripción del problema en lenguaje natural y reformula la sentencia en lógica de predicado para asegurar la comprensión.
+        Solamente responde con la reformulación, no des explicaciones ni comentarios.
+        Ten en cuenta que todo predicado debe tener argumentos.
+            
+        EJEMPLOS:
+        sentence: All people who regularly drink coffee are dependent on caffeine.
+        reformulation: ∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+
+        sentence: Sam is doing a project.
+        reformulation: ∃x (Project(x) ∧ Do(sam, x))
+
+        sentence: No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+        reformulation: ∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+
+        sentence: If Sam does a project written in Python, he will not use a Mac.
+        reformulation: ∀x (Project(x) ∧ WrittenIn(x, python) ∧ Do(sam, x) → ¬Use(sam, mac))
+
+        sentence: All social media applications containing chat features are software.
+        reformulation: ∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+
+        sentence: 
+Some musicians love music
+        reformulation:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: ∃x (Musician(x) ∧ Love(x, music))
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini JSON (formalize_statement_
+some_musicians_love) ---
+Prompt: 
+        Traduce la siguiente declaración en lenguaje natural a una única cláusula de Horn formal.
+        Omite detalles o datos que estén implicados en la resolución del problema porque la tarea final es solamente determinar la cláusula o afirmación que se quiere verificar.
+        Formato de Cláusula de Horn:
+        - Hechos: predicado(termino1, terminoConstant).
+        - Reglas: cabeza(X, Y) :- cuerpo1(X, Z), cuerpo2(Z, Y).
+        Usa variables en mayúsculas (ej: X, Y, Z) y constantes en minúsculas o como strings citados si es necesario.
+        Cada regla debe tener una cabeza y un cuerpo. No puede haber cuerpo sin cabeza.
+        Ten en cuenta que cada predicado debe vener con al menos un argumento, de lo contrario no ess un hecho válido.
+        Dame la respuesta como una lista de strings, cada string es una cláusula de Horn.
+        No utilices símbolos dentro de las cláusulas como comillas para enucniar nombres propios, esto tiene que parsear bien.
+
+
+        EJEMPLOS:
+        sentence: All people who regularly drink coffee are dependent on caffeine.
+        reformulation: ∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+        horn_clause: ["is_dependent_on(X, caffeine) :- drink_regularly(X, coffee)."]
+
+        sentence: Sam is doing a project.
+        reformulation: ∃x (Project(x) ∧ Do(sam, x))
+        horn_clause: ["project(cs101_assignment).", "do(sam, cs101_assignment)."]
+
+
+        sentence: No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+        reformulation: ∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+        horn_clause: ["aware_that_drug(X, caffeine) :- \+ want_to_be_addicted_to(X, caffeine)."]
+
+
+        sentence: If Sam does a project written in Python, he will not use a Mac.
+        reformulation: ∀x (Project(x) ∧ WrittenIn(x, python) ∧ Do(sam, x) → ¬Use(sam, mac))
+        horn_clause: ["\+ use(sam, mac) :- project(X), written_in(X, python), do(sam, X)."]
+        
+        sentence: All social media applications containing chat features are software.
+        reformulation: ∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+        horn_clause: ["software(X) :- social_media(X), application(X), contain(X, chat_feature)."]
+
+        
+        Declaración a traducir: "∃x (Musician(x) ∧ Love(x, music))"
+        Contexto del problema (si ayuda): "**
+1.  Hay un individuo específico llamado Miroslav Venhoda.
+2.  Miroslav Venhoda pertenece a la categoría de Directores corales.
+3.  Pertenecer a la categoría de Director coral implica pertenecer a la categoría de Músico.
+4.  Existe al menos un individuo en la categoría de Músico que tiene la propiedad de Amar la Música.
+5.  Miroslav Venhoda realizó la acción de Publicar un libro sobre Canto gregoriano en 1946.
+
+**"
+
+        horn_clause:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta JSON de Gemini: [
+  "musician(some_entity).",
+  "love(some_entity, music)."
+]
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (formalize_in_logic_
+miroslav_venhoda_pu) ---
+Prompt: 
+        Analiza la siguiente descripción del problema en lenguaje natural y reformula la sentencia en lógica de predicado para asegurar la comprensión.
+        Solamente responde con la reformulación, no des explicaciones ni comentarios.
+        Ten en cuenta que todo predicado debe tener argumentos.
+            
+        EJEMPLOS:
+        sentence: All people who regularly drink coffee are dependent on caffeine.
+        reformulation: ∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+
+        sentence: Sam is doing a project.
+        reformulation: ∃x (Project(x) ∧ Do(sam, x))
+
+        sentence: No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+        reformulation: ∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+
+        sentence: If Sam does a project written in Python, he will not use a Mac.
+        reformulation: ∀x (Project(x) ∧ WrittenIn(x, python) ∧ Do(sam, x) → ¬Use(sam, mac))
+
+        sentence: All social media applications containing chat features are software.
+        reformulation: ∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+
+        sentence: 
+Miroslav Venhoda published a book in 1946 called Method of Studying Gregorian Chant
+        reformulation:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: ∃x (Book(x) ∧ Published(miroslavVenhoda, x, year1946) ∧ HasTitle(x, methodOfStudyingGregorianChantTitle))
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini JSON (formalize_statement_
+miroslav_venhoda_pu) ---
+Prompt: 
+        Traduce la siguiente declaración en lenguaje natural a una única cláusula de Horn formal.
+        Omite detalles o datos que estén implicados en la resolución del problema porque la tarea final es solamente determinar la cláusula o afirmación que se quiere verificar.
+        Formato de Cláusula de Horn:
+        - Hechos: predicado(termino1, terminoConstant).
+        - Reglas: cabeza(X, Y) :- cuerpo1(X, Z), cuerpo2(Z, Y).
+        Usa variables en mayúsculas (ej: X, Y, Z) y constantes en minúsculas o como strings citados si es necesario.
+        Cada regla debe tener una cabeza y un cuerpo. No puede haber cuerpo sin cabeza.
+        Ten en cuenta que cada predicado debe vener con al menos un argumento, de lo contrario no ess un hecho válido.
+        Dame la respuesta como una lista de strings, cada string es una cláusula de Horn.
+        No utilices símbolos dentro de las cláusulas como comillas para enucniar nombres propios, esto tiene que parsear bien.
+
+
+        EJEMPLOS:
+        sentence: All people who regularly drink coffee are dependent on caffeine.
+        reformulation: ∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+        horn_clause: ["is_dependent_on(X, caffeine) :- drink_regularly(X, coffee)."]
+
+        sentence: Sam is doing a project.
+        reformulation: ∃x (Project(x) ∧ Do(sam, x))
+        horn_clause: ["project(cs101_assignment).", "do(sam, cs101_assignment)."]
+
+
+        sentence: No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+        reformulation: ∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+        horn_clause: ["aware_that_drug(X, caffeine) :- \+ want_to_be_addicted_to(X, caffeine)."]
+
+
+        sentence: If Sam does a project written in Python, he will not use a Mac.
+        reformulation: ∀x (Project(x) ∧ WrittenIn(x, python) ∧ Do(sam, x) → ¬Use(sam, mac))
+        horn_clause: ["\+ use(sam, mac) :- project(X), written_in(X, python), do(sam, X)."]
+        
+        sentence: All social media applications containing chat features are software.
+        reformulation: ∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+        horn_clause: ["software(X) :- social_media(X), application(X), contain(X, chat_feature)."]
+
+        
+        Declaración a traducir: "∃x (Book(x) ∧ Published(miroslavVenhoda, x, year1946) ∧ HasTitle(x, methodOfStudyingGregorianChantTitle))"
+        Contexto del problema (si ayuda): "**
+1.  Hay un individuo específico llamado Miroslav Venhoda.
+2.  Miroslav Venhoda pertenece a la categoría de Directores corales.
+3.  Pertenecer a la categoría de Director coral implica pertenecer a la categoría de Músico.
+4.  Existe al menos un individuo en la categoría de Músico que tiene la propiedad de Amar la Música.
+5.  Miroslav Venhoda realizó la acción de Publicar un libro sobre Canto gregoriano en 1946.
+
+**"
+
+        horn_clause:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta JSON de Gemini: [
+  "book(book_method_of_studying_gregorian_chant).",
+  "published(miroslav_venhoda, book_method_of_studying_gregorian_chant, year1946).",
+  "has_title(book_method_of_studying_gregorian_chant, method_of_studying_gregorian_chant_title)."
+]
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (formalize_in_logic__¿podemos_conlcuir_q) ---
+Prompt: 
+        Analiza la siguiente descripción del problema en lenguaje natural y reformula la sentencia en lógica de predicado para asegurar la comprensión.
+        Solamente responde con la reformulación, no des explicaciones ni comentarios.
+        Ten en cuenta que todo predicado debe tener argumentos.
+            
+        EJEMPLOS:
+        sentence: All people who regularly drink coffee are dependent on caffeine.
+        reformulation: ∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+
+        sentence: Sam is doing a project.
+        reformulation: ∃x (Project(x) ∧ Do(sam, x))
+
+        sentence: No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+        reformulation: ∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+
+        sentence: If Sam does a project written in Python, he will not use a Mac.
+        reformulation: ∀x (Project(x) ∧ WrittenIn(x, python) ∧ Do(sam, x) → ¬Use(sam, mac))
+
+        sentence: All social media applications containing chat features are software.
+        reformulation: ∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+
+        sentence:  ¿Podemos conlcuir que: Miroslav Venhoda loved music
+        reformulation:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: Loved(miroslavVenhoda, music)
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini JSON (formalize_statement__¿podemos_conlcuir_q) ---
+Prompt: 
+        Traduce la siguiente declaración en lenguaje natural a una única cláusula de Horn formal.
+        Omite detalles o datos que estén implicados en la resolución del problema porque la tarea final es solamente determinar la cláusula o afirmación que se quiere verificar.
+        Formato de Cláusula de Horn:
+        - Hechos: predicado(termino1, terminoConstant).
+        - Reglas: cabeza(X, Y) :- cuerpo1(X, Z), cuerpo2(Z, Y).
+        Usa variables en mayúsculas (ej: X, Y, Z) y constantes en minúsculas o como strings citados si es necesario.
+        Cada regla debe tener una cabeza y un cuerpo. No puede haber cuerpo sin cabeza.
+        Ten en cuenta que cada predicado debe vener con al menos un argumento, de lo contrario no ess un hecho válido.
+        Dame la respuesta como una lista de strings, cada string es una cláusula de Horn.
+        No utilices símbolos dentro de las cláusulas como comillas para enucniar nombres propios, esto tiene que parsear bien.
+
+
+        EJEMPLOS:
+        sentence: All people who regularly drink coffee are dependent on caffeine.
+        reformulation: ∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+        horn_clause: ["is_dependent_on(X, caffeine) :- drink_regularly(X, coffee)."]
+
+        sentence: Sam is doing a project.
+        reformulation: ∃x (Project(x) ∧ Do(sam, x))
+        horn_clause: ["project(cs101_assignment).", "do(sam, cs101_assignment)."]
+
+
+        sentence: No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+        reformulation: ∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+        horn_clause: ["aware_that_drug(X, caffeine) :- \+ want_to_be_addicted_to(X, caffeine)."]
+
+
+        sentence: If Sam does a project written in Python, he will not use a Mac.
+        reformulation: ∀x (Project(x) ∧ WrittenIn(x, python) ∧ Do(sam, x) → ¬Use(sam, mac))
+        horn_clause: ["\+ use(sam, mac) :- project(X), written_in(X, python), do(sam, X)."]
+        
+        sentence: All social media applications containing chat features are software.
+        reformulation: ∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+        horn_clause: ["software(X) :- social_media(X), application(X), contain(X, chat_feature)."]
+
+        
+        Declaración a traducir: "Loved(miroslavVenhoda, music)"
+        Contexto del problema (si ayuda): "**
+1.  Hay un individuo específico llamado Miroslav Venhoda.
+2.  Miroslav Venhoda pertenece a la categoría de Directores corales.
+3.  Pertenecer a la categoría de Director coral implica pertenecer a la categoría de Músico.
+4.  Existe al menos un individuo en la categoría de Músico que tiene la propiedad de Amar la Música.
+5.  Miroslav Venhoda realizó la acción de Publicar un libro sobre Canto gregoriano en 1946.
+
+**"
+
+        horn_clause:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta JSON de Gemini: [
+  "loved(miroslav_venhoda, music)."
+]
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (formalize_in_logic_?
+aclaración_del_usu) ---
+Prompt: 
+        Analiza la siguiente descripción del problema en lenguaje natural y reformula la sentencia en lógica de predicado para asegurar la comprensión.
+        Solamente responde con la reformulación, no des explicaciones ni comentarios.
+        Ten en cuenta que todo predicado debe tener argumentos.
+            
+        EJEMPLOS:
+        sentence: All people who regularly drink coffee are dependent on caffeine.
+        reformulation: ∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+
+        sentence: Sam is doing a project.
+        reformulation: ∃x (Project(x) ∧ Do(sam, x))
+
+        sentence: No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+        reformulation: ∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+
+        sentence: If Sam does a project written in Python, he will not use a Mac.
+        reformulation: ∀x (Project(x) ∧ WrittenIn(x, python) ∧ Do(sam, x) → ¬Use(sam, mac))
+
+        sentence: All social media applications containing chat features are software.
+        reformulation: ∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+
+        sentence: ?
+Aclaración del Usuario: 
+        reformulation:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: Unknown(theSentence)
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini JSON (formalize_statement_?
+aclaración_del_usu) ---
+Prompt: 
+        Traduce la siguiente declaración en lenguaje natural a una única cláusula de Horn formal.
+        Omite detalles o datos que estén implicados en la resolución del problema porque la tarea final es solamente determinar la cláusula o afirmación que se quiere verificar.
+        Formato de Cláusula de Horn:
+        - Hechos: predicado(termino1, terminoConstant).
+        - Reglas: cabeza(X, Y) :- cuerpo1(X, Z), cuerpo2(Z, Y).
+        Usa variables en mayúsculas (ej: X, Y, Z) y constantes en minúsculas o como strings citados si es necesario.
+        Cada regla debe tener una cabeza y un cuerpo. No puede haber cuerpo sin cabeza.
+        Ten en cuenta que cada predicado debe vener con al menos un argumento, de lo contrario no ess un hecho válido.
+        Dame la respuesta como una lista de strings, cada string es una cláusula de Horn.
+        No utilices símbolos dentro de las cláusulas como comillas para enucniar nombres propios, esto tiene que parsear bien.
+
+
+        EJEMPLOS:
+        sentence: All people who regularly drink coffee are dependent on caffeine.
+        reformulation: ∀x (DrinkRegularly(x, coffee) → IsDependentOn(x, caffeine))
+        horn_clause: ["is_dependent_on(X, caffeine) :- drink_regularly(X, coffee)."]
+
+        sentence: Sam is doing a project.
+        reformulation: ∃x (Project(x) ∧ Do(sam, x))
+        horn_clause: ["project(cs101_assignment).", "do(sam, cs101_assignment)."]
+
+
+        sentence: No one who doesn't want to be addicted to caffeine is unaware that caffeine is a drug.
+        reformulation: ∀x (¬WantToBeAddictedTo(x, caffeine) → ¬AwareThatDrug(x, caffeine))
+        horn_clause: ["aware_that_drug(X, caffeine) :- \+ want_to_be_addicted_to(X, caffeine)."]
+
+
+        sentence: If Sam does a project written in Python, he will not use a Mac.
+        reformulation: ∀x (Project(x) ∧ WrittenIn(x, python) ∧ Do(sam, x) → ¬Use(sam, mac))
+        horn_clause: ["\+ use(sam, mac) :- project(X), written_in(X, python), do(sam, X)."]
+        
+        sentence: All social media applications containing chat features are software.
+        reformulation: ∀x (SocialMedia(x) ∧ Application(x) ∧ Contain(x, chatFeature) → Software(x))
+        horn_clause: ["software(X) :- social_media(X), application(X), contain(X, chat_feature)."]
+
+        
+        Declaración a traducir: "Unknown(theSentence)"
+        Contexto del problema (si ayuda): "**
+1.  Hay un individuo específico llamado Miroslav Venhoda.
+2.  Miroslav Venhoda pertenece a la categoría de Directores corales.
+3.  Pertenecer a la categoría de Director coral implica pertenecer a la categoría de Músico.
+4.  Existe al menos un individuo en la categoría de Músico que tiene la propiedad de Amar la Música.
+5.  Miroslav Venhoda realizó la acción de Publicar un libro sobre Canto gregoriano en 1946.
+
+**"
+
+        horn_clause:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta JSON de Gemini: [
+  "unknown(the_sentence)."
+]
+
+-------------------------------------------------------------------
+
+
+MFSA: Cláusulas del Problema Extraídas: 11
+
+--- Cláusulas Extraídas ---
+
+Cláusulas Objetivo:
+- amaba_musica(miroslav_venhoda).
+
+Cláusulas del Problema:
+- is_czech(miroslav_venhoda).
+- is_choral_conductor(miroslav_venhoda).
+- specialized_in(miroslav_venhoda, renaissance_and_baroque_performance).
+- musician(X) :- choral_conductor(X).
+- musician(some_entity).
+- love(some_entity, music).
+- book(book_method_of_studying_gregorian_chant).
+- published(miroslav_venhoda, book_method_of_studying_gregorian_chant, year1946).
+- has_title(book_method_of_studying_gregorian_chant, method_of_studying_gregorian_chant_title).
+- loved(miroslav_venhoda, music).
+- unknown(the_sentence).
+
+Axiomas Base:
+--- Formalización Completada ---
+KR-Store:
+  Axiomas Base: 0
+  Cláusulas del Problema: 11
+  Cláusulas Objetivo: 1
+INFO: Checkpoint guardado: checkpoints/mfsa_kr_store_Miroslav_Venhoda_was_a_Czech_choral_conductor_who_.pkl
+
+INFO: Cláusula Objetivo Principal: amaba_musica(miroslav_venhoda).
+INFO: Checkpoint no encontrado: checkpoints/ohi_selected_clauses_cycle0_Miroslav_Venhoda_was_a_Czech_choral_conductor_who_.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando OHI ---
+
+--- OHI: Iniciando Selección Heurística de Cláusulas ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (select_clauses_amaba_musica_initial) ---
+Prompt: 
+        Tu tarea es actuar como una Unidad de Selección de Políticas (Policy Selection Unit).
+        Debes seleccionar un subconjunto estratégico de cláusulas para intentar probar un objetivo.
+
+        Objetivo Principal a Probar: amaba_musica(miroslav_venhoda).
+
+        Cláusulas Disponibles (Axiomas y Hechos del Problema):
+        ID: 11b75759-a88f-4bfc-baf5-e5715c199741 | is_czech(miroslav_venhoda). (Fuente: problem_derived_llm)
+ID: 0e07c1a8-431a-4a52-9d87-dbb894d63ed3 | is_choral_conductor(miroslav_venhoda). (Fuente: problem_derived_llm)
+ID: 927332b7-4bee-44a3-b8dd-b35094281f6e | specialized_in(miroslav_venhoda, renaissance_and_baroque_performance). (Fuente: problem_derived_llm)
+ID: 00e977ed-513d-42c4-8ef8-1ded32026288 | musician(X) :- choral_conductor(X). (Fuente: problem_derived_llm)
+ID: fc91883d-5af4-456a-9269-e46f6f34b1ef | musician(some_entity). (Fuente: problem_derived_llm)
+ID: 5f368d3d-2811-4f62-a251-c046143eec8a | love(some_entity, music). (Fuente: problem_derived_llm)
+ID: cdebfa4e-5705-4f60-97d6-2ff716af4bea | book(book_method_of_studying_gregorian_chant). (Fuente: problem_derived_llm)
+ID: 70e7ac05-40c3-4317-8c34-27fef9d2c4e3 | published(miroslav_venhoda, book_method_of_studying_gregorian_chant, year1946). (Fuente: problem_derived_llm)
+ID: 08ce0ce9-de5a-456e-abf1-dd968b80223b | has_title(book_method_of_studying_gregorian_chant, method_of_studying_gregorian_chant_title). (Fuente: problem_derived_llm)
+ID: 1c769b32-b1f9-4e51-88a7-966622260c36 | loved(miroslav_venhoda, music). (Fuente: problem_derived_llm)
+ID: b708b36d-5443-45cb-9ee1-3eeab8af55c6 | unknown(the_sentence). (Fuente: problem_derived_llm)
+
+        Historial de Intentos de Inferencia Anteriores (si existe):
+        No hay historial de inferencias previas.
+
+        Instrucciones para la Selección:
+        1. Enfócate en cláusulas que parezcan directamente relevantes para alcanzar el Objetivo Principal.
+        2. Considera el historial: Si ciertos caminos fallaron por falta de cláusulas específicas, y esas cláusulas (o similares) están ahora disponibles, podrían ser buenas candidatas.
+        3. Evita cláusulas que consistentemente llevaron a análisis negativos en el historial, a menos que tengas una nueva razón para incluirlas.
+        4. El objetivo es reducir el espacio de búsqueda. No selecciones todas las cláusulas. Intenta seleccionar un conjunto prometedor de no más de 10 cláusulas.
+        5. Si crees que faltan cláusulas cruciales o ninguna de las disponibles es útil, puedes indicarlo.
+
+        Formato de Respuesta Esperado:
+        Lista las cláusulas seleccionadas. Es preferible que uses los IDs de las cláusulas si puedes identificarlos en la lista de arriba.
+        Si no usas IDs, escribe el contenido exacto de la cláusula.
+        Puedes añadir una justificación breve para tu selección general o para cláusulas específicas si es importante.
+        Ejemplo de formato de respuesta si usas IDs:
+        SELECCIONADAS:
+        ID: [ID_de_la_clausula_1]
+        ID: [ID_de_la_clausula_2]
+        /* Justificación general: Estas cláusulas conectan directamente los términos del objetivo. */
+
+        Tu Selección:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: SELECCIONADAS:
+ID: 1c769b32-b1f9-4e51-88a7-966622260c36
+ID: 0e07c1a8-431a-4a52-9d87-dbb894d63ed3
+ID: 00e977ed-513d-42c4-8ef8-1ded32026288
+
+/* Justificación general: La cláusula ID: 1c769b32-b1f9-4e51-88a7-966622260c36 (`loved(miroslav_venhoda, music).`) es la más directamente relevante para probar el objetivo `amaba_musica(miroslav_venhoda)`. Las cláusulas ID: 0e07c1a8-431a-4a52-9d87-dbb894d63ed3 (`is_choral_conductor(miroslav_venhoda).`) y ID: 00e977ed-513d-42c4-8ef8-1ded32026288 (`musician(X) :- choral_conductor(X).`) se incluyen para permitir la derivación de `musician(miroslav_venhoda)`, lo cual es una fuerte indicación de involucramiento musical y podría ser parte de un camino inferencial alternativo o de apoyo, si bien no hay una regla explícita en las cláusulas dadas que conecte `musician(X)` con `amaba_musica(X)`. Este subconjunto es estratégico por su relevancia directa e indirecta, manteniendo un número limitado de cláusulas. */
+
+-------------------------------------------------------------------
+
+
+OHI: El LLM-PSU ha seleccionado 3 cláusulas:
+  - loved(miroslav_venhoda, music). (ID: 1c769b32-b1f9-4e51-88a7-966622260c36)
+  - musician(X) :- choral_conductor(X). (ID: 00e977ed-513d-42c4-8ef8-1ded32026288)
+  - is_choral_conductor(miroslav_venhoda). (ID: 0e07c1a8-431a-4a52-9d87-dbb894d63ed3)
+INFO: Checkpoint guardado: checkpoints/ohi_selected_clauses_cycle0_Miroslav_Venhoda_was_a_Czech_choral_conductor_who_.pkl
+
+Cláusulas Seleccionadas por OHI:
+- loved(miroslav_venhoda, music). (ID: 1c769b32-b1f9-4e51-88a7-966622260c36, Origen: problem_derived_llm)
+- musician(X) :- choral_conductor(X). (ID: 00e977ed-513d-42c4-8ef8-1ded32026288, Origen: problem_derived_llm)
+- is_choral_conductor(miroslav_venhoda). (ID: 0e07c1a8-431a-4a52-9d87-dbb894d63ed3, Origen: problem_derived_llm)
+
+--- CICLO DE REFINAMIENTO 2 / 3 ---
+
+INFO: Cláusula Objetivo Principal: amaba_musica(miroslav_venhoda).
+INFO: Checkpoint no encontrado: checkpoints/ohi_selected_clauses_cycle1_Miroslav_Venhoda_was_a_Czech_choral_conductor_who_.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando OHI ---
+
+--- OHI: Iniciando Selección Heurística de Cláusulas ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (select_clauses_amaba_musica_initial) ---
+Prompt: 
+        Tu tarea es actuar como una Unidad de Selección de Políticas (Policy Selection Unit).
+        Debes seleccionar un subconjunto estratégico de cláusulas para intentar probar un objetivo.
+
+        Objetivo Principal a Probar: amaba_musica(miroslav_venhoda).
+
+        Cláusulas Disponibles (Axiomas y Hechos del Problema):
+        ID: 11b75759-a88f-4bfc-baf5-e5715c199741 | is_czech(miroslav_venhoda). (Fuente: problem_derived_llm)
+ID: 0e07c1a8-431a-4a52-9d87-dbb894d63ed3 | is_choral_conductor(miroslav_venhoda). (Fuente: problem_derived_llm)
+ID: 927332b7-4bee-44a3-b8dd-b35094281f6e | specialized_in(miroslav_venhoda, renaissance_and_baroque_performance). (Fuente: problem_derived_llm)
+ID: 00e977ed-513d-42c4-8ef8-1ded32026288 | musician(X) :- choral_conductor(X). (Fuente: problem_derived_llm)
+ID: fc91883d-5af4-456a-9269-e46f6f34b1ef | musician(some_entity). (Fuente: problem_derived_llm)
+ID: 5f368d3d-2811-4f62-a251-c046143eec8a | love(some_entity, music). (Fuente: problem_derived_llm)
+ID: cdebfa4e-5705-4f60-97d6-2ff716af4bea | book(book_method_of_studying_gregorian_chant). (Fuente: problem_derived_llm)
+ID: 70e7ac05-40c3-4317-8c34-27fef9d2c4e3 | published(miroslav_venhoda, book_method_of_studying_gregorian_chant, year1946). (Fuente: problem_derived_llm)
+ID: 08ce0ce9-de5a-456e-abf1-dd968b80223b | has_title(book_method_of_studying_gregorian_chant, method_of_studying_gregorian_chant_title). (Fuente: problem_derived_llm)
+ID: 1c769b32-b1f9-4e51-88a7-966622260c36 | loved(miroslav_venhoda, music). (Fuente: problem_derived_llm)
+ID: b708b36d-5443-45cb-9ee1-3eeab8af55c6 | unknown(the_sentence). (Fuente: problem_derived_llm)
+
+        Historial de Intentos de Inferencia Anteriores (si existe):
+        No hay historial de inferencias previas.
+
+        Instrucciones para la Selección:
+        1. Enfócate en cláusulas que parezcan directamente relevantes para alcanzar el Objetivo Principal.
+        2. Considera el historial: Si ciertos caminos fallaron por falta de cláusulas específicas, y esas cláusulas (o similares) están ahora disponibles, podrían ser buenas candidatas.
+        3. Evita cláusulas que consistentemente llevaron a análisis negativos en el historial, a menos que tengas una nueva razón para incluirlas.
+        4. El objetivo es reducir el espacio de búsqueda. No selecciones todas las cláusulas. Intenta seleccionar un conjunto prometedor de no más de 10 cláusulas.
+        5. Si crees que faltan cláusulas cruciales o ninguna de las disponibles es útil, puedes indicarlo.
+
+        Formato de Respuesta Esperado:
+        Lista las cláusulas seleccionadas. Es preferible que uses los IDs de las cláusulas si puedes identificarlos en la lista de arriba.
+        Si no usas IDs, escribe el contenido exacto de la cláusula.
+        Puedes añadir una justificación breve para tu selección general o para cláusulas específicas si es importante.
+        Ejemplo de formato de respuesta si usas IDs:
+        SELECCIONADAS:
+        ID: [ID_de_la_clausula_1]
+        ID: [ID_de_la_clausula_2]
+        /* Justificación general: Estas cláusulas conectan directamente los términos del objetivo. */
+
+        Tu Selección:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: SELECCIONADAS:
+ID: 1c769b32-b1f9-4e51-88a7-966622260c36
+ID: 0e07c1a8-431a-4a52-9d87-dbb894d63ed3
+ID: 00e977ed-513d-42c4-8ef8-1ded32026288
+ID: 927332b7-4bee-44a3-b8dd-b35094281f6e
+ID: 70e7ac05-40c3-4317-8c34-27fef9d2c4e3
+
+/* Justificación general: La cláusula `loved(miroslav_venhoda, music).` (ID: 1c769b32-b1f9-4e51-88a7-966622260c36) es semánticamente muy cercana al objetivo principal y es la evidencia más directa. Las otras cláusulas seleccionadas establecen la fuerte conexión de Miroslav Venhoda con la música (siendo director coral, músico, especialista en interpretación renacentista/barroca y editor de un libro sobre canto gregoriano), lo cual proporciona un contexto relevante y apoyo a la conclusión de que amaba la música, y podrían ser utilizadas si existieran reglas adicionales que conecten estas actividades con el acto de amar la música. */
+
+-------------------------------------------------------------------
+
+
+OHI: El LLM-PSU ha seleccionado 5 cláusulas:
+  - loved(miroslav_venhoda, music). (ID: 1c769b32-b1f9-4e51-88a7-966622260c36)
+  - specialized_in(miroslav_venhoda, renaissance_and_baroque_performance). (ID: 927332b7-4bee-44a3-b8dd-b35094281f6e)
+  - is_choral_conductor(miroslav_venhoda). (ID: 0e07c1a8-431a-4a52-9d87-dbb894d63ed3)
+  - published(miroslav_venhoda, book_method_of_studying_gregorian_chant, year1946). (ID: 70e7ac05-40c3-4317-8c34-27fef9d2c4e3)
+  - musician(X) :- choral_conductor(X). (ID: 00e977ed-513d-42c4-8ef8-1ded32026288)
+INFO: Checkpoint guardado: checkpoints/ohi_selected_clauses_cycle1_Miroslav_Venhoda_was_a_Czech_choral_conductor_who_.pkl
+
+Cláusulas Seleccionadas por OHI:
+- loved(miroslav_venhoda, music). (ID: 1c769b32-b1f9-4e51-88a7-966622260c36, Origen: problem_derived_llm)
+- specialized_in(miroslav_venhoda, renaissance_and_baroque_performance). (ID: 927332b7-4bee-44a3-b8dd-b35094281f6e, Origen: problem_derived_llm)
+- is_choral_conductor(miroslav_venhoda). (ID: 0e07c1a8-431a-4a52-9d87-dbb894d63ed3, Origen: problem_derived_llm)
+- published(miroslav_venhoda, book_method_of_studying_gregorian_chant, year1946). (ID: 70e7ac05-40c3-4317-8c34-27fef9d2c4e3, Origen: problem_derived_llm)
+- musician(X) :- choral_conductor(X). (ID: 00e977ed-513d-42c4-8ef8-1ded32026288, Origen: problem_derived_llm)
+
+--- CICLO DE REFINAMIENTO 3 / 3 ---
+
+INFO: Cláusula Objetivo Principal: amaba_musica(miroslav_venhoda).
+INFO: Checkpoint no encontrado: checkpoints/ohi_selected_clauses_cycle2_Miroslav_Venhoda_was_a_Czech_choral_conductor_who_.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando OHI ---
+
+--- OHI: Iniciando Selección Heurística de Cláusulas ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (select_clauses_amaba_musica_initial) ---
+Prompt: 
+        Tu tarea es actuar como una Unidad de Selección de Políticas (Policy Selection Unit).
+        Debes seleccionar un subconjunto estratégico de cláusulas para intentar probar un objetivo.
+
+        Objetivo Principal a Probar: amaba_musica(miroslav_venhoda).
+
+        Cláusulas Disponibles (Axiomas y Hechos del Problema):
+        ID: 11b75759-a88f-4bfc-baf5-e5715c199741 | is_czech(miroslav_venhoda). (Fuente: problem_derived_llm)
+ID: 0e07c1a8-431a-4a52-9d87-dbb894d63ed3 | is_choral_conductor(miroslav_venhoda). (Fuente: problem_derived_llm)
+ID: 927332b7-4bee-44a3-b8dd-b35094281f6e | specialized_in(miroslav_venhoda, renaissance_and_baroque_performance). (Fuente: problem_derived_llm)
+ID: 00e977ed-513d-42c4-8ef8-1ded32026288 | musician(X) :- choral_conductor(X). (Fuente: problem_derived_llm)
+ID: fc91883d-5af4-456a-9269-e46f6f34b1ef | musician(some_entity). (Fuente: problem_derived_llm)
+ID: 5f368d3d-2811-4f62-a251-c046143eec8a | love(some_entity, music). (Fuente: problem_derived_llm)
+ID: cdebfa4e-5705-4f60-97d6-2ff716af4bea | book(book_method_of_studying_gregorian_chant). (Fuente: problem_derived_llm)
+ID: 70e7ac05-40c3-4317-8c34-27fef9d2c4e3 | published(miroslav_venhoda, book_method_of_studying_gregorian_chant, year1946). (Fuente: problem_derived_llm)
+ID: 08ce0ce9-de5a-456e-abf1-dd968b80223b | has_title(book_method_of_studying_gregorian_chant, method_of_studying_gregorian_chant_title). (Fuente: problem_derived_llm)
+ID: 1c769b32-b1f9-4e51-88a7-966622260c36 | loved(miroslav_venhoda, music). (Fuente: problem_derived_llm)
+ID: b708b36d-5443-45cb-9ee1-3eeab8af55c6 | unknown(the_sentence). (Fuente: problem_derived_llm)
+
+        Historial de Intentos de Inferencia Anteriores (si existe):
+        No hay historial de inferencias previas.
+
+        Instrucciones para la Selección:
+        1. Enfócate en cláusulas que parezcan directamente relevantes para alcanzar el Objetivo Principal.
+        2. Considera el historial: Si ciertos caminos fallaron por falta de cláusulas específicas, y esas cláusulas (o similares) están ahora disponibles, podrían ser buenas candidatas.
+        3. Evita cláusulas que consistentemente llevaron a análisis negativos en el historial, a menos que tengas una nueva razón para incluirlas.
+        4. El objetivo es reducir el espacio de búsqueda. No selecciones todas las cláusulas. Intenta seleccionar un conjunto prometedor de no más de 10 cláusulas.
+        5. Si crees que faltan cláusulas cruciales o ninguna de las disponibles es útil, puedes indicarlo.
+
+        Formato de Respuesta Esperado:
+        Lista las cláusulas seleccionadas. Es preferible que uses los IDs de las cláusulas si puedes identificarlos en la lista de arriba.
+        Si no usas IDs, escribe el contenido exacto de la cláusula.
+        Puedes añadir una justificación breve para tu selección general o para cláusulas específicas si es importante.
+        Ejemplo de formato de respuesta si usas IDs:
+        SELECCIONADAS:
+        ID: [ID_de_la_clausula_1]
+        ID: [ID_de_la_clausula_2]
+        /* Justificación general: Estas cláusulas conectan directamente los términos del objetivo. */
+
+        Tu Selección:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: SELECCIONADAS:
+ID: 0e07c1a8-431a-4a52-9d87-dbb894d63ed3
+ID: 927332b7-4bee-44a3-b8dd-b35094281f6e
+ID: 00e977ed-513d-42c4-8ef8-1ded32026288
+ID: 70e7ac05-40c3-4317-8c34-27fef9d2c4e3
+ID: 1c769b32-b1f9-4e51-88a7-966622260c36
+
+/* Justificación general: La selección se enfoca en las cláusulas que mencionan a 'miroslav_venhoda' en contextos relacionados con la música (conductor, especializado, publicó un libro sobre canto gregoriano) y la regla que conecta a los conductores con ser músico. Se incluye la cláusula `loved(miroslav_venhoda, music)` ya que es semánticamente muy cercana al objetivo, aunque el predicado difiera ligeramente. Estas cláusulas ofrecen los caminos más prometedores para inferir que Miroslav Venhoda amaba la música. */
+
+-------------------------------------------------------------------
+
+
+OHI: El LLM-PSU ha seleccionado 5 cláusulas:
+  - loved(miroslav_venhoda, music). (ID: 1c769b32-b1f9-4e51-88a7-966622260c36)
+  - specialized_in(miroslav_venhoda, renaissance_and_baroque_performance). (ID: 927332b7-4bee-44a3-b8dd-b35094281f6e)
+  - is_choral_conductor(miroslav_venhoda). (ID: 0e07c1a8-431a-4a52-9d87-dbb894d63ed3)
+  - published(miroslav_venhoda, book_method_of_studying_gregorian_chant, year1946). (ID: 70e7ac05-40c3-4317-8c34-27fef9d2c4e3)
+  - musician(X) :- choral_conductor(X). (ID: 00e977ed-513d-42c4-8ef8-1ded32026288)
+INFO: Checkpoint guardado: checkpoints/ohi_selected_clauses_cycle2_Miroslav_Venhoda_was_a_Czech_choral_conductor_who_.pkl
+
+Cláusulas Seleccionadas por OHI:
+- loved(miroslav_venhoda, music). (ID: 1c769b32-b1f9-4e51-88a7-966622260c36, Origen: problem_derived_llm)
+- specialized_in(miroslav_venhoda, renaissance_and_baroque_performance). (ID: 927332b7-4bee-44a3-b8dd-b35094281f6e, Origen: problem_derived_llm)
+- is_choral_conductor(miroslav_venhoda). (ID: 0e07c1a8-431a-4a52-9d87-dbb894d63ed3, Origen: problem_derived_llm)
+- published(miroslav_venhoda, book_method_of_studying_gregorian_chant, year1946). (ID: 70e7ac05-40c3-4317-8c34-27fef9d2c4e3, Origen: problem_derived_llm)
+- musician(X) :- choral_conductor(X). (ID: 00e977ed-513d-42c4-8ef8-1ded32026288, Origen: problem_derived_llm)
+
+======================================================================
+FIN DEL PROCESAMIENTO PARA PROBLEMA 5
+======================================================================
+Presiona Enter para continuar con el siguiente problema...

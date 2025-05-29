@@ -1,0 +1,45 @@
+PROBLEMA 1:
+Si llovió anoche, entonces el césped está mojado. Si el sistema de riego (aspersor) estuvo encendido, entonces el césped está mojado. Observamos que el césped efectivamente está mojado. Queremos saber si podemos concluir que llovió.
+
+REGLAS:
+césped(mojado) :- clima(llovió)
+césped(mojado) :- aspersor(encendido)
+
+HECHOS:
+césped(mojado)
+
+OBJETIVO:
+clima(llovió)
+
+
+PROBLEMA 2:
+Para que una conferencia sea considerada un éxito, el orador principal debe ser carismático y la participación de la audiencia debe ser alta. La participación de la audiencia es alta si el tema es de actualidad. El orador principal, el Dr. Lógica, es carismático, y el tema de "Inteligencia Artificial Generativa" es de actualidad. ¿Será la conferencia un éxito?
+
+REGLAS:
+participacion(alta) :- tema(actual)
+conferencia(exitosa) :- orador(carismático), participacion(alta)
+
+HECHOS:
+orador(DrLogica)
+orador(carismático)
+tema(Inteligencia_Artificial)
+tema(actual)
+
+OBJETIVO:
+conferencia(exitosa)
+
+
+PROBLEMA 3:
+Un estudiante aprueba un examen si estudia mucho o si tiene suerte en las preguntas. Sabemos que si un estudiante asiste a todas las clases, entonces estudia mucho. María asistió a todas las clases. ¿Aprobó María el examen?
+
+REGLAS:
+examen(X, aprobó) :- estudia_mucho(X)
+examen(X, aprobó) :- tuvo_suerte(X)
+estudia_mucho(X) :- asiste_siempre(X)
+
+HECHOS:
+asiste_siempre(María)
+
+OBJETIVO:
+examen(María, aprobó)
+

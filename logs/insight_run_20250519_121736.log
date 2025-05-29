@@ -1,0 +1,355 @@
+
+======================================================================
+PROCESANDO PROBLEMA 1: "La alarma de la casa suena si detecta un intruso o si hay un fallo en el sistema..."
+======================================================================
+
+--- CICLO DE REFINAMIENTO 1 / 3 ---
+INFO: Checkpoint no encontrado: checkpoints/mfsa_kr_store_La_alarma_de_la_casa_suena_si_detecta_un_intruso_o.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando MFSA ---
+
+--- Iniciando Formalización Semántica y Axiomatización (MFSA) ---
+Descripción del Problema (NL): La alarma de la casa suena si detecta un intruso o si hay un fallo en el sistema eléctrico. Los vecinos llamaron porque la alarma estaba sonando. Más tarde, la compañía eléctrica confirmó que no hubo ningún fallo en el sistema en toda la zona. ¿Qué se puede concluir sobre la causa de que sonara la alarma?
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (initial_analysis_la_alarma_de_la_casa) ---
+Prompt: 
+        Analiza la siguiente descripción del problema en lenguaje natural.
+        1. Reformula el problema en tus propias palabras para asegurar la comprensión.
+        2. Identifica las entidades clave, sus propiedades y las relaciones entre ellas (reificación).
+        3. ¿Cuál es la pregunta principal o la proposición que se busca probar (objetivo en lenguaje natural)?
+        4. ¿Detectas alguna ambigüedad, vaguedad o información faltante que requiera aclaración del usuario? Si es así, enuméralas. Si no, indica "Ninguna ambigüedad aparente".
+
+        Descripción del Problema: "La alarma de la casa suena si detecta un intruso o si hay un fallo en el sistema eléctrico. Los vecinos llamaron porque la alarma estaba sonando. Más tarde, la compañía eléctrica confirmó que no hubo ningún fallo en el sistema en toda la zona. ¿Qué se puede concluir sobre la causa de que sonara la alarma?"
+
+        Proporciona tu análisis de forma estructurada:
+        Reformulación: [Tu respuesta]
+        Entidades y Relaciones: [Tu respuesta]
+        Objetivo Principal (Lenguaje Natural): [Tu respuesta]
+        Ambigüedades: [Tu respuesta]
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: Aquí tienes el análisis de la descripción del problema:
+
+**Reformulación:**
+Se describe un sistema de alarma de una casa que se activa bajo dos posibles condiciones: la detección de un intruso o la existencia de un fallo en el sistema eléctrico. Se sabe que la alarma se activó. Posteriormente, se verificó que no hubo ningún fallo eléctrico en la zona. El problema pide determinar la causa necesaria de la activación de la alarma basándose en esta información.
+
+**Entidades y Relaciones:**
+*   **Entidades Clave:**
+    *   Alarma de la casa
+    *   Intruso
+    *   Fallo en el sistema eléctrico
+*   **Propiedades:**
+    *   Alarma: Estado (Sonando/No sonando)
+    *   Intruso: Estado (Detectado/No detectado)
+    *   Fallo eléctrico: Estado (Existente/No existente)
+*   **Relaciones (Reificación):**
+    *   Relación Causal/Condicional (Disyunción): La Alarma suena SI (Intruso es detectado O Fallo eléctrico existe). Esto se puede representar lógicamente como: `SuenaAlarma <=> (IntrusoDetectado OR FalloElectrico)` (asumiendo que estas son las únicas causas).
+    *   Hecho observado: `SuenaAlarma` es verdadero.
+    *   Hecho observado: `FalloElectrico` es falso (en la zona, según la compañía eléctrica).
+
+**Objetivo Principal (Lenguaje Natural):**
+Determinar cuál de las posibles causas (intruso o fallo eléctrico) provocó que la alarma de la casa sonara, dadas las condiciones y la información proporcionada.
+
+**Ambigüedades:**
+*   **Alcance del "fallo en el sistema eléctrico":** No queda completamente claro si el "fallo en el sistema eléctrico" que puede activar la alarma se refiere exclusivamente a un problema general de suministro en la zona (que la compañía eléctrica podría confirmar) o si podría incluir fallos eléctricos más localizados dentro de la propia casa o el sistema de alarma, que no serían detectados o confirmados por la compañía eléctrica "en toda la zona". Si fuera esto último, la confirmación de la compañía no descartaría completamente un fallo eléctrico localizado como causa.
+*   **Exclusividad de las causas:** La descripción indica que la alarma suena *si* detecta un intruso o *si* hay un fallo eléctrico. Aunque en lógica se suele asumir que estas son las *únicas* condiciones bajo las cuales suena (un "si y solo si" implícito), la redacción literal ("suena si...") podría, teóricamente, permitir otras causas no mencionadas. Sin embargo, en el contexto de este tipo de problemas lógicos, se suele asumir que la lista de causas proporcionada es exhaustiva.
+
+-------------------------------------------------------------------
+
+
+MFSA LLM-KGE - Reformulación: **
+Se describe un sistema de alarma de una casa que se activa bajo dos posibles condiciones: la detección de un intruso o la existencia de un fallo en el sistema eléctrico. Se sabe que la alarma se activó. Posteriormente, se verificó que no hubo ningún fallo eléctrico en la zona. El problema pide determinar la causa necesaria de la activación de la alarma basándose en esta información.
+
+**
+MFSA LLM-KGE - Entidades/Relaciones: **
+*   **Entidades Clave:**
+    *   Alarma de la casa
+    *   Intruso
+    *   Fallo en el sistema eléctrico
+*   **Propiedades:**
+    *   Alarma: Estado (Sonando/No sonando)
+    *   Intruso: Estado (Detectado/No detectado)
+    *   Fallo eléctrico: Estado (Existente/No existente)
+*   **Relaciones (Reificación):**
+    *   Relación Causal/Condicional (Disyunción): La Alarma suena SI (Intruso es detectado O Fallo eléctrico existe). Esto se puede representar lógicamente como: `SuenaAlarma <=> (IntrusoDetectado OR FalloElectrico)` (asumiendo que estas son las únicas causas).
+    *   Hecho observado: `SuenaAlarma` es verdadero.
+    *   Hecho observado: `FalloElectrico` es falso (en la zona, según la compañía eléctrica).
+
+**
+MFSA LLM-KGE - Objetivo NL: **
+Determinar cuál de las posibles causas (intruso o fallo eléctrico) provocó que la alarma de la casa sonara, dadas las condiciones y la información proporcionada.
+
+**
+MFSA LLM-KGE - Ambigüedades: ['**', '*   **Alcance del "fallo en el sistema eléctrico":** No queda completamente claro si el "fallo en el sistema eléctrico" que puede activar la alarma se refiere exclusivamente a un problema general de suministro en la zona (que la compañía eléctrica podría confirmar) o si podría incluir fallos eléctricos más localizados dentro de la propia casa o el sistema de alarma, que no serían detectados o confirmados por la compañía eléctrica "en toda la zona". Si fuera esto último, la confirmación de la compañía no descartaría completamente un fallo eléctrico localizado como causa.', '*   **Exclusividad de las causas:** La descripción indica que la alarma suena *si* detecta un intruso o *si* hay un fallo eléctrico. Aunque en lógica se suele asumir que estas son las *únicas* condiciones bajo las cuales suena (un "si y solo si" implícito), la redacción literal ("suena si...") podría, teóricamente, permitir otras causas no mencionadas. Sin embargo, en el contexto de este tipo de problemas lógicos, se suele asumir que la lista de causas proporcionada es exhaustiva.']
+
+--- SOLICITUD DE DESAMBIGUACIÓN ---
+El sistema ha detectado las siguientes ambigüedades o puntos que requieren aclaración:
+- **
+- *   **Alcance del "fallo en el sistema eléctrico":** No queda completamente claro si el "fallo en el sistema eléctrico" que puede activar la alarma se refiere exclusivamente a un problema general de suministro en la zona (que la compañía eléctrica podría confirmar) o si podría incluir fallos eléctricos más localizados dentro de la propia casa o el sistema de alarma, que no serían detectados o confirmados por la compañía eléctrica "en toda la zona". Si fuera esto último, la confirmación de la compañía no descartaría completamente un fallo eléctrico localizado como causa.
+- *   **Exclusividad de las causas:** La descripción indica que la alarma suena *si* detecta un intruso o *si* hay un fallo eléctrico. Aunque en lógica se suele asumir que estas son las *únicas* condiciones bajo las cuales suena (un "si y solo si" implícito), la redacción literal ("suena si...") podría, teóricamente, permitir otras causas no mencionadas. Sin embargo, en el contexto de este tipo de problemas lógicos, se suele asumir que la lista de causas proporcionada es exhaustiva.
+Por favor, proporciona tus aclaraciones o escribe 'continuar' si no son relevantes: MFSA: Descripción del problema actualizada tras desambiguación.
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (formalize_objetivo_**
+determi) ---
+Prompt: 
+        Traduce la siguiente declaración en lenguaje natural a una única cláusula de Horn formal.
+        Omite detalles o datos que estén implicados en la resolución del problema porque la tarea final es solamente determinar la cláusula o afirmación que se quiere verificar.
+        Formato de Cláusula de Horn:
+        - Hechos: predicado(termino1, terminoConstant).
+        - Reglas: cabeza(X, Y) :- cuerpo1(X, Z), cuerpo2(Z, Y).
+        Usa variables en mayúsculas (ej: X, Y, Z) y constantes en minúsculas o como strings citados si es necesario.
+        Ten en cuenta que cada predicado debe vener con al menos un argumento, de lo contrario no ess un hecho válido.
+
+
+        EJEMPLOS:
+        PROBLEMA 1:
+        Si llovió anoche, entonces el césped está mojado. Si el sistema de riego (aspersor) estuvo encendido, entonces el césped está mojado. Observamos que el césped efectivamente está mojado. Queremos saber si podemos concluir que llovió.
+
+        REGLAS:
+        césped(mojado) :- clima(llovió)
+        césped(mojado) :- aspersor(encendido)
+
+        HECHOS:
+        césped(mojado)
+
+        OBJETIVO:
+        clima(llovió)
+
+
+        PROBLEMA 2:
+        Para que una conferencia sea considerada un éxito, el orador principal debe ser carismático y la participación de la audiencia debe ser alta. La participación de la audiencia es alta si el tema es de actualidad. El orador principal, el Dr. Lógica, es carismático, y el tema de "Inteligencia Artificial Generativa" es de actualidad. ¿Será la conferencia un éxito?
+
+        REGLAS:
+        participacion(alta) :- tema(actual)
+        conferencia(exitosa) :- orador(carismático), participacion(alta)
+
+        HECHOS:
+        orador(drlogica)
+        orador(carismático)
+        tema(inteligencia_artificial)
+        tema(actual)
+
+        OBJETIVO:
+        conferencia(exitosa)
+
+
+        PROBLEMA 3:
+        Un estudiante aprueba un examen si estudia mucho o si tiene suerte en las preguntas. Sabemos que si un estudiante asiste a todas las clases, entonces estudia mucho. María asistió a todas las clases. ¿Aprobó María el examen?
+
+        REGLAS:
+        examen(X, aprobó) :- estudia_mucho(X)
+        examen(X, aprobó) :- tuvo_suerte(X)
+        estudia_mucho(X) :- asiste_siempre(X)
+
+        HECHOS:
+        asiste_siempre(maría)
+
+        OBJETIVO:
+        examen(maría, aprobó)
+
+        Declaración a traducir: "**
+Determinar cuál de las posibles causas (intruso o fallo eléctrico) provocó que la alarma de la casa sonara, dadas las condiciones y la información proporcionada.
+
+**"
+        Contexto del problema (si ayuda): "La alarma de la casa suena si detecta un intruso o si hay un fallo en el sistema eléctrico. Los vecinos llamaron porque la alarma estaba sonando. Más tarde, la compañía eléctrica confirmó que no hubo ningún fallo en el sistema en toda la zona. ¿Qué se puede concluir sobre la causa de que sonara la alarma?
+Aclaración del Usuario: asume que el fallo en la zona incluye tu casa, estas son las unicas causas posibes"
+        Tipo de declaración esperada: objetivo
+
+        Cláusula de Horn resultante (OBJETIVO):
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: intruso(detectado)
+
+-------------------------------------------------------------------
+
+
+MFSA: Cláusula Objetivo Formalizada: intruso(detectado).
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (extract_problem_clauses_la_alarma_de_la_casa) ---
+Prompt: 
+        Basado en la siguiente descripción de un problema (y posibles aclaraciones), y el análisis de entidades/relaciones:
+        Descripción: "La alarma de la casa suena si detecta un intruso o si hay un fallo en el sistema eléctrico. Los vecinos llamaron porque la alarma estaba sonando. Más tarde, la compañía eléctrica confirmó que no hubo ningún fallo en el sistema en toda la zona. ¿Qué se puede concluir sobre la causa de que sonara la alarma?
+Aclaración del Usuario: asume que el fallo en la zona incluye tu casa, estas son las unicas causas posibes"
+        Entidades/Relaciones Clave: "**
+*   **Entidades Clave:**
+    *   Alarma de la casa
+    *   Intruso
+    *   Fallo en el sistema eléctrico
+*   **Propiedades:**
+    *   Alarma: Estado (Sonando/No sonando)
+    *   Intruso: Estado (Detectado/No detectado)
+    *   Fallo eléctrico: Estado (Existente/No existente)
+*   **Relaciones (Reificación):**
+    *   Relación Causal/Condicional (Disyunción): La Alarma suena SI (Intruso es detectado O Fallo eléctrico existe). Esto se puede representar lógicamente como: `SuenaAlarma <=> (IntrusoDetectado OR FalloElectrico)` (asumiendo que estas son las únicas causas).
+    *   Hecho observado: `SuenaAlarma` es verdadero.
+    *   Hecho observado: `FalloElectrico` es falso (en la zona, según la compañía eléctrica).
+
+**"
+        Causas del Objetivo: "intruso(detectado)."
+
+        Extrae todos los hechos y reglas relevantes directamente mencionados o implícitos en la descripción.
+        Expresa cada uno como una cláusula de Horn.
+        - Hechos: predicado(termino1, terminoConstant).
+        - Reglas: cabeza(X, Y) :- cuerpo1(X, Z), cuerpo2(Z, Y).
+        Usa variables en mayúsculas (X, Y) y constantes en minúsculas.
+        Ten en cuenta que cada predicado debe vener con al menos un argumento, de lo contrario no ess un hecho válido.
+        Sé consistente con las cláusulas objetivo y con las que estés generando
+        Sé consistente con las entidades/relaciones clave, si dos cláusulas refieren a nombres de persona o objetos deben estar escritos de la misma forma en ambas cláusulas y verifica que sea consistente con la cláusula objetivo.
+        Proporciona una cláusula por línea. Incluye un breve comentario /* en lenguaje natural de dónde viene cada cláusula */.
+        Ejemplo:
+        padre(pedro, juan). /* De "pedro es padre de juan" */
+        padre(juan, maria). /* De "juan es padre de maria" */
+        abuelo(X, Y) :- padre(X, Z), padre(Z, Y). /* De "X es abuelo de Y si X es padre de Z y Z es padre de Y" */
+
+        Cláusulas de Horn del Problema:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: ```prolog
+suena_alarma(si). /* De "La alarma estaba sonando" */
+fallo_electrico(no_existente). /* De "no hubo ningún fallo en el sistema en toda la zona" y la aclaración */
+suena_alarma(si) :- intruso(detectado). /* Regla causal: La alarma suena si detecta un intruso */
+suena_alarma(si) :- fallo_electrico(existente). /* Regla causal: La alarma suena si hay un fallo en el sistema eléctrico */
+intruso(detectado) :- suena_alarma(si), fallo_electrico(no_existente). /* Regla de deducción: si la alarma suena y no hay fallo eléctrico, se concluye que hay un intruso */
+```
+
+-------------------------------------------------------------------
+
+
+MFSA: Cláusulas del Problema Extraídas: 5
+--- Formalización Completada ---
+KR-Store:
+  Axiomas Base: 0
+  Cláusulas del Problema: 5
+  Cláusulas Objetivo: 1
+INFO: Checkpoint guardado: checkpoints/mfsa_kr_store_La_alarma_de_la_casa_suena_si_detecta_un_intruso_o.pkl
+
+INFO: Cláusula Objetivo Principal: intruso(detectado).
+INFO: Checkpoint no encontrado: checkpoints/ohi_selected_clauses_cycle0_La_alarma_de_la_casa_suena_si_detecta_un_intruso_o.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando OHI ---
+
+--- OHI: Iniciando Selección Heurística de Cláusulas ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (select_clauses_intruso_initial) ---
+Prompt: 
+        Tu tarea es actuar como una Unidad de Selección de Políticas (Policy Selection Unit).
+        Debes seleccionar un subconjunto estratégico de cláusulas para intentar probar un objetivo.
+
+        Objetivo Principal a Probar: intruso(detectado).
+
+        Cláusulas Disponibles (Axiomas y Hechos del Problema):
+        ID: e4865007-e37b-403f-a747-029cd6d95d51 | suena_alarma(si). (Fuente: problem_derived_llm)
+ID: 27add28e-6c59-42c7-9ba9-e2140005e3ad | fallo_electrico(no_existente). (Fuente: problem_derived_llm)
+ID: 6915fa5b-08eb-44f8-9d02-12d18891a9d6 | suena_alarma(si) :- intruso(detectado). (Fuente: problem_derived_llm)
+ID: 2e74c90d-bbf2-4d57-aa3c-9336964198f9 | suena_alarma(si) :- fallo_electrico(existente). (Fuente: problem_derived_llm)
+ID: cecca470-e008-4d85-a180-089d8850000b | intruso(detectado) :- suena_alarma(si), fallo_electrico(no_existente). (Fuente: problem_derived_llm)
+
+        Historial de Intentos de Inferencia Anteriores (si existe):
+        No hay historial de inferencias previas.
+
+        Instrucciones para la Selección:
+        1. Enfócate en cláusulas que parezcan directamente relevantes para alcanzar el Objetivo Principal.
+        2. Considera el historial: Si ciertos caminos fallaron por falta de cláusulas específicas, y esas cláusulas (o similares) están ahora disponibles, podrían ser buenas candidatas.
+        3. Evita cláusulas que consistentemente llevaron a análisis negativos en el historial, a menos que tengas una nueva razón para incluirlas.
+        4. El objetivo es reducir el espacio de búsqueda. No selecciones todas las cláusulas. Intenta seleccionar un conjunto prometedor de no más de 10 cláusulas.
+        5. Si crees que faltan cláusulas cruciales o ninguna de las disponibles es útil, puedes indicarlo.
+
+        Formato de Respuesta Esperado:
+        Lista las cláusulas seleccionadas. Es preferible que uses los IDs de las cláusulas si puedes identificarlos en la lista de arriba.
+        Si no usas IDs, escribe el contenido exacto de la cláusula.
+        Puedes añadir una justificación breve para tu selección general o para cláusulas específicas si es importante.
+        Ejemplo de formato de respuesta si usas IDs:
+        SELECCIONADAS:
+        ID: [ID_de_la_clausula_1]
+        ID: [ID_de_la_clausula_2]
+        /* Justificación general: Estas cláusulas conectan directamente los términos del objetivo. */
+
+        Tu Selección:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: SELECCIONADAS:
+ID: cecca470-e008-4d85-a180-089d8850000b
+ID: e4865007-e37b-403f-a747-029cd6d95d51
+ID: 27add28e-6c59-42c7-9ba9-e2140005e3ad
+/* Justificación general: Se selecciona la regla cuyo consecuente es el objetivo principal, junto con los hechos que satisfacen directamente los antecedentes de dicha regla. Esto proporciona un camino de inferencia directo hacia el objetivo. */
+
+-------------------------------------------------------------------
+
+
+OHI: El LLM-PSU ha seleccionado 3 cláusulas:
+  - suena_alarma(si). (ID: e4865007-e37b-403f-a747-029cd6d95d51)
+  - intruso(detectado) :- suena_alarma(si), fallo_electrico(no_existente). (ID: cecca470-e008-4d85-a180-089d8850000b)
+  - fallo_electrico(no_existente). (ID: 27add28e-6c59-42c7-9ba9-e2140005e3ad)
+INFO: Checkpoint guardado: checkpoints/ohi_selected_clauses_cycle0_La_alarma_de_la_casa_suena_si_detecta_un_intruso_o.pkl
+
+Cláusulas Seleccionadas por OHI:
+- suena_alarma(si). (ID: e4865007-e37b-403f-a747-029cd6d95d51, Origen: problem_derived_llm)
+- intruso(detectado) :- suena_alarma(si), fallo_electrico(no_existente). (ID: cecca470-e008-4d85-a180-089d8850000b, Origen: problem_derived_llm)
+- fallo_electrico(no_existente). (ID: 27add28e-6c59-42c7-9ba9-e2140005e3ad, Origen: problem_derived_llm)
+INFO: Checkpoint no encontrado: checkpoints/misa_j_trace_cycle0_La_alarma_de_la_casa_suena_si_detecta_un_intruso_o.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando MISA-J (CFCS) ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (general) ---
+Prompt: Dadas las siguientes premisas: [suena_alarma(si).; fallo_electrico(no_existente).; intruso(detectado) :- suena_alarma(si), fallo_electrico(no_existente).], se ha derivado la conclusión: 'intruso(detectado).'. Por favor, proporciona una breve justificación en lenguaje natural para este paso de inferencia.
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: Aquí tienes una breve justificación:
+
+La regla establece que se detecta un intruso **si** la alarma suena **y** no hay un fallo eléctrico. Las otras dos premisas confirman precisamente que la alarma sí suena y que no hay un fallo eléctrico. Dado que ambas condiciones requeridas por la regla se cumplen, se concluye lógicamente que se detecta un intruso.
+
+-------------------------------------------------------------------
+
+
+INFO: Checkpoint guardado: checkpoints/misa_j_trace_cycle0_La_alarma_de_la_casa_suena_si_detecta_un_intruso_o.pkl
+
+--- Traza de Inferencia ---
+Objetivo: intruso(detectado).
+Paso 1: 'suena_alarma(si).' (Derivado de: [Hecho inicial])
+      Justificación: Hecho inicial proporcionado.
+Paso 2: 'fallo_electrico(no_existente).' (Derivado de: [Hecho inicial])
+      Justificación: Hecho inicial proporcionado.
+Paso 3: 'intruso(detectado).' (Derivado de: [suena_alarma(si)., fallo_electrico(no_existente)., intruso(detectado) :- suena_alarma(si), fallo_electrico(no_existente).])
+      Justificación: Aquí tienes una breve justificación:
+
+La regla establece que se detecta un intruso **si** la alarma suena **y** no hay un fallo eléctrico. Las otras dos premisas confirman precisamente que la alarma sí suena y que no hay un fallo eléctrico. Dado que ambas condiciones requeridas por la regla se cumplen, se concluye lógicamente que se detecta un intruso.
+
+--- Fin de la Traza ---
+Resultado: ¡Objetivo 'intruso(detectado).' alcanzado!
+
+¡SOLUCIÓN ENCONTRADA en el ciclo 1!
+
+======================================================================
+FIN DEL PROCESAMIENTO PARA PROBLEMA 1
+======================================================================
+
+TODOS LOS PROBLEMAS CONFIGURADOS PROCESADOS.

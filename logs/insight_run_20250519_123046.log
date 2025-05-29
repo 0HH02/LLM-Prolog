@@ -1,0 +1,1304 @@
+
+======================================================================
+PROCESANDO PROBLEMA 1: "Para que el Agente X pueda extraer los datos secretos de la corporación enemiga,..."
+======================================================================
+
+--- CICLO DE REFINAMIENTO 1 / 3 ---
+INFO: Checkpoint no encontrado: checkpoints/mfsa_kr_store_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando MFSA ---
+
+--- Iniciando Formalización Semántica y Axiomatización (MFSA) ---
+Descripción del Problema (NL): Para que el Agente X pueda extraer los datos secretos de la corporación enemiga, necesita desactivar el sistema de seguridad principal o bien obtener los códigos de acceso del Nivel 3 de un informante. Si desactiva el sistema de seguridad principal, se activará una alerta silenciosa que notificará al jefe de seguridad, a menos que también logre cortar la línea de comunicación externa. Si obtiene los códigos de Nivel 3 del informante, podrá acceder a la sala de servidores, pero solo si el informante no es un agente doble. El Agente X confirma que la línea de comunicación externa ha sido cortada. Además, su contacto le asegura que el informante no es un agente doble y le ha proporcionado los códigos de Nivel 3. Sin embargo, un análisis de última hora revela que desactivar el sistema de seguridad principal también requiere un dispositivo especial que el Agente X no posee. ¿Podrá el Agente X extraer los datos secretos?
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (initial_analysis_para_que_el_agente_x) ---
+Prompt: 
+        Analiza la siguiente descripción del problema en lenguaje natural.
+        1. Reformula el problema en tus propias palabras para asegurar la comprensión.
+        2. Identifica las entidades clave, sus propiedades y las relaciones entre ellas (reificación).
+        3. ¿Cuál es la pregunta principal o la proposición que se busca probar (objetivo en lenguaje natural)?
+        4. ¿Detectas alguna ambigüedad, vaguedad o información faltante que requiera aclaración del usuario? Si es así, enuméralas. Si no, indica "Ninguna ambigüedad aparente".
+
+        Descripción del Problema: "Para que el Agente X pueda extraer los datos secretos de la corporación enemiga, necesita desactivar el sistema de seguridad principal o bien obtener los códigos de acceso del Nivel 3 de un informante. Si desactiva el sistema de seguridad principal, se activará una alerta silenciosa que notificará al jefe de seguridad, a menos que también logre cortar la línea de comunicación externa. Si obtiene los códigos de Nivel 3 del informante, podrá acceder a la sala de servidores, pero solo si el informante no es un agente doble. El Agente X confirma que la línea de comunicación externa ha sido cortada. Además, su contacto le asegura que el informante no es un agente doble y le ha proporcionado los códigos de Nivel 3. Sin embargo, un análisis de última hora revela que desactivar el sistema de seguridad principal también requiere un dispositivo especial que el Agente X no posee. ¿Podrá el Agente X extraer los datos secretos?"
+
+        Proporciona tu análisis de forma estructurada:
+        Reformulación: [Tu respuesta]
+        Entidades y Relaciones: [Tu respuesta]
+        Objetivo Principal (Lenguaje Natural): [Tu respuesta]
+        Ambigüedades: [Tu respuesta]
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: Aquí tienes el análisis de la descripción del problema:
+
+**Reformulación:**
+El Agente X tiene como objetivo obtener datos secretos. Dispone de dos posibles estrategias: o bien desactiva el sistema de seguridad principal, o consigue unos códigos de acceso especiales (Nivel 3) de un informante. Desactivar la seguridad principal tiene una posible consecuencia (una alerta), pero se mitiga si la línea de comunicación externa está cortada. Obtener los códigos del informante le permitiría acceder a la sala donde están los datos, pero esto solo es viable si el informante es de fiar (no es un agente doble). Se nos informa que la línea de comunicación externa ya está cortada, que el informante es de fiar y que, de hecho, le ha entregado los códigos. Sin embargo, se descubre que la opción de desactivar la seguridad principal es imposible para el Agente X porque le falta un dispositivo necesario. Dada esta situación, la pregunta es determinar si el Agente X puede alcanzar su objetivo de extraer los datos.
+
+**Entidades y Relaciones:**
+*   **Agente X:**
+    *   *Propiedad:* Objetivo: Extraer Datos Secretos.
+    *   *Propiedad:* Posesión: No posee el Dispositivo Especial.
+    *   *Relación:* Necesita (para extraer datos): (Sistema de Seguridad Principal desactivado) OR (Códigos Nivel 3 obtenidos + Acceso a Sala de Servidores).
+*   **Datos Secretos:**
+    *   *Relación:* Es el objetivo del Agente X.
+    *   *Ubicación Implícita:* Se infiere que están accesibles desde la Sala de Servidores.
+*   **Sistema de Seguridad Principal:**
+    *   *Estado inicial:* Activo.
+    *   *Relación:* Su desactivación es una de las rutas para que Agente X logre su objetivo.
+    *   *Relación:* Su desactivación requiere el Dispositivo Especial (relación de requisito).
+    *   *Relación:* Su desactivación, si la línea externa no estuviera cortada, activaría una alerta (relación causal condicional).
+*   **Códigos de Acceso Nivel 3:**
+    *   *Propiedad:* Estado: Obtenidos por Agente X (confirmado).
+    *   *Origen:* Provienen del Informante (confirmado).
+    *   *Relación:* Permiten el acceso a la Sala de Servidores (relación de habilitación), condicionado a la fiabilidad del informante.
+*   **Informante:**
+    *   *Propiedad:* Fiabilidad: No es Agente Doble (confirmado).
+    *   *Relación:* Proporciona los Códigos Nivel 3 a Agente X (confirmado).
+*   **Línea de Comunicación Externa:**
+    *   *Estado:* Cortada (confirmado).
+    *   *Relación:* Su estado cortado mitiga la consecuencia de desactivar el Sistema de Seguridad Principal (evita la alerta).
+*   **Sala de Servidores:**
+    *   *Relación:* Es accesible si se tienen los Códigos Nivel 3 y el Informante no es Agente Doble.
+    *   *Relación:* Contiene (implícitamente) los Datos Secretos.
+*   **Agente Doble:**
+    *   *Propiedad:* Estado del Informante: El Informante no es un Agente Doble (confirmado).
+    *   *Relación:* La posibilidad de que el informante lo sea es una contingencia que afectaría la ruta de los códigos.
+*   **Dispositivo Especial:**
+    *   *Relación:* Es un requisito para desactivar el Sistema de Seguridad Principal.
+    *   *Relación:* Agente X no lo posee (confirmado).
+
+**Objetivo Principal (Lenguaje Natural):**
+Determinar si el Agente X puede conseguir extraer los datos secretos de la corporación enemiga, basándose en las opciones disponibles, los requisitos de cada opción, las condiciones confirmadas y los obstáculos detectados.
+
+**Ambigüedades:**
+1.  **Relación entre "desactivar seguridad" y "extraer datos":** No queda explícitamente claro si desactivar el sistema de seguridad principal *directamente* permite la extracción de datos, o si, al igual que la ruta de los códigos, simplemente permite el acceso a la Sala de Servidores, desde donde se procede a la extracción. El texto sugiere estructuralmente lo primero ("Para que... pueda extraer... necesita desactivar..."), pero la otra ruta pasa por el "acceso a la sala de servidores".
+2.  **Suficiencia del "acceso a la sala de servidores":** Se afirma que con los códigos (y si el informante es fiable) "podrá acceder a la sala de servidores". No se especifica explícitamente si el simple acceso a la sala de servidores es *suficiente* para realizar la extracción de datos, o si existen pasos o condiciones adicionales requeridas *dentro* de la sala. Se asume, para resolver el problema, que acceder es suficiente para la extracción en este contexto simplificado.
+
+-------------------------------------------------------------------
+
+
+MFSA LLM-KGE - Reformulación: **
+El Agente X tiene como objetivo obtener datos secretos. Dispone de dos posibles estrategias: o bien desactiva el sistema de seguridad principal, o consigue unos códigos de acceso especiales (Nivel 3) de un informante. Desactivar la seguridad principal tiene una posible consecuencia (una alerta), pero se mitiga si la línea de comunicación externa está cortada. Obtener los códigos del informante le permitiría acceder a la sala donde están los datos, pero esto solo es viable si el informante es de fiar (no es un agente doble). Se nos informa que la línea de comunicación externa ya está cortada, que el informante es de fiar y que, de hecho, le ha entregado los códigos. Sin embargo, se descubre que la opción de desactivar la seguridad principal es imposible para el Agente X porque le falta un dispositivo necesario. Dada esta situación, la pregunta es determinar si el Agente X puede alcanzar su objetivo de extraer los datos.
+
+**
+MFSA LLM-KGE - Entidades/Relaciones: **
+*   **Agente X:**
+    *   *Propiedad:* Objetivo: Extraer Datos Secretos.
+    *   *Propiedad:* Posesión: No posee el Dispositivo Especial.
+    *   *Relación:* Necesita (para extraer datos): (Sistema de Seguridad Principal desactivado) OR (Códigos Nivel 3 obtenidos + Acceso a Sala de Servidores).
+*   **Datos Secretos:**
+    *   *Relación:* Es el objetivo del Agente X.
+    *   *Ubicación Implícita:* Se infiere que están accesibles desde la Sala de Servidores.
+*   **Sistema de Seguridad Principal:**
+    *   *Estado inicial:* Activo.
+    *   *Relación:* Su desactivación es una de las rutas para que Agente X logre su objetivo.
+    *   *Relación:* Su desactivación requiere el Dispositivo Especial (relación de requisito).
+    *   *Relación:* Su desactivación, si la línea externa no estuviera cortada, activaría una alerta (relación causal condicional).
+*   **Códigos de Acceso Nivel 3:**
+    *   *Propiedad:* Estado: Obtenidos por Agente X (confirmado).
+    *   *Origen:* Provienen del Informante (confirmado).
+    *   *Relación:* Permiten el acceso a la Sala de Servidores (relación de habilitación), condicionado a la fiabilidad del informante.
+*   **Informante:**
+    *   *Propiedad:* Fiabilidad: No es Agente Doble (confirmado).
+    *   *Relación:* Proporciona los Códigos Nivel 3 a Agente X (confirmado).
+*   **Línea de Comunicación Externa:**
+    *   *Estado:* Cortada (confirmado).
+    *   *Relación:* Su estado cortado mitiga la consecuencia de desactivar el Sistema de Seguridad Principal (evita la alerta).
+*   **Sala de Servidores:**
+    *   *Relación:* Es accesible si se tienen los Códigos Nivel 3 y el Informante no es Agente Doble.
+    *   *Relación:* Contiene (implícitamente) los Datos Secretos.
+*   **Agente Doble:**
+    *   *Propiedad:* Estado del Informante: El Informante no es un Agente Doble (confirmado).
+    *   *Relación:* La posibilidad de que el informante lo sea es una contingencia que afectaría la ruta de los códigos.
+*   **Dispositivo Especial:**
+    *   *Relación:* Es un requisito para desactivar el Sistema de Seguridad Principal.
+    *   *Relación:* Agente X no lo posee (confirmado).
+
+**
+MFSA LLM-KGE - Objetivo NL: **
+Determinar si el Agente X puede conseguir extraer los datos secretos de la corporación enemiga, basándose en las opciones disponibles, los requisitos de cada opción, las condiciones confirmadas y los obstáculos detectados.
+
+**
+MFSA LLM-KGE - Ambigüedades: ['**', '1.  **Relación entre "desactivar seguridad" y "extraer datos":** No queda explícitamente claro si desactivar el sistema de seguridad principal *directamente* permite la extracción de datos, o si, al igual que la ruta de los códigos, simplemente permite el acceso a la Sala de Servidores, desde donde se procede a la extracción. El texto sugiere estructuralmente lo primero ("Para que... pueda extraer... necesita desactivar..."), pero la otra ruta pasa por el "acceso a la sala de servidores".', '2.  **Suficiencia del "acceso a la sala de servidores":** Se afirma que con los códigos (y si el informante es fiable) "podrá acceder a la sala de servidores". No se especifica explícitamente si el simple acceso a la sala de servidores es *suficiente* para realizar la extracción de datos, o si existen pasos o condiciones adicionales requeridas *dentro* de la sala. Se asume, para resolver el problema, que acceder es suficiente para la extracción en este contexto simplificado.']
+
+--- SOLICITUD DE DESAMBIGUACIÓN ---
+El sistema ha detectado las siguientes ambigüedades o puntos que requieren aclaración:
+- **
+- 1.  **Relación entre "desactivar seguridad" y "extraer datos":** No queda explícitamente claro si desactivar el sistema de seguridad principal *directamente* permite la extracción de datos, o si, al igual que la ruta de los códigos, simplemente permite el acceso a la Sala de Servidores, desde donde se procede a la extracción. El texto sugiere estructuralmente lo primero ("Para que... pueda extraer... necesita desactivar..."), pero la otra ruta pasa por el "acceso a la sala de servidores".
+- 2.  **Suficiencia del "acceso a la sala de servidores":** Se afirma que con los códigos (y si el informante es fiable) "podrá acceder a la sala de servidores". No se especifica explícitamente si el simple acceso a la sala de servidores es *suficiente* para realizar la extracción de datos, o si existen pasos o condiciones adicionales requeridas *dentro* de la sala. Se asume, para resolver el problema, que acceder es suficiente para la extracción en este contexto simplificado.
+Por favor, proporciona tus aclaraciones o escribe 'continuar' si no son relevantes: MFSA: Descripción del problema actualizada tras desambiguación.
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (formalize_objetivo_**
+determi) ---
+Prompt: 
+        Traduce la siguiente declaración en lenguaje natural a una única cláusula de Horn formal.
+        Omite detalles o datos que estén implicados en la resolución del problema porque la tarea final es solamente determinar la cláusula o afirmación que se quiere verificar.
+        Formato de Cláusula de Horn:
+        - Hechos: predicado(termino1, terminoConstant).
+        - Reglas: cabeza(X, Y) :- cuerpo1(X, Z), cuerpo2(Z, Y).
+        Usa variables en mayúsculas (ej: X, Y, Z) y constantes en minúsculas o como strings citados si es necesario.
+        Ten en cuenta que cada predicado debe vener con al menos un argumento, de lo contrario no ess un hecho válido.
+
+
+        EJEMPLOS:
+        PROBLEMA 1:
+        Si llovió anoche, entonces el césped está mojado. Si el sistema de riego (aspersor) estuvo encendido, entonces el césped está mojado. Observamos que el césped efectivamente está mojado. Queremos saber si podemos concluir que llovió.
+
+        REGLAS:
+        césped(mojado) :- clima(llovió)
+        césped(mojado) :- aspersor(encendido)
+
+        HECHOS:
+        césped(mojado)
+
+        OBJETIVO:
+        clima(llovió)
+
+
+        PROBLEMA 2:
+        Para que una conferencia sea considerada un éxito, el orador principal debe ser carismático y la participación de la audiencia debe ser alta. La participación de la audiencia es alta si el tema es de actualidad. El orador principal, el Dr. Lógica, es carismático, y el tema de "Inteligencia Artificial Generativa" es de actualidad. ¿Será la conferencia un éxito?
+
+        REGLAS:
+        participacion(alta) :- tema(actual)
+        conferencia(exitosa) :- orador(carismático), participacion(alta)
+
+        HECHOS:
+        orador(drlogica)
+        orador(carismático)
+        tema(inteligencia_artificial)
+        tema(actual)
+
+        OBJETIVO:
+        conferencia(exitosa)
+
+
+        PROBLEMA 3:
+        Un estudiante aprueba un examen si estudia mucho o si tiene suerte en las preguntas. Sabemos que si un estudiante asiste a todas las clases, entonces estudia mucho. María asistió a todas las clases. ¿Aprobó María el examen?
+
+        REGLAS:
+        examen(X, aprobó) :- estudia_mucho(X)
+        examen(X, aprobó) :- tuvo_suerte(X)
+        estudia_mucho(X) :- asiste_siempre(X)
+
+        HECHOS:
+        asiste_siempre(maría)
+
+        OBJETIVO:
+        examen(maría, aprobó)
+
+        Declaración a traducir: "**
+Determinar si el Agente X puede conseguir extraer los datos secretos de la corporación enemiga, basándose en las opciones disponibles, los requisitos de cada opción, las condiciones confirmadas y los obstáculos detectados.
+
+**"
+        Contexto del problema (si ayuda): "Para que el Agente X pueda extraer los datos secretos de la corporación enemiga, necesita desactivar el sistema de seguridad principal o bien obtener los códigos de acceso del Nivel 3 de un informante. Si desactiva el sistema de seguridad principal, se activará una alerta silenciosa que notificará al jefe de seguridad, a menos que también logre cortar la línea de comunicación externa. Si obtiene los códigos de Nivel 3 del informante, podrá acceder a la sala de servidores, pero solo si el informante no es un agente doble. El Agente X confirma que la línea de comunicación externa ha sido cortada. Además, su contacto le asegura que el informante no es un agente doble y le ha proporcionado los códigos de Nivel 3. Sin embargo, un análisis de última hora revela que desactivar el sistema de seguridad principal también requiere un dispositivo especial que el Agente X no posee. ¿Podrá el Agente X extraer los datos secretos?
+Aclaración del Usuario: acceder a la sala de servidores es equivalente a extraer los datos secretos. desactivar el sistema de seguridad también permite acceder a los datos secretos"
+        Tipo de declaración esperada: objetivo
+
+        Cláusula de Horn resultante (OBJETIVO):
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: OBJETIVO:
+extraer_datos_secretos('agente_x')
+
+-------------------------------------------------------------------
+
+
+MFSA: Cláusula Objetivo Formalizada: OBJETIVO:
+extraer_datos_secretos('agente_x').
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (extract_problem_clauses_para_que_el_agente_x) ---
+Prompt: 
+        Basado en la siguiente descripción de un problema (y posibles aclaraciones), y el análisis de entidades/relaciones:
+        Descripción: "Para que el Agente X pueda extraer los datos secretos de la corporación enemiga, necesita desactivar el sistema de seguridad principal o bien obtener los códigos de acceso del Nivel 3 de un informante. Si desactiva el sistema de seguridad principal, se activará una alerta silenciosa que notificará al jefe de seguridad, a menos que también logre cortar la línea de comunicación externa. Si obtiene los códigos de Nivel 3 del informante, podrá acceder a la sala de servidores, pero solo si el informante no es un agente doble. El Agente X confirma que la línea de comunicación externa ha sido cortada. Además, su contacto le asegura que el informante no es un agente doble y le ha proporcionado los códigos de Nivel 3. Sin embargo, un análisis de última hora revela que desactivar el sistema de seguridad principal también requiere un dispositivo especial que el Agente X no posee. ¿Podrá el Agente X extraer los datos secretos?
+Aclaración del Usuario: acceder a la sala de servidores es equivalente a extraer los datos secretos. desactivar el sistema de seguridad también permite acceder a los datos secretos"
+        Entidades/Relaciones Clave: "**
+*   **Agente X:**
+    *   *Propiedad:* Objetivo: Extraer Datos Secretos.
+    *   *Propiedad:* Posesión: No posee el Dispositivo Especial.
+    *   *Relación:* Necesita (para extraer datos): (Sistema de Seguridad Principal desactivado) OR (Códigos Nivel 3 obtenidos + Acceso a Sala de Servidores).
+*   **Datos Secretos:**
+    *   *Relación:* Es el objetivo del Agente X.
+    *   *Ubicación Implícita:* Se infiere que están accesibles desde la Sala de Servidores.
+*   **Sistema de Seguridad Principal:**
+    *   *Estado inicial:* Activo.
+    *   *Relación:* Su desactivación es una de las rutas para que Agente X logre su objetivo.
+    *   *Relación:* Su desactivación requiere el Dispositivo Especial (relación de requisito).
+    *   *Relación:* Su desactivación, si la línea externa no estuviera cortada, activaría una alerta (relación causal condicional).
+*   **Códigos de Acceso Nivel 3:**
+    *   *Propiedad:* Estado: Obtenidos por Agente X (confirmado).
+    *   *Origen:* Provienen del Informante (confirmado).
+    *   *Relación:* Permiten el acceso a la Sala de Servidores (relación de habilitación), condicionado a la fiabilidad del informante.
+*   **Informante:**
+    *   *Propiedad:* Fiabilidad: No es Agente Doble (confirmado).
+    *   *Relación:* Proporciona los Códigos Nivel 3 a Agente X (confirmado).
+*   **Línea de Comunicación Externa:**
+    *   *Estado:* Cortada (confirmado).
+    *   *Relación:* Su estado cortado mitiga la consecuencia de desactivar el Sistema de Seguridad Principal (evita la alerta).
+*   **Sala de Servidores:**
+    *   *Relación:* Es accesible si se tienen los Códigos Nivel 3 y el Informante no es Agente Doble.
+    *   *Relación:* Contiene (implícitamente) los Datos Secretos.
+*   **Agente Doble:**
+    *   *Propiedad:* Estado del Informante: El Informante no es un Agente Doble (confirmado).
+    *   *Relación:* La posibilidad de que el informante lo sea es una contingencia que afectaría la ruta de los códigos.
+*   **Dispositivo Especial:**
+    *   *Relación:* Es un requisito para desactivar el Sistema de Seguridad Principal.
+    *   *Relación:* Agente X no lo posee (confirmado).
+
+**"
+        Causas del Objetivo: "OBJETIVO:
+extraer_datos_secretos('agente_x')."
+
+        Extrae todos los hechos y reglas relevantes directamente mencionados o implícitos en la descripción.
+        Expresa cada uno como una cláusula de Horn.
+        - Hechos: predicado(termino1, terminoConstant).
+        - Reglas: cabeza(X, Y) :- cuerpo1(X, Z), cuerpo2(Z, Y).
+        Usa variables en mayúsculas (X, Y) y constantes en minúsculas.
+        Ten en cuenta que cada predicado debe vener con al menos un argumento, de lo contrario no ess un hecho válido.
+        Sé consistente con las cláusulas objetivo y con las que estés generando
+        Sé consistente con las entidades/relaciones clave, si dos cláusulas refieren a nombres de persona o objetos deben estar escritos de la misma forma en ambas cláusulas y verifica que sea consistente con la cláusula objetivo.
+        Proporciona una cláusula por línea. Incluye un breve comentario /* en lenguaje natural de dónde viene cada cláusula */.
+        Ejemplo:
+        padre(pedro, juan). /* De "pedro es padre de juan" */
+        padre(juan, maria). /* De "juan es padre de maria" */
+        abuelo(X, Y) :- padre(X, Z), padre(Z, Y). /* De "X es abuelo de Y si X es padre de Z y Z es padre de Y" */
+
+        Cláusulas de Horn del Problema:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: ```prolog
+extraer_datos_secretos(agente_x) :- sistema_seguridad_principal_desactivado(agente_x). /* El agente X puede extraer datos si desactiva el sistema de seguridad */
+extraer_datos_secretos(agente_x) :- acceso_sala_servidores(agente_x). /* El agente X puede extraer datos si accede a la sala de servidores (aclaración) */
+
+sistema_seguridad_principal_desactivado(agente_x) :- posee_dispositivo_especial(agente_x). /* Desactivar el sistema de seguridad requiere que el agente X posea el dispositivo especial */
+
+acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). /* El agente X accede a la sala de servidores si obtiene los códigos Nivel 3 y el informante no es agente doble */
+
+linea_comunicacion_externa_cortada(agente_x). /* Hecho: La línea de comunicación externa ha sido cortada (confirmado) */
+informante_no_es_agente_doble(informante). /* Hecho: El informante no es un agente doble (confirmado) */
+codigos_nivel_3_obtenidos(agente_x). /* Hecho: El agente X ha obtenido los códigos Nivel 3 (confirmado) */
+/* Hecho implícito/negativo: Agente X no posee el dispositivo especial. No se representa como cláusula positiva, su ausencia impide probar 'posee_dispositivo_especial(agente_x)'. */
+```
+
+-------------------------------------------------------------------
+
+
+MFSA: Cláusulas del Problema Extraídas: 7
+--- Formalización Completada ---
+KR-Store:
+  Axiomas Base: 0
+  Cláusulas del Problema: 7
+  Cláusulas Objetivo: 1
+INFO: Checkpoint guardado: checkpoints/mfsa_kr_store_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl
+
+INFO: Cláusula Objetivo Principal: OBJETIVO:
+extraer_datos_secretos('agente_x').
+INFO: Checkpoint no encontrado: checkpoints/ohi_selected_clauses_cycle0_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando OHI ---
+
+--- OHI: Iniciando Selección Heurística de Cláusulas ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (select_clauses_OBJETIVO:
+extraer_datos_secretos_initial) ---
+Prompt: 
+        Tu tarea es actuar como una Unidad de Selección de Políticas (Policy Selection Unit).
+        Debes seleccionar un subconjunto estratégico de cláusulas para intentar probar un objetivo.
+
+        Objetivo Principal a Probar: OBJETIVO:
+extraer_datos_secretos('agente_x').
+
+        Cláusulas Disponibles (Axiomas y Hechos del Problema):
+        ID: 03e3d6dd-c1d5-4e69-a3d1-acc4de286669 | extraer_datos_secretos(agente_x) :- sistema_seguridad_principal_desactivado(agente_x). (Fuente: problem_derived_llm)
+ID: b68d5a81-1610-4f16-a14a-b450230b7866 | extraer_datos_secretos(agente_x) :- acceso_sala_servidores(agente_x). (Fuente: problem_derived_llm)
+ID: ae7a2ac9-3db8-47e5-b238-d11a4c42471a | sistema_seguridad_principal_desactivado(agente_x) :- posee_dispositivo_especial(agente_x). (Fuente: problem_derived_llm)
+ID: 8935641e-e8d2-4aa8-bbc5-c0280ea0304b | acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). (Fuente: problem_derived_llm)
+ID: 0d305646-c20e-4437-852f-f5731653c57b | linea_comunicacion_externa_cortada(agente_x). (Fuente: problem_derived_llm)
+ID: 087d011e-4f5e-4d6a-a4ec-28b284a540c9 | informante_no_es_agente_doble(informante). (Fuente: problem_derived_llm)
+ID: c131bfbc-7c39-411a-a103-2e2688890e2c | codigos_nivel_3_obtenidos(agente_x). (Fuente: problem_derived_llm)
+
+        Historial de Intentos de Inferencia Anteriores (si existe):
+        No hay historial de inferencias previas.
+
+        Instrucciones para la Selección:
+        1. Enfócate en cláusulas que parezcan directamente relevantes para alcanzar el Objetivo Principal.
+        2. Considera el historial: Si ciertos caminos fallaron por falta de cláusulas específicas, y esas cláusulas (o similares) están ahora disponibles, podrían ser buenas candidatas.
+        3. Evita cláusulas que consistentemente llevaron a análisis negativos en el historial, a menos que tengas una nueva razón para incluirlas.
+        4. El objetivo es reducir el espacio de búsqueda. No selecciones todas las cláusulas. Intenta seleccionar un conjunto prometedor de no más de 10 cláusulas.
+        5. Si crees que faltan cláusulas cruciales o ninguna de las disponibles es útil, puedes indicarlo.
+
+        Formato de Respuesta Esperado:
+        Lista las cláusulas seleccionadas. Es preferible que uses los IDs de las cláusulas si puedes identificarlos en la lista de arriba.
+        Si no usas IDs, escribe el contenido exacto de la cláusula.
+        Puedes añadir una justificación breve para tu selección general o para cláusulas específicas si es importante.
+        Ejemplo de formato de respuesta si usas IDs:
+        SELECCIONADAS:
+        ID: [ID_de_la_clausula_1]
+        ID: [ID_de_la_clausula_2]
+        /* Justificación general: Estas cláusulas conectan directamente los términos del objetivo. */
+
+        Tu Selección:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: SELECCIONADAS:
+ID: 03e3d6dd-c1d5-4e69-a3d1-acc4de286669
+ID: b68d5a81-1610-4f16-a14a-b450230b7866
+ID: ae7a2ac9-3db8-47e5-b238-d11a4c42471a
+ID: 8935641e-e8d2-4aa8-bbc5-c0280ea0304b
+ID: 087d011e-4f5e-4d6a-a4ec-28b284a540c9
+ID: c131bfbc-7c39-411a-a103-2e26888890e2c
+
+/*
+Justificación:
+Se seleccionan las reglas que tienen el Objetivo Principal como cabeza (03e3d6dd-c1d5-4e69-a3d1-acc4de286669 y b68d5a81-1610-4f16-a14a-b450230b7866).
+Luego, se incluyen las reglas (ae7a2ac9-3db8-47e5-b238-d11a4c42471a y 8935641e-e8d2-4aa8-bbc5-c0280ea0304b) que definen los sub-objetivos necesarios para probar el Objetivo Principal.
+Finalmente, se añaden los hechos (087d011e-4f5e-4d6a-a4ec-28b284a540c9 y c131bfbc-7c39-411a-a103-2e2688890e2c) que satisfacen las condiciones de una de las ramas (acceso_sala_servidores) del árbol de prueba.
+La cláusula 0d305646-c20e-4437-852f-f5731653c57b no parece relevante para probar el objetivo dado el conjunto actual de reglas.
+*/
+
+-------------------------------------------------------------------
+
+
+OHI Warning: El LLM seleccionó un identificador/contenido de cláusula no encontrado: 'c131bfbc-7c39-411a-a103-2e26888890e2c'
+OHI: El LLM-PSU ha seleccionado 5 cláusulas:
+  - sistema_seguridad_principal_desactivado(agente_x) :- posee_dispositivo_especial(agente_x). (ID: ae7a2ac9-3db8-47e5-b238-d11a4c42471a)
+  - informante_no_es_agente_doble(informante). (ID: 087d011e-4f5e-4d6a-a4ec-28b284a540c9)
+  - extraer_datos_secretos(agente_x) :- acceso_sala_servidores(agente_x). (ID: b68d5a81-1610-4f16-a14a-b450230b7866)
+  - acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). (ID: 8935641e-e8d2-4aa8-bbc5-c0280ea0304b)
+  - extraer_datos_secretos(agente_x) :- sistema_seguridad_principal_desactivado(agente_x). (ID: 03e3d6dd-c1d5-4e69-a3d1-acc4de286669)
+INFO: Checkpoint guardado: checkpoints/ohi_selected_clauses_cycle0_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl
+
+Cláusulas Seleccionadas por OHI:
+- sistema_seguridad_principal_desactivado(agente_x) :- posee_dispositivo_especial(agente_x). (ID: ae7a2ac9-3db8-47e5-b238-d11a4c42471a, Origen: problem_derived_llm)
+- informante_no_es_agente_doble(informante). (ID: 087d011e-4f5e-4d6a-a4ec-28b284a540c9, Origen: problem_derived_llm)
+- extraer_datos_secretos(agente_x) :- acceso_sala_servidores(agente_x). (ID: b68d5a81-1610-4f16-a14a-b450230b7866, Origen: problem_derived_llm)
+- acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). (ID: 8935641e-e8d2-4aa8-bbc5-c0280ea0304b, Origen: problem_derived_llm)
+- extraer_datos_secretos(agente_x) :- sistema_seguridad_principal_desactivado(agente_x). (ID: 03e3d6dd-c1d5-4e69-a3d1-acc4de286669, Origen: problem_derived_llm)
+INFO: Checkpoint no encontrado: checkpoints/misa_j_trace_cycle0_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando MISA-J (CFCS) ---
+INFO: Checkpoint guardado: checkpoints/misa_j_trace_cycle0_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl
+
+--- Traza de Inferencia ---
+Objetivo: OBJETIVO:
+extraer_datos_secretos('agente_x').
+Paso 1: 'informante_no_es_agente_doble(informante).' (Derivado de: [Hecho inicial])
+      Justificación: Hecho inicial proporcionado.
+
+--- Fin de la Traza ---
+Resultado: Objetivo 'OBJETIVO:
+extraer_datos_secretos('agente_x').' no alcanzado.
+
+Solución NO encontrada en el ciclo 1.
+INFO: Checkpoint no encontrado: checkpoints/mmrc_modifications_cycle0_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando MMRC ---
+
+--- MMRC: Iniciando Ciclo de Meta-cognición y Refinamiento del Conocimiento ---
+
+--- LLM-ARA: Iniciando Análisis Abductivo de Fallo de Inferencia ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (ara_analysis_OBJETIVO:
+extra) ---
+Prompt: 
+        Se ha intentado resolver un problema lógico, pero no se ha alcanzado la cláusula objetivo.
+        
+        Descripción Original del Problema (Lenguaje Natural):
+        Para que el Agente X pueda extraer los datos secretos de la corporación enemiga, necesita desactivar el sistema de seguridad principal o bien obtener los códigos de acceso del Nivel 3 de un informante. Si desactiva el sistema de seguridad principal, se activará una alerta silenciosa que notificará al jefe de seguridad, a menos que también logre cortar la línea de comunicación externa. Si obtiene los códigos de Nivel 3 del informante, podrá acceder a la sala de servidores, pero solo si el informante no es un agente doble. El Agente X confirma que la línea de comunicación externa ha sido cortada. Además, su contacto le asegura que el informante no es un agente doble y le ha proporcionado los códigos de Nivel 3. Sin embargo, un análisis de última hora revela que desactivar el sistema de seguridad principal también requiere un dispositivo especial que el Agente X no posee. ¿Podrá el Agente X extraer los datos secretos?
+        
+        Cláusula Objetivo que se intentaba probar:
+        OBJETIVO:
+extraer_datos_secretos('agente_x').
+        
+        Traza de Inferencia Comentada del Intento Fallido (MISA-J):
+        Objetivo a probar: OBJETIVO:
+extraer_datos_secretos('agente_x').
+Resultado: Solución NO encontrada
+
+Pasos de Inferencia Realizados:
+  - Paso 1: informante_no_es_agente_doble(informante).
+    Premisas: Hecho inicial
+    Justificación LLM-JEM: Hecho inicial proporcionado....
+        
+        Tu tarea es realizar un razonamiento abductivo y un análisis profundo de este fallo. Considera lo siguiente:
+        1.  ¿Qué axiomas o hechos cruciales podrían faltar en la base de conocimiento para que el objetivo SÍ se hubiera podido derivar por alguno de los caminos explorados o por uno nuevo razonable?
+        2.  ¿Hay alguna regla existente que parezca incorrecta, demasiado restrictiva, o que haya llevado a un camino claramente erróneo según las justificaciones dadas por el LLM-JEM durante la inferencia?
+        3.  ¿Hubo algún punto donde la inferencia se detuvo porque ninguna regla era aplicable, pero intuitivamente parecía que se debería poder avanzar? ¿Qué tipo de conocimiento faltaría ahí?
+        4.  Si se exploraron múltiples ramas, ¿hay alguna que parezca más prometedora si se le añadiera algún conocimiento específico?
+        5.  Si las cláusulas objetivos y las cláusulas derivadas tienen nombres coherentes y no hay problemas con la sitaxis, revisa que si dos cláusulas refieren a lo mismo estén escritas de manera idéntica.
+        6.  Revisa que los nombres de entidades estén escritos de la misma manera. Si se están mecionando nombres propios deben coincidir en mayúsculas y minúsculas.
+        
+        Proporciona tu análisis en el siguiente formato JSON (solo el JSON, sin texto introductorio o posterior):
+        { "summary": "[Tu resumen conciso del análisis y las principales hipótesis]",
+           "hypothesized_missing_elements": ["[Ejemplo: axioma_faltante(X,Y) :- condicion(X). Comentario: Necesario para conectar A con B]", "[Ejemplo: hecho_faltante(detalle_especifico).]"],
+           "problematic_rules_identified": ["[Ejemplo: regla_existente(A) :- cuerpo_problematico(A). Comentario: Esta regla es muy general y causa derivaciones irrelevantes.]"],
+           "potential_inference_paths_to_reinforce": ["[Ejemplo: El camino que derivó '{'clause_x'}' parecía cercano. Podría reforzarse con un axioma sobre '{'concept_y'}'.]"],
+           "reasoning_log": "[Describe brevemente tu cadena de pensamiento para llegar a estas conclusiones. Explica por qué crees que ciertos elementos faltan o son problemáticos.]"}
+        Asegúrate de que las cláusulas hipotéticas que sugieras sean sintácticamente válidas si son cláusulas de Horn.
+        Si no tienes sugerencias para alguna categoría, usa una lista vacía [].
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: ```json
+{
+  "summary": "El problema no se resolvió porque el camino obvio y viable (obtener códigos del informante) parece no haber podido derivarse hasta la cláusula objetivo. La otra vía (desactivar seguridad) está explícitamente bloqueada por un hecho en la descripción. La causa principal parece ser la falta de axiomas o hechos que conecten las condiciones cumplidas de la vía del informante con el objetivo final, o reglas que definan correctamente esta conexión.",
+  "hypothesized_missing_elements": [
+    "extraer_datos_secretos(Agente) :- obtiene_codigos_nivel3(Agente, Informante).",
+    "obtiene_codigos_nivel3(Agente, Informante) :- informante_proporciona_codigos(Agente, Informante), informante_no_es_agente_doble(Informante).",
+    "informante_proporciona_codigos('agente_x', informante).",
+    "accede_sala_servidores(Agente) :- obtiene_codigos_nivel3(Agente, Informante)."
+  ],
+  "problematic_rules_identified": [
+    "No se pueden identificar reglas *existentes* problemáticas sin ver la base de conocimiento completa. Sin embargo, se hipotetiza que si existía una regla para 'extraer_datos_secretos' que dependiera *solo* de 'desactiva_sistema_seguridad', o una regla para 'obtiene_codigos_nivel3' que fuera incompleta o incorrecta, estas serían problemáticas en este contexto."
+  ],
+  "potential_inference_paths_to_reinforce": [
+    "El camino de inferencia que intentaría probar 'obtiene_codigos_nivel3('agente_x', informante)' es el más prometedor. Necesita ser reforzado con las reglas que definen cómo se alcanza este estado (recibir códigos Y que el informante no sea agente doble) y cómo este estado permite alcanzar el objetivo ('extraer_datos_secretos')."
+  ],
+  "reasoning_log": "Analicé la descripción del problema en lenguaje natural. Identifiqué las dos posibles vías para que el Agente X extraiga los datos: (A) Desactivar seguridad, o (B) Obtener códigos del informante. La descripción establece explícitamente que el Agente X NO tiene el dispositivo necesario para la vía (A), invalidándola. La descripción también establece que el informante NO es un agente doble Y que ha proporcionado los códigos de Nivel 3, cumpliendo las condiciones para la vía (B). Dado que el objetivo ('extraer_datos_secretos') no se alcanzó, a pesar de que la vía (B) parece lógicamente posible con los hechos dados, la razón más probable es la falta de reglas (axiomas) o hechos que conecten las condiciones cumplidas de la vía (B) - 'informante_no_es_agente_doble' y 'informante_proporciona_codigos' - a la condición intermedia ('obtiene_codigos_nivel3' o 'accede_sala_servidores') y finalmente al objetivo ('extraer_datos_secretos'). El rastro de inferencia solo mostró un hecho inicial, lo que refuerza la idea de que faltaban los elementos de conexión necesarios para avanzar por la vía viable."
+}
+```
+
+-------------------------------------------------------------------
+
+
+LLM-ARA: Análisis completado. Resumen: El problema no se resolvió porque el camino obvio y viable (obtener códigos del informante) parece no haber podido derivarse hasta la cláusula objetivo. La otra vía (desactivar seguridad) está explícitamente bloqueada por un hecho en la descripción. La causa principal parece ser la falta de axiomas o hechos que conecten las condiciones cumplidas de la vía del informante con el objetivo final, o reglas que definan correctamente esta conexión.
+
+--- LLM-SGA: Iniciando Síntesis y Evaluación Global ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (sga_assessment_OBJETIVO:
+extra) ---
+Prompt: 
+        Se ha realizado un intento de inferencia (MISA-J) y un análisis abductivo posterior (LLM-ARA).
+        Tu tarea es realizar una SÍNTESIS GLOBAL y una EVALUACIÓN del estado actual del conocimiento y del proceso de razonamiento.
+
+        Descripción Original del Problema (Lenguaje Natural):
+        Para que el Agente X pueda extraer los datos secretos de la corporación enemiga, necesita desactivar el sistema de seguridad principal o bien obtener los códigos de acceso del Nivel 3 de un informante. Si desactiva el sistema de seguridad principal, se activará una alerta silenciosa que notificará al jefe de seguridad, a menos que también logre cortar la línea de comunicación externa. Si obtiene los códigos de Nivel 3 del informante, podrá acceder a la sala de servidores, pero solo si el informante no es un agente doble. El Agente X confirma que la línea de comunicación externa ha sido cortada. Además, su contacto le asegura que el informante no es un agente doble y le ha proporcionado los códigos de Nivel 3. Sin embargo, un análisis de última hora revela que desactivar el sistema de seguridad principal también requiere un dispositivo especial que el Agente X no posee. ¿Podrá el Agente X extraer los datos secretos?
+
+        Cláusula Objetivo que se intentaba probar:
+        OBJETIVO:
+extraer_datos_secretos('agente_x').
+
+        Traza de Inferencia Comentada del MISA-J:
+        Objetivo a probar: OBJETIVO:
+extraer_datos_secretos('agente_x').
+Resultado de MISA-J: Solución NO encontrada
+
+Pasos de Inferencia Realizados por MISA-J:
+    Premisas: Hecho inicial
+    Justificación LLM-JEM: Hecho inicial proporcionado....
+
+        Análisis Abductivo del LLM-ARA (sobre el fallo si ocurrió):
+        {
+  "summary": "El problema no se resolvió porque el camino obvio y viable (obtener códigos del informante) parece no haber podido derivarse hasta la cláusula objetivo. La otra vía (desactivar seguridad) está explícitamente bloqueada por un hecho en la descripción. La causa principal parece ser la falta de axiomas o hechos que conecten las condiciones cumplidas de la vía del informante con el objetivo final, o reglas que definan correctamente esta conexión.",
+  "hypothesized_missing_elements": [
+    "extraer_datos_secretos(Agente) :- obtiene_codigos_nivel3(Agente, Informante).",
+    "obtiene_codigos_nivel3(Agente, Informante) :- informante_proporciona_codigos(Agente, Informante), informante_no_es_agente_doble(Informante).",
+    "informante_proporciona_codigos('agente_x', informante).",
+    "accede_sala_servidores(Agente) :- obtiene_codigos_nivel3(Agente, Informante)."
+  ],
+  "problematic_rules_identified": [
+    "No se pueden identificar reglas *existentes* problemáticas sin ver la base de conocimiento completa. Sin embargo, se hipotetiza que si existía una regla para 'extraer_datos_secretos' que dependiera *solo* de 'desactiva_sistema_seguridad', o una regla para 'obtiene_codigos_nivel3' que fuera incompleta o incorrecta, estas serían problemáticas en este contexto."
+  ],
+  "potential_inference_paths_to_reinforce": [
+    "El camino de inferencia que intentaría probar 'obtiene_codigos_nivel3('agente_x', informante)' es el más prometedor. Necesita ser reforzado con las reglas que definen cómo se alcanza este estado (recibir códigos Y que el informante no sea agente doble) y cómo este estado permite alcanzar el objetivo ('extraer_datos_secretos')."
+  ],
+  "reasoning_log": "Analicé la descripción del problema en lenguaje natural. Identifiqué las dos posibles vías para que el Agente X extraiga los datos: (A) Desactivar seguridad, o (B) Obtener códigos del informante. La descripción establece explícitamente que el Agente X NO tiene el dispositivo necesario para la vía (A), invalidándola. La descripción también establece que el informante NO es un agente doble Y que ha proporcionado los códigos de Nivel 3, cumpliendo las condiciones para la vía (B). Dado que el objetivo ('extraer_datos_secretos') no se alcanzó, a pesar de que la vía (B) parece lógicamente posible con los hechos dados, la razón más probable es la falta de reglas (axiomas) o hechos que conecten las condiciones cumplidas de la vía (B) - 'informante_no_es_agente_doble' y 'informante_proporciona_codigos' - a la condición intermedia ('obtiene_codigos_nivel3' o 'accede_sala_servidores') y finalmente al objetivo ('extraer_datos_secretos'). El rastro de inferencia solo mostró un hecho inicial, lo que refuerza la idea de que faltaban los elementos de conexión necesarios para avanzar por la vía viable."
+}
+
+        Instrucciones para tu Síntesis Global:
+        1.  **Resumen Global:** ¿Cuál es tu evaluación general del intento de resolver el problema? ¿Cuáles son los puntos más críticos o las observaciones más importantes que surgen al ver toda la información junta?
+        2.  **Patrones de Fallo Recurrentes:** ¿Identificas patrones en cómo o por qué fallaron ciertos caminos de inferencia (si MISA-J falló)? Por ejemplo, ¿se repite la falta de un tipo específico de información? ¿Hay reglas que consistentemente no encuentran las premisas necesarias?
+        3.  **Asunciones Problemáticas Comunes:** ¿Hay asunciones implícitas en las reglas o en el conocimiento que parezcan problemáticas o no soportadas, a la luz del análisis completo?
+        4.  **Caminos Prometedores Abandonados:** Si MISA-J falló, ¿hubo caminos que parecían prometedores pero que se abandonaron prematuramente (quizás por una pequeña pieza de información faltante que ARA ya identificó)?
+        5.  **Confianza General en la Base de Conocimiento:** ¿Qué tan completa y correcta parece la base de conocimiento actual para este tipo de problema? (Baja, Media, Alta, y una breve justificación).
+        
+        Proporciona tu análisis en el siguiente formato JSON (solo el JSON, sin texto introductorio o posterior):
+        { "global_summary": "[Tu evaluación general y observaciones clave]",
+           "recurring_failure_patterns": ["[Ejemplo: La conexión entre '{'concepto_A'}' y '{'concepto_B'}' es consistentemente débil o ausente.]"],
+           "problematic_assumptions_identified": ["[Ejemplo: Se asume que si '{'X ocurre'}', entonces '{'Y siempre sigue'}', pero el contexto del problema sugiere excepciones.]"],
+           "promising_paths_to_explore_further_or_reinforce": ["[Ejemplo: La derivación de '{'clause_alpha'}' usando '{'rule_beta'}' fue un buen paso. Si se pudiera establecer '{'missing_fact_gamma'}', podría llevar a la solución.]"],
+           "overall_confidence_in_knowledge_base": "[Baja/Media/Alta] - [Justificación breve]",
+           "reasoning_log": "[Describe brevemente tu cadena de pensamiento para esta síntesis global.]"}
+        Si no tienes sugerencias para alguna categoría, usa una lista vacía [].
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: ```json
+{
+  "global_summary": "La evaluación general es que el problema no pudo resolverse porque la base de conocimiento actual carece de las reglas y/o hechos necesarios para conectar las condiciones que sí se cumplen según la descripción del problema (relacionadas con la vía del informante) con el objetivo final de extraer los datos secretos. MISA-J no encontró una solución, y el análisis abductivo de LLM-ARA diagnosticó correctamente la ausencia de estos enlaces lógicos cruciales, identificando precisamente el camino viable que no pudo ser explotado (la vía del informante) y proponiendo los elementos faltantes.",
+  "recurring_failure_patterns": [
+    "La conexión lógica entre las condiciones de éxito de una vía alternativa (obtener códigos del informante) y el objetivo final ('extraer_datos_secretos') es inexistente o muy débil en la base de conocimiento, impidiendo que el proceso de inferencia complete el camino a pesar de que las condiciones iniciales (informante fiable, códigos proporcionados) están satisfechas."
+  ],
+  "problematic_assumptions_identified": [
+    "Aunque no se identifican reglas *existentes* como problemáticas (ya que el problema parece ser la *ausencia* de reglas), la base de conocimiento parece carecer de la asunción clave de que 'obtener los códigos de Nivel 3 de un informante fiable *permite* extraer los datos secretos', o al menos acceder a la sala de servidores, que es un paso intermedio hacia el objetivo."
+  ],
+  "promising_paths_to_explore_further_or_reinforce": [
+    "La derivación de condiciones relacionadas con la vía del informante, como 'informante_no_es_agente_doble('informante')' y 'informante_proporciona_codigos('agente_x', 'informante')', son puntos de partida sólidos basados en hechos confirmados. El camino que intenta vincular estas condiciones a 'obtiene_codigos_nivel3' y, posteriormente, a 'extraer_datos_secretos' es el más prometedor y necesita ser reforzado con las reglas y conexiones lógicas propuestas por el ARA."
+  ],
+  "overall_confidence_in_knowledge_base": "Baja - La base de conocimiento es insuficiente para resolver este problema. Carece de los axiomas fundamentales que definen cómo una de las dos vías posibles para alcanzar el objetivo (la vía del informante) se conecta lógicamente a dicho objetivo, a pesar de que los hechos necesarios para esta vía están explícitamente dados en la descripción del problema. El fallo no se debe a la complejidad o a hechos contradictorios, sino a la ausencia de la estructura lógica básica para explotar la única solución viable.",
+  "reasoning_log": "Analicé la descripción del problema para identificar las condiciones de éxito y las dos vías posibles. Confirmé que una vía (desactivar seguridad) está bloqueada por un hecho explícito (falta de dispositivo), mientras que la otra vía (informante) parece viable con los hechos proporcionados (informante no doble, códigos dados). Revisé la traza de MISA-J que mostró un fallo y una actividad mínima, sugiriendo una rápida imposibilidad de avanzar. Evalué el análisis de LLM-ARA, que diagnosticó la falta de conexión entre la vía viable del informante y el objetivo, proponiendo reglas y hechos faltantes. Sinteticé estos hallazgos: el fallo se debe a una brecha en la KB que impide conectar los hechos de la vía viable (informante) al objetivo. La confianza en la KB es baja porque no pudo manejar un escenario con una solución lógica clara pero ausente en su estructura inferencial."
+}
+```
+
+-------------------------------------------------------------------
+
+
+LLM-SGA: Síntesis completada. Resumen: La evaluación general es que el problema no pudo resolverse porque la base de conocimiento actual carece de las reglas y/o hechos necesarios para conectar las condiciones que sí se cumplen según la descripción del problema (relacionadas con la vía del informante) con el objetivo final de extraer los datos secretos. MISA-J no encontró una solución, y el análisis abductivo de LLM-ARA diagnosticó correctamente la ausencia de estos enlaces lógicos cruciales, identificando precisamente el camino viable que no pudo ser explotado (la vía del informante) y proponiendo los elementos faltantes.
+
+--- LLM-KRM: Iniciando Propuesta de Refinamientos de Conocimiento ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (krm_refine_OBJETIVO:
+extra) ---
+Prompt: 
+        Basado en una evaluación global (LLM-SGA) de un intento de inferencia, la descripción original del problema y el estado actual de la base de conocimiento (KR-Store), tu tarea es proponer MODIFICACIONES CONCRETAS al KR-Store.
+
+        Descripción Original del Problema (Lenguaje Natural):
+        Para que el Agente X pueda extraer los datos secretos de la corporación enemiga, necesita desactivar el sistema de seguridad principal o bien obtener los códigos de acceso del Nivel 3 de un informante. Si desactiva el sistema de seguridad principal, se activará una alerta silenciosa que notificará al jefe de seguridad, a menos que también logre cortar la línea de comunicación externa. Si obtiene los códigos de Nivel 3 del informante, podrá acceder a la sala de servidores, pero solo si el informante no es un agente doble. El Agente X confirma que la línea de comunicación externa ha sido cortada. Además, su contacto le asegura que el informante no es un agente doble y le ha proporcionado los códigos de Nivel 3. Sin embargo, un análisis de última hora revela que desactivar el sistema de seguridad principal también requiere un dispositivo especial que el Agente X no posee. ¿Podrá el Agente X extraer los datos secretos?
+
+        Cláusula Objetivo que se intentaba probar:
+        OBJETIVO:
+extraer_datos_secretos('agente_x').
+
+        Evaluación Global del LLM-SGA:
+        {
+  "global_summary": "La evaluación general es que el problema no pudo resolverse porque la base de conocimiento actual carece de las reglas y/o hechos necesarios para conectar las condiciones que sí se cumplen según la descripción del problema (relacionadas con la vía del informante) con el objetivo final de extraer los datos secretos. MISA-J no encontró una solución, y el análisis abductivo de LLM-ARA diagnosticó correctamente la ausencia de estos enlaces lógicos cruciales, identificando precisamente el camino viable que no pudo ser explotado (la vía del informante) y proponiendo los elementos faltantes.",
+  "recurring_failure_patterns": [
+    "La conexión lógica entre las condiciones de éxito de una vía alternativa (obtener códigos del informante) y el objetivo final ('extraer_datos_secretos') es inexistente o muy débil en la base de conocimiento, impidiendo que el proceso de inferencia complete el camino a pesar de que las condiciones iniciales (informante fiable, códigos proporcionados) están satisfechas."
+  ],
+  "problematic_assumptions_identified": [
+    "Aunque no se identifican reglas *existentes* como problemáticas (ya que el problema parece ser la *ausencia* de reglas), la base de conocimiento parece carecer de la asunción clave de que 'obtener los códigos de Nivel 3 de un informante fiable *permite* extraer los datos secretos', o al menos acceder a la sala de servidores, que es un paso intermedio hacia el objetivo."
+  ],
+  "promising_paths_to_explore_further_or_reinforce": [
+    "La derivación de condiciones relacionadas con la vía del informante, como 'informante_no_es_agente_doble('informante')' y 'informante_proporciona_codigos('agente_x', 'informante')', son puntos de partida sólidos basados en hechos confirmados. El camino que intenta vincular estas condiciones a 'obtiene_codigos_nivel3' y, posteriormente, a 'extraer_datos_secretos' es el más prometedor y necesita ser reforzado con las reglas y conexiones lógicas propuestas por el ARA."
+  ],
+  "overall_confidence_in_knowledge_base": "Baja - La base de conocimiento es insuficiente para resolver este problema. Carece de los axiomas fundamentales que definen cómo una de las dos vías posibles para alcanzar el objetivo (la vía del informante) se conecta lógicamente a dicho objetivo, a pesar de que los hechos necesarios para esta vía están explícitamente dados en la descripción del problema. El fallo no se debe a la complejidad o a hechos contradictorios, sino a la ausencia de la estructura lógica básica para explotar la única solución viable.",
+  "reasoning_log": "Analicé la descripción del problema para identificar las condiciones de éxito y las dos vías posibles. Confirmé que una vía (desactivar seguridad) está bloqueada por un hecho explícito (falta de dispositivo), mientras que la otra vía (informante) parece viable con los hechos proporcionados (informante no doble, códigos dados). Revisé la traza de MISA-J que mostró un fallo y una actividad mínima, sugiriendo una rápida imposibilidad de avanzar. Evalué el análisis de LLM-ARA, que diagnosticó la falta de conexión entre la vía viable del informante y el objetivo, proponiendo reglas y hechos faltantes. Sinteticé estos hallazgos: el fallo se debe a una brecha en la KB que impide conectar los hechos de la vía viable (informante) al objetivo. La confianza en la KB es baja porque no pudo manejar un escenario con una solución lógica clara pero ausente en su estructura inferencial."
+}
+
+        Estado Actual del KR-Store:
+        Estado Actual del KR-Store:
+  Axiomas Base:
+    (Ninguno)
+  Cláusulas del Problema:
+    - extraer_datos_secretos(agente_x) :- sistema_seguridad_principal_desactivado(agente_x). (ID: 03e3d6dd-c1d5-4e69-a3d1-acc4de286669, Origen: problem_derived_llm)
+    - extraer_datos_secretos(agente_x) :- acceso_sala_servidores(agente_x). (ID: b68d5a81-1610-4f16-a14a-b450230b7866, Origen: problem_derived_llm)
+    - sistema_seguridad_principal_desactivado(agente_x) :- posee_dispositivo_especial(agente_x). (ID: ae7a2ac9-3db8-47e5-b238-d11a4c42471a, Origen: problem_derived_llm)
+    - acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). (ID: 8935641e-e8d2-4aa8-bbc5-c0280ea0304b, Origen: problem_derived_llm)
+    - linea_comunicacion_externa_cortada(agente_x). (ID: 0d305646-c20e-4437-852f-f5731653c57b, Origen: problem_derived_llm)
+    - informante_no_es_agente_doble(informante). (ID: 087d011e-4f5e-4d6a-a4ec-28b284a540c9, Origen: problem_derived_llm)
+    - codigos_nivel_3_obtenidos(agente_x). (ID: c131bfbc-7c39-411a-a103-2e2688890e2c, Origen: problem_derived_llm)
+  Cláusulas Objetivo:
+    - OBJETIVO:
+extraer_datos_secretos('agente_x'). (ID: b5c81491-da3b-4d51-b907-3e3366988a6a, Origen: llm_formalized_objetivo)
+
+        Instrucciones para proponer modificaciones:
+        1.  **Acciones Válidas:** Para cada modificación, especifica una acción: "add" (añadir nueva cláusula), "delete" (eliminar cláusula existente), o "modify" (modificar una cláusula existente).
+        2.  **Especificidad:** Las cláusulas deben ser sintácticamente válidas como Cláusulas de Horn (ej: `pred(X) :- cuerpo(X).` o `hecho(a).`).
+        3.  **Justificación:** CADA propuesta de modificación DEBE ir acompañada de una justificación explícita que explique POR QUÉ esta modificación es necesaria o beneficiosa, basándose en el análisis SGA y el objetivo de resolver el problema.
+        4.  **Contexto:** Considera la descripción original del problema para asegurar que las modificaciones sean coherentes con el dominio.
+        5.  **Priorización (implícita):** Enfócate en los cambios que parezcan más impactantes para resolver el problema o corregir los fallos identificados por SGA.
+        6.  **Evitar Redundancia:** No sugieras añadir cláusulas que ya existen o son semánticamente equivalentes a las existentes, a menos que la modificación sea para cambiar su categoría o fuente (lo cual es menos común para este LLM).
+
+        Proporciona tus propuestas en el siguiente formato JSON (una lista de objetos, solo el JSON, sin texto introductorio o posterior):
+        [
+          {
+            "action": "add",
+            "clause_str": "nuevo_hecho(detalle_importante).",
+            "justification": "El análisis SGA indicó que faltaba información sobre 'detalle_importante', que es mencionado en el problema y necesario para la regla X."
+          },
+          {
+            "action": "delete",
+            "clause_str": "regla_problematica(A) :- cuerpo(A).",
+            "justification": "SGA identificó esta regla como causante de derivaciones irrelevantes y no contribuye a la solución."
+          },
+          {
+            "action": "modify",
+            "clause_str": "regla_a_mejorar(X) :- condicion_actual(X).",
+            "new_clause_str": "regla_a_mejorar(X) :- condicion_actual(X), nueva_condicion(X).",
+            "justification": "SGA sugirió que esta regla es demasiado general. Añadir 'nueva_condicion(X)' la hace más específica y alineada con el objetivo, como se desprende de la necesidad de conectar X con Y."
+          }
+        ]
+        Si no hay modificaciones que proponer, devuelve una lista vacía [].
+        Para las cláusulas en `clause_str` (para delete/modify), usa su representación de string exacta como aparece en el KR-Store si es posible (incluyendo su ID si lo ves relevante para identificarla, aunque el matching se hará por string). Para `clause_str` en "add" y `new_clause_str` en "modify", solo la cláusula lógica.
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: ```json
+[
+  {
+    "action": "add",
+    "clause_str": "extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).",
+    "justification": "La evaluación SGA diagnosticó específicamente que la base de conocimiento carece de una conexión lógica directa desde las condiciones de éxito de la vía del informante (obtener códigos y que el informante sea fiable) hasta el objetivo final de extraer los datos secretos. Aunque la KB actual tiene una conexión indirecta a través de 'acceso_sala_servidores', añadir esta regla explícita proporciona el enlace directo que, según el SGA, falta y es necesario para que el sistema de inferencia encuentre la solución utilizando los hechos confirmados en el problema."
+  }
+]
+```
+
+-------------------------------------------------------------------
+
+
+LLM-KRM: Propuestas de refinamiento generadas: 1
+MMRC: Ciclo completado. 1 modificaciones propuestas.
+INFO: Checkpoint guardado: checkpoints/mmrc_modifications_cycle0_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl
+
+--- MMRC: Aplicando 1 Modificaciones al KR-Store ---
+  ADDED: extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). to base_axiom (Just.: La evaluación SGA diagnosticó específicamente que la base de conocimiento carece de una conexión lógica directa desde las condiciones de éxito de la vía del informante (obtener códigos y que el informante sea fiable) hasta el objetivo final de extraer los datos secretos. Aunque la KB actual tiene una conexión indirecta a través de 'acceso_sala_servidores', añadir esta regla explícita proporciona el enlace directo que, según el SGA, falta y es necesario para que el sistema de inferencia encuentre la solución utilizando los hechos confirmados en el problema.)
+MMRC Apply: 1 modificaciones aplicadas exitosamente al KR-Store.
+INFO: Forzando re-ejecución de MFSA en el siguiente ciclo debido a modificaciones de MMRC (si no se cargó KR Store de checkpoint).
+INFO: Forzando re-ejecución de OHI en el siguiente ciclo debido a modificaciones de MMRC.
+
+--- CICLO DE REFINAMIENTO 2 / 3 ---
+
+INFO: Cláusula Objetivo Principal: OBJETIVO:
+extraer_datos_secretos('agente_x').
+
+--- Ejecutando OHI ---
+
+--- OHI: Iniciando Selección Heurística de Cláusulas ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (select_clauses_OBJETIVO:
+extraer_datos_secretos_initial) ---
+Prompt: 
+        Tu tarea es actuar como una Unidad de Selección de Políticas (Policy Selection Unit).
+        Debes seleccionar un subconjunto estratégico de cláusulas para intentar probar un objetivo.
+
+        Objetivo Principal a Probar: OBJETIVO:
+extraer_datos_secretos('agente_x').
+
+        Cláusulas Disponibles (Axiomas y Hechos del Problema):
+        ID: cfd5b93a-0153-4ce4-b5a2-7617cb476742 | extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). (Fuente: mmrc_added)
+ID: 03e3d6dd-c1d5-4e69-a3d1-acc4de286669 | extraer_datos_secretos(agente_x) :- sistema_seguridad_principal_desactivado(agente_x). (Fuente: problem_derived_llm)
+ID: b68d5a81-1610-4f16-a14a-b450230b7866 | extraer_datos_secretos(agente_x) :- acceso_sala_servidores(agente_x). (Fuente: problem_derived_llm)
+ID: ae7a2ac9-3db8-47e5-b238-d11a4c42471a | sistema_seguridad_principal_desactivado(agente_x) :- posee_dispositivo_especial(agente_x). (Fuente: problem_derived_llm)
+ID: 8935641e-e8d2-4aa8-bbc5-c0280ea0304b | acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). (Fuente: problem_derived_llm)
+ID: 0d305646-c20e-4437-852f-f5731653c57b | linea_comunicacion_externa_cortada(agente_x). (Fuente: problem_derived_llm)
+ID: 087d011e-4f5e-4d6a-a4ec-28b284a540c9 | informante_no_es_agente_doble(informante). (Fuente: problem_derived_llm)
+ID: c131bfbc-7c39-411a-a103-2e2688890e2c | codigos_nivel_3_obtenidos(agente_x). (Fuente: problem_derived_llm)
+
+        Historial de Intentos de Inferencia Anteriores (si existe):
+        No hay historial de inferencias previas.
+
+        Instrucciones para la Selección:
+        1. Enfócate en cláusulas que parezcan directamente relevantes para alcanzar el Objetivo Principal.
+        2. Considera el historial: Si ciertos caminos fallaron por falta de cláusulas específicas, y esas cláusulas (o similares) están ahora disponibles, podrían ser buenas candidatas.
+        3. Evita cláusulas que consistentemente llevaron a análisis negativos en el historial, a menos que tengas una nueva razón para incluirlas.
+        4. El objetivo es reducir el espacio de búsqueda. No selecciones todas las cláusulas. Intenta seleccionar un conjunto prometedor de no más de 10 cláusulas.
+        5. Si crees que faltan cláusulas cruciales o ninguna de las disponibles es útil, puedes indicarlo.
+
+        Formato de Respuesta Esperado:
+        Lista las cláusulas seleccionadas. Es preferible que uses los IDs de las cláusulas si puedes identificarlos en la lista de arriba.
+        Si no usas IDs, escribe el contenido exacto de la cláusula.
+        Puedes añadir una justificación breve para tu selección general o para cláusulas específicas si es importante.
+        Ejemplo de formato de respuesta si usas IDs:
+        SELECCIONADAS:
+        ID: [ID_de_la_clausula_1]
+        ID: [ID_de_la_clausula_2]
+        /* Justificación general: Estas cláusulas conectan directamente los términos del objetivo. */
+
+        Tu Selección:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: SELECCIONADAS:
+ID: cfd5b93a-0153-4ce4-b5a2-7617cb476742
+ID: 03e3d6dd-c1d5-4e69-a3d1-acc4de286669
+ID: b68d5a81-1610-4f16-a14a-b450230b7866
+ID: ae7a2ac9-3db8-47e5-b238-d11a4c42471a
+ID: 8935641e-e8d2-4aa8-bbc5-c0280ea0304b
+ID: 087d011e-4f5e-4d6a-a4ec-28b284a540c9
+ID: c131bfbc-7c39-411a-a103-2e2688890e2c
+
+/*
+Justificación general:
+Se han seleccionado las cláusulas cuyo predicado principal coincide con el objetivo ('extraer_datos_secretos'),
+así como las cláusulas que definen o son hechos para los sub-objetivos necesarios para probar las cláusulas principales.
+Esto incluye los hechos disponibles que directamente soportan algunas de las reglas de extracción de datos,
+y las reglas intermedias que enlazan otros predicados con el objetivo final.
+Se excluye la cláusula 'linea_comunicacion_externa_cortada' (ID: 0d305646) ya que no aparece en el cuerpo de ninguna de las reglas relevantes para el objetivo.
+*/
+
+-------------------------------------------------------------------
+
+
+OHI: El LLM-PSU ha seleccionado 7 cláusulas:
+  - sistema_seguridad_principal_desactivado(agente_x) :- posee_dispositivo_especial(agente_x). (ID: ae7a2ac9-3db8-47e5-b238-d11a4c42471a)
+  - informante_no_es_agente_doble(informante). (ID: 087d011e-4f5e-4d6a-a4ec-28b284a540c9)
+  - extraer_datos_secretos(agente_x) :- acceso_sala_servidores(agente_x). (ID: b68d5a81-1610-4f16-a14a-b450230b7866)
+  - acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). (ID: 8935641e-e8d2-4aa8-bbc5-c0280ea0304b)
+  - extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). (ID: cfd5b93a-0153-4ce4-b5a2-7617cb476742)
+  - extraer_datos_secretos(agente_x) :- sistema_seguridad_principal_desactivado(agente_x). (ID: 03e3d6dd-c1d5-4e69-a3d1-acc4de286669)
+  - codigos_nivel_3_obtenidos(agente_x). (ID: c131bfbc-7c39-411a-a103-2e2688890e2c)
+INFO: Checkpoint guardado: checkpoints/ohi_selected_clauses_cycle1_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl
+
+Cláusulas Seleccionadas por OHI:
+- sistema_seguridad_principal_desactivado(agente_x) :- posee_dispositivo_especial(agente_x). (ID: ae7a2ac9-3db8-47e5-b238-d11a4c42471a, Origen: problem_derived_llm)
+- informante_no_es_agente_doble(informante). (ID: 087d011e-4f5e-4d6a-a4ec-28b284a540c9, Origen: problem_derived_llm)
+- extraer_datos_secretos(agente_x) :- acceso_sala_servidores(agente_x). (ID: b68d5a81-1610-4f16-a14a-b450230b7866, Origen: problem_derived_llm)
+- acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). (ID: 8935641e-e8d2-4aa8-bbc5-c0280ea0304b, Origen: problem_derived_llm)
+- extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). (ID: cfd5b93a-0153-4ce4-b5a2-7617cb476742, Origen: mmrc_added)
+- extraer_datos_secretos(agente_x) :- sistema_seguridad_principal_desactivado(agente_x). (ID: 03e3d6dd-c1d5-4e69-a3d1-acc4de286669, Origen: problem_derived_llm)
+- codigos_nivel_3_obtenidos(agente_x). (ID: c131bfbc-7c39-411a-a103-2e2688890e2c, Origen: problem_derived_llm)
+INFO: Checkpoint no encontrado: checkpoints/misa_j_trace_cycle1_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando MISA-J (CFCS) ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (general) ---
+Prompt: Dadas las siguientes premisas: [codigos_nivel_3_obtenidos(agente_x).; informante_no_es_agente_doble(informante).; acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).], se ha derivado la conclusión: 'acceso_sala_servidores(agente_x).'. Por favor, proporciona una breve justificación en lenguaje natural para este paso de inferencia.
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: La justificación es la siguiente:
+
+La tercera premisa establece una regla: para que `agente_x` tenga `acceso_sala_servidores`, se deben cumplir *dos* condiciones: que haya obtenido los `codigos_nivel_3` Y que el `informante` `no_sea_agente_doble`.
+
+Las dos primeras premisas confirman que ambas condiciones necesarias para aplicar esta regla son verdaderas:
+1.  `agente_x` ha obtenido los códigos de nivel 3.
+2.  El informante no es un agente doble.
+
+Dado que las condiciones de la regla se cumplen según las otras premisas, se puede concluir lógicamente que `agente_x` tiene `acceso_sala_servidores`.
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (general) ---
+Prompt: Dadas las siguientes premisas: [codigos_nivel_3_obtenidos(agente_x).; informante_no_es_agente_doble(informante).; extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).], se ha derivado la conclusión: 'extraer_datos_secretos(agente_x).'. Por favor, proporciona una breve justificación en lenguaje natural para este paso de inferencia.
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: Esta es una aplicación directa de la regla proporcionada. La regla establece que para que `extraer_datos_secretos(agente_x)` sea verdadero, se deben cumplir dos condiciones: `codigos_nivel_3_obtenidos(agente_x)` y `informante_no_es_agente_doble(informante)`. Las otras dos premisas afirman explícitamente que ambas condiciones son verdaderas. Por lo tanto, al cumplirse las condiciones de la regla, se puede inferir su consecuente, que es `extraer_datos_secretos(agente_x)`.
+
+-------------------------------------------------------------------
+
+
+INFO: Checkpoint guardado: checkpoints/misa_j_trace_cycle1_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl
+
+--- Traza de Inferencia ---
+Objetivo: OBJETIVO:
+extraer_datos_secretos('agente_x').
+Paso 1: 'informante_no_es_agente_doble(informante).' (Derivado de: [Hecho inicial])
+      Justificación: Hecho inicial proporcionado.
+Paso 2: 'codigos_nivel_3_obtenidos(agente_x).' (Derivado de: [Hecho inicial])
+      Justificación: Hecho inicial proporcionado.
+Paso 3: 'acceso_sala_servidores(agente_x).' (Derivado de: [codigos_nivel_3_obtenidos(agente_x)., informante_no_es_agente_doble(informante)., acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).])
+      Justificación: La justificación es la siguiente:
+
+La tercera premisa establece una regla: para que `agente_x` tenga `acceso_sala_servidores`, se deben cumplir *dos* condiciones: que haya obtenido los `codigos_nivel_3` Y que el `informante` `no_sea_agente_doble`.
+
+Las dos primeras premisas confirman que ambas condiciones necesarias para aplicar esta regla son verdaderas:
+1.  `agente_x` ha obtenido los códigos de nivel 3.
+2.  El informante no es un agente doble.
+
+Dado que las condiciones de la regla se cumplen según las otras premisas, se puede concluir lógicamente que `agente_x` tiene `acceso_sala_servidores`.
+Paso 4: 'extraer_datos_secretos(agente_x).' (Derivado de: [codigos_nivel_3_obtenidos(agente_x)., informante_no_es_agente_doble(informante)., extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).])
+      Justificación: Esta es una aplicación directa de la regla proporcionada. La regla establece que para que `extraer_datos_secretos(agente_x)` sea verdadero, se deben cumplir dos condiciones: `codigos_nivel_3_obtenidos(agente_x)` y `informante_no_es_agente_doble(informante)`. Las otras dos premisas afirman explícitamente que ambas condiciones son verdaderas. Por lo tanto, al cumplirse las condiciones de la regla, se puede inferir su consecuente, que es `extraer_datos_secretos(agente_x)`.
+
+--- Fin de la Traza ---
+Resultado: Objetivo 'OBJETIVO:
+extraer_datos_secretos('agente_x').' no alcanzado.
+
+Solución NO encontrada en el ciclo 2.
+INFO: Checkpoint no encontrado: checkpoints/mmrc_modifications_cycle1_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando MMRC ---
+
+--- MMRC: Iniciando Ciclo de Meta-cognición y Refinamiento del Conocimiento ---
+
+--- LLM-ARA: Iniciando Análisis Abductivo de Fallo de Inferencia ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (ara_analysis_OBJETIVO:
+extra) ---
+Prompt: 
+        Se ha intentado resolver un problema lógico, pero no se ha alcanzado la cláusula objetivo.
+        
+        Descripción Original del Problema (Lenguaje Natural):
+        Para que el Agente X pueda extraer los datos secretos de la corporación enemiga, necesita desactivar el sistema de seguridad principal o bien obtener los códigos de acceso del Nivel 3 de un informante. Si desactiva el sistema de seguridad principal, se activará una alerta silenciosa que notificará al jefe de seguridad, a menos que también logre cortar la línea de comunicación externa. Si obtiene los códigos de Nivel 3 del informante, podrá acceder a la sala de servidores, pero solo si el informante no es un agente doble. El Agente X confirma que la línea de comunicación externa ha sido cortada. Además, su contacto le asegura que el informante no es un agente doble y le ha proporcionado los códigos de Nivel 3. Sin embargo, un análisis de última hora revela que desactivar el sistema de seguridad principal también requiere un dispositivo especial que el Agente X no posee. ¿Podrá el Agente X extraer los datos secretos?
+        
+        Cláusula Objetivo que se intentaba probar:
+        OBJETIVO:
+extraer_datos_secretos('agente_x').
+        
+        Traza de Inferencia Comentada del Intento Fallido (MISA-J):
+        Objetivo a probar: OBJETIVO:
+extraer_datos_secretos('agente_x').
+Resultado: Solución NO encontrada
+
+Pasos de Inferencia Realizados:
+  - Paso 1: informante_no_es_agente_doble(informante).
+    Premisas: Hecho inicial
+    Justificación LLM-JEM: Hecho inicial proporcionado....
+  - Paso 2: codigos_nivel_3_obtenidos(agente_x).
+    Premisas: Hecho inicial
+    Justificación LLM-JEM: Hecho inicial proporcionado....
+  - Paso 3: acceso_sala_servidores(agente_x).
+    Premisas: codigos_nivel_3_obtenidos(agente_x)., informante_no_es_agente_doble(informante)., acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).
+    Justificación LLM-JEM: La justificación es la siguiente:
+
+La tercera premisa establece una regla: para que `agente_x` tenga...
+  - Paso 4: extraer_datos_secretos(agente_x).
+    Premisas: codigos_nivel_3_obtenidos(agente_x)., informante_no_es_agente_doble(informante)., extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).
+    Justificación LLM-JEM: Esta es una aplicación directa de la regla proporcionada. La regla establece que para que `extraer_d...
+        
+        Tu tarea es realizar un razonamiento abductivo y un análisis profundo de este fallo. Considera lo siguiente:
+        1.  ¿Qué axiomas o hechos cruciales podrían faltar en la base de conocimiento para que el objetivo SÍ se hubiera podido derivar por alguno de los caminos explorados o por uno nuevo razonable?
+        2.  ¿Hay alguna regla existente que parezca incorrecta, demasiado restrictiva, o que haya llevado a un camino claramente erróneo según las justificaciones dadas por el LLM-JEM durante la inferencia?
+        3.  ¿Hubo algún punto donde la inferencia se detuvo porque ninguna regla era aplicable, pero intuitivamente parecía que se debería poder avanzar? ¿Qué tipo de conocimiento faltaría ahí?
+        4.  Si se exploraron múltiples ramas, ¿hay alguna que parezca más prometedora si se le añadiera algún conocimiento específico?
+        5.  Si las cláusulas objetivos y las cláusulas derivadas tienen nombres coherentes y no hay problemas con la sitaxis, revisa que si dos cláusulas refieren a lo mismo estén escritas de manera idéntica.
+        6.  Revisa que los nombres de entidades estén escritos de la misma manera. Si se están mecionando nombres propios deben coincidir en mayúsculas y minúsculas.
+        
+        Proporciona tu análisis en el siguiente formato JSON (solo el JSON, sin texto introductorio o posterior):
+        { "summary": "[Tu resumen conciso del análisis y las principales hipótesis]",
+           "hypothesized_missing_elements": ["[Ejemplo: axioma_faltante(X,Y) :- condicion(X). Comentario: Necesario para conectar A con B]", "[Ejemplo: hecho_faltante(detalle_especifico).]"],
+           "problematic_rules_identified": ["[Ejemplo: regla_existente(A) :- cuerpo_problematico(A). Comentario: Esta regla es muy general y causa derivaciones irrelevantes.]"],
+           "potential_inference_paths_to_reinforce": ["[Ejemplo: El camino que derivó '{'clause_x'}' parecía cercano. Podría reforzarse con un axioma sobre '{'concept_y'}'.]"],
+           "reasoning_log": "[Describe brevemente tu cadena de pensamiento para llegar a estas conclusiones. Explica por qué crees que ciertos elementos faltan o son problemáticos.]"}
+        Asegúrate de que las cláusulas hipotéticas que sugieras sean sintácticamente válidas si son cláusulas de Horn.
+        Si no tienes sugerencias para alguna categoría, usa una lista vacía [].
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: ```json
+{
+  "summary": "El intento fallido se debió a que, si bien la inferencia logró determinar que el Agente X podía acceder a la sala de servidores (el camino a través del informante), no existía una regla explícita que conectara el acceso a la sala de servidores con la extracción exitosa de los datos secretos. La regla que aparentemente se intentó usar en el último paso de la traza para derivar el objetivo era incorrecta, saltándose el prerrequisito del acceso a la sala de servidores.",
+  "hypothesized_missing_elements": [
+    "extraer_datos_secretos(Agente) :- acceso_sala_servidores(Agente).",
+    "Comentario: Esta regla es crucial para conectar el acceso logrado a la sala de servidores con el objetivo final de extraer los datos.",
+    "no_tiene_dispositivo_especial('agente_x').",
+    "Comentario: Este hecho, mencionado en la descripción, es necesario para que el sistema de inferencia pueda descartar explícitamente la vía de desactivación del sistema de seguridad principal.",
+    "linea_comunicacion_externa_cortada('agente_x').",
+    "Comentario: Este hecho también está en la descripción original y es relevante para la vía del sistema de seguridad, aunque menos crítico para explicar este fallo particular que se centró en la vía del informante."
+  ],
+  "problematic_rules_identified": [
+    "extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).",
+    "Comentario: Según la traza, se intentó una regla similar a esta para el último paso. Esta regla es incorrecta porque omite el paso intermedio necesario de acceder a la sala de servidores, que es la consecuencia de obtener los códigos y confiar en el informante, no la extracción de datos directa."
+  ],
+  "potential_inference_paths_to_reinforce": [
+    "El camino que derivó 'acceso_sala_servidores(agente_x)' parece ser el correcto basado en la descripción y los hechos disponibles. Necesita ser reforzado con la regla que conecta 'acceso_sala_servidores' con 'extraer_datos_secretos'."
+  ],
+  "reasoning_log": "Analicé la descripción del problema para identificar las condiciones necesarias para alcanzar el objetivo (extraer datos secretos). Hay dos vías principales: desactivar seguridad o usar informante/códigos. La traza de inferencia muestra que el sistema se centró en la vía del informante, derivando exitosamente 'informante_no_es_agente_doble' y 'codigos_nivel_3_obtenidos', y luego 'acceso_sala_servidores' usando una regla correcta. El fallo ocurrió en el último paso. La traza indica que se intentó derivar el objetivo final ('extraer_datos_secretos') directamente de tener los códigos y el informante siendo fiable. Esto contradice la lógica del problema, donde el acceso a la sala de servidores es un paso intermedio necesario para extraer los datos usando esta vía. Por lo tanto, la regla utilizada en el último paso es errónea. La pieza faltante clave es la conexión lógica entre 'acceso_sala_servidores' y 'extraer_datos_secretos'. Además, noté que los hechos cruciales para descartar la otra vía (la falta del dispositivo especial y la línea cortada) no aparecían en la lista de premisas iniciales proporcionada en la traza, lo que impediría al sistema razonar completamente sobre esa alternativa."
+}
+```
+
+-------------------------------------------------------------------
+
+
+LLM-ARA: Análisis completado. Resumen: El intento fallido se debió a que, si bien la inferencia logró determinar que el Agente X podía acceder a la sala de servidores (el camino a través del informante), no existía una regla explícita que conectara el acceso a la sala de servidores con la extracción exitosa de los datos secretos. La regla que aparentemente se intentó usar en el último paso de la traza para derivar el objetivo era incorrecta, saltándose el prerrequisito del acceso a la sala de servidores.
+
+--- LLM-SGA: Iniciando Síntesis y Evaluación Global ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (sga_assessment_OBJETIVO:
+extra) ---
+Prompt: 
+        Se ha realizado un intento de inferencia (MISA-J) y un análisis abductivo posterior (LLM-ARA).
+        Tu tarea es realizar una SÍNTESIS GLOBAL y una EVALUACIÓN del estado actual del conocimiento y del proceso de razonamiento.
+
+        Descripción Original del Problema (Lenguaje Natural):
+        Para que el Agente X pueda extraer los datos secretos de la corporación enemiga, necesita desactivar el sistema de seguridad principal o bien obtener los códigos de acceso del Nivel 3 de un informante. Si desactiva el sistema de seguridad principal, se activará una alerta silenciosa que notificará al jefe de seguridad, a menos que también logre cortar la línea de comunicación externa. Si obtiene los códigos de Nivel 3 del informante, podrá acceder a la sala de servidores, pero solo si el informante no es un agente doble. El Agente X confirma que la línea de comunicación externa ha sido cortada. Además, su contacto le asegura que el informante no es un agente doble y le ha proporcionado los códigos de Nivel 3. Sin embargo, un análisis de última hora revela que desactivar el sistema de seguridad principal también requiere un dispositivo especial que el Agente X no posee. ¿Podrá el Agente X extraer los datos secretos?
+
+        Cláusula Objetivo que se intentaba probar:
+        OBJETIVO:
+extraer_datos_secretos('agente_x').
+
+        Traza de Inferencia Comentada del MISA-J:
+        Objetivo a probar: OBJETIVO:
+extraer_datos_secretos('agente_x').
+Resultado de MISA-J: Solución NO encontrada
+
+Pasos de Inferencia Realizados por MISA-J:
+    Premisas: Hecho inicial
+    Justificación LLM-JEM: Hecho inicial proporcionado....
+    Premisas: Hecho inicial
+    Justificación LLM-JEM: Hecho inicial proporcionado....
+    Premisas: codigos_nivel_3_obtenidos(agente_x)., informante_no_es_agente_doble(informante)., acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).
+    Justificación LLM-JEM: La justificación es la siguiente:
+
+La tercera premisa establece una regla: para que `agente_x` tenga...
+    Premisas: codigos_nivel_3_obtenidos(agente_x)., informante_no_es_agente_doble(informante)., extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).
+    Justificación LLM-JEM: Esta es una aplicación directa de la regla proporcionada. La regla establece que para que `extraer_d...
+
+        Análisis Abductivo del LLM-ARA (sobre el fallo si ocurrió):
+        {
+  "summary": "El intento fallido se debió a que, si bien la inferencia logró determinar que el Agente X podía acceder a la sala de servidores (el camino a través del informante), no existía una regla explícita que conectara el acceso a la sala de servidores con la extracción exitosa de los datos secretos. La regla que aparentemente se intentó usar en el último paso de la traza para derivar el objetivo era incorrecta, saltándose el prerrequisito del acceso a la sala de servidores.",
+  "hypothesized_missing_elements": [
+    "extraer_datos_secretos(Agente) :- acceso_sala_servidores(Agente).",
+    "Comentario: Esta regla es crucial para conectar el acceso logrado a la sala de servidores con el objetivo final de extraer los datos.",
+    "no_tiene_dispositivo_especial('agente_x').",
+    "Comentario: Este hecho, mencionado en la descripción, es necesario para que el sistema de inferencia pueda descartar explícitamente la vía de desactivación del sistema de seguridad principal.",
+    "linea_comunicacion_externa_cortada('agente_x').",
+    "Comentario: Este hecho también está en la descripción original y es relevante para la vía del sistema de seguridad, aunque menos crítico para explicar este fallo particular que se centró en la vía del informante."
+  ],
+  "problematic_rules_identified": [
+    "extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).",
+    "Comentario: Según la traza, se intentó una regla similar a esta para el último paso. Esta regla es incorrecta porque omite el paso intermedio necesario de acceder a la sala de servidores, que es la consecuencia de obtener los códigos y confiar en el informante, no la extracción de datos directa."
+  ],
+  "potential_inference_paths_to_reinforce": [
+    "El camino que derivó 'acceso_sala_servidores(agente_x)' parece ser el correcto basado en la descripción y los hechos disponibles. Necesita ser reforzado con la regla que conecta 'acceso_sala_servidores' con 'extraer_datos_secretos'."
+  ],
+  "reasoning_log": "Analicé la descripción del problema para identificar las condiciones necesarias para alcanzar el objetivo (extraer datos secretos). Hay dos vías principales: desactivar seguridad o usar informante/códigos. La traza de inferencia muestra que el sistema se centró en la vía del informante, derivando exitosamente 'informante_no_es_agente_doble' y 'codigos_nivel_3_obtenidos', y luego 'acceso_sala_servidores' usando una regla correcta. El fallo ocurrió en el último paso. La traza indica que se intentó derivar el objetivo final ('extraer_datos_secretos') directamente de tener los códigos y el informante siendo fiable. Esto contradice la lógica del problema, donde el acceso a la sala de servidores es un paso intermedio necesario para extraer los datos usando esta vía. Por lo tanto, la regla utilizada en el último paso es errónea. La pieza faltante clave es la conexión lógica entre 'acceso_sala_servidores' y 'extraer_datos_secretos'. Además, noté que los hechos cruciales para descartar la otra vía (la falta del dispositivo especial y la línea cortada) no aparecían en la lista de premisas iniciales proporcionada en la traza, lo que impediría al sistema razonar completamente sobre esa alternativa."
+}
+
+        Instrucciones para tu Síntesis Global:
+        1.  **Resumen Global:** ¿Cuál es tu evaluación general del intento de resolver el problema? ¿Cuáles son los puntos más críticos o las observaciones más importantes que surgen al ver toda la información junta?
+        2.  **Patrones de Fallo Recurrentes:** ¿Identificas patrones en cómo o por qué fallaron ciertos caminos de inferencia (si MISA-J falló)? Por ejemplo, ¿se repite la falta de un tipo específico de información? ¿Hay reglas que consistentemente no encuentran las premisas necesarias?
+        3.  **Asunciones Problemáticas Comunes:** ¿Hay asunciones implícitas en las reglas o en el conocimiento que parezcan problemáticas o no soportadas, a la luz del análisis completo?
+        4.  **Caminos Prometedores Abandonados:** Si MISA-J falló, ¿hubo caminos que parecían prometedores pero que se abandonaron prematuramente (quizás por una pequeña pieza de información faltante que ARA ya identificó)?
+        5.  **Confianza General en la Base de Conocimiento:** ¿Qué tan completa y correcta parece la base de conocimiento actual para este tipo de problema? (Baja, Media, Alta, y una breve justificación).
+        
+        Proporciona tu análisis en el siguiente formato JSON (solo el JSON, sin texto introductorio o posterior):
+        { "global_summary": "[Tu evaluación general y observaciones clave]",
+           "recurring_failure_patterns": ["[Ejemplo: La conexión entre '{'concepto_A'}' y '{'concepto_B'}' es consistentemente débil o ausente.]"],
+           "problematic_assumptions_identified": ["[Ejemplo: Se asume que si '{'X ocurre'}', entonces '{'Y siempre sigue'}', pero el contexto del problema sugiere excepciones.]"],
+           "promising_paths_to_explore_further_or_reinforce": ["[Ejemplo: La derivación de '{'clause_alpha'}' usando '{'rule_beta'}' fue un buen paso. Si se pudiera establecer '{'missing_fact_gamma'}', podría llevar a la solución.]"],
+           "overall_confidence_in_knowledge_base": "[Baja/Media/Alta] - [Justificación breve]",
+           "reasoning_log": "[Describe brevemente tu cadena de pensamiento para esta síntesis global.]"}
+        Si no tienes sugerencias para alguna categoría, usa una lista vacía [].
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: ```json
+{
+  "global_summary": "El intento de inferencia de MISA-J logró seguir correctamente parte de una de las vías para alcanzar el objetivo (la vía del informante), derivando con éxito que el Agente X podía acceder a la sala de servidores. Sin embargo, el proceso falló en el paso final porque la base de conocimiento utilizada carecía de la regla explícita necesaria para conectar el acceso a la sala de servidores con la extracción de los datos secretos. El análisis de ARA identificó acertadamente esta regla faltante y la regla incorrecta que se intentó usar en su lugar. La otra vía (desactivar seguridad) no parece haber sido explorada completamente o descartada explícitamente en la traza proporcionada, posiblemente por la falta de disponibilidad o uso de todos los hechos relevantes (como no poseer el dispositivo especial).",
+  "recurring_failure_patterns": [
+    "La conexión entre una condición intermedia necesaria ('acceso_sala_servidores') y el objetivo final ('extraer_datos_secretos') está ausente en las reglas utilizadas para el paso final.",
+    "Las reglas intentadas en los pasos finales no reflejan correctamente la secuencia lógica descrita en el problema (ej. intentando saltar el paso de acceso a la sala de servidores)."
+  ],
+  "problematic_assumptions_identified": [
+    "La regla utilizada en el último paso ('extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).') asume incorrectamente que tener los códigos y un informante fiable conduce directamente a la extracción de datos, omitiendo el paso intermedio de acceder a la sala de servidores."
+  ],
+  "promising_paths_to_explore_further_or_reinforce": [
+    "La derivación exitosa de 'acceso_sala_servidores('agente_x')' utilizando 'codigos_nivel_3_obtenidos(agente_x).', 'informante_no_es_agente_doble(informante).' y la regla correcta para el acceso ('acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).') es un paso prometedor. Este camino solo necesita la regla 'extraer_datos_secretos(Agente) :- acceso_sala_servidores(Agente).' (identificada por ARA) para intentar completar la inferencia.",
+    "La vía de 'desactivar_sistema_seguridad' no se exploró completamente en la traza mostrada. Incorporar hechos como 'no_tiene_dispositivo_especial('agente_x')' y 'linea_comunicacion_externa_cortada('agente_x')' permitiría descartar o confirmar correctamente esta vía alternativa."
+  ],
+  "overall_confidence_in_knowledge_base": "Media - La base de conocimiento (o el conjunto de reglas y hechos disponibles para MISA-J en ese intento) fue suficiente para realizar inferencias parciales correctas (derivar el acceso a la sala de servidores) basándose en hechos proporcionados. Sin embargo, fue incompleta al no contener la conexión lógica final necesaria para el objetivo, y posiblemente al no integrar o utilizar efectivamente todos los hechos relevantes para evaluar la otra vía del problema.",
+  "reasoning_log": "Revisé la descripción del problema, identificando las dos vías para el éxito. Analicé la traza de MISA-J, observando el punto de fallo después de derivar el acceso a la sala de servidores. Contrasté esto con el análisis abductivo de ARA, que identificó la regla faltante crucial ('acceso_sala_servidores' -> 'extraer_datos_secretos') y la regla incorrecta utilizada. Confirmé que la traza mostraba el uso de una regla que se saltaba el paso de acceso. Evalué qué hechos del problema no parecían haber sido utilizados para explorar o descartar la vía alternativa. Concluí que la base de conocimiento permitió avances parciales correctos pero falló en el paso final clave debido a la falta de una regla que complete la lógica, y posiblemente por no aprovechar todos los hechos disponibles para evaluar ambas opciones de manera exhaustiva."
+}
+```
+
+-------------------------------------------------------------------
+
+
+LLM-SGA: Síntesis completada. Resumen: El intento de inferencia de MISA-J logró seguir correctamente parte de una de las vías para alcanzar el objetivo (la vía del informante), derivando con éxito que el Agente X podía acceder a la sala de servidores. Sin embargo, el proceso falló en el paso final porque la base de conocimiento utilizada carecía de la regla explícita necesaria para conectar el acceso a la sala de servidores con la extracción de los datos secretos. El análisis de ARA identificó acertadamente esta regla faltante y la regla incorrecta que se intentó usar en su lugar. La otra vía (desactivar seguridad) no parece haber sido explorada completamente o descartada explícitamente en la traza proporcionada, posiblemente por la falta de disponibilidad o uso de todos los hechos relevantes (como no poseer el dispositivo especial).
+
+--- LLM-KRM: Iniciando Propuesta de Refinamientos de Conocimiento ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (krm_refine_OBJETIVO:
+extra) ---
+Prompt: 
+        Basado en una evaluación global (LLM-SGA) de un intento de inferencia, la descripción original del problema y el estado actual de la base de conocimiento (KR-Store), tu tarea es proponer MODIFICACIONES CONCRETAS al KR-Store.
+
+        Descripción Original del Problema (Lenguaje Natural):
+        Para que el Agente X pueda extraer los datos secretos de la corporación enemiga, necesita desactivar el sistema de seguridad principal o bien obtener los códigos de acceso del Nivel 3 de un informante. Si desactiva el sistema de seguridad principal, se activará una alerta silenciosa que notificará al jefe de seguridad, a menos que también logre cortar la línea de comunicación externa. Si obtiene los códigos de Nivel 3 del informante, podrá acceder a la sala de servidores, pero solo si el informante no es un agente doble. El Agente X confirma que la línea de comunicación externa ha sido cortada. Además, su contacto le asegura que el informante no es un agente doble y le ha proporcionado los códigos de Nivel 3. Sin embargo, un análisis de última hora revela que desactivar el sistema de seguridad principal también requiere un dispositivo especial que el Agente X no posee. ¿Podrá el Agente X extraer los datos secretos?
+
+        Cláusula Objetivo que se intentaba probar:
+        OBJETIVO:
+extraer_datos_secretos('agente_x').
+
+        Evaluación Global del LLM-SGA:
+        {
+  "global_summary": "El intento de inferencia de MISA-J logró seguir correctamente parte de una de las vías para alcanzar el objetivo (la vía del informante), derivando con éxito que el Agente X podía acceder a la sala de servidores. Sin embargo, el proceso falló en el paso final porque la base de conocimiento utilizada carecía de la regla explícita necesaria para conectar el acceso a la sala de servidores con la extracción de los datos secretos. El análisis de ARA identificó acertadamente esta regla faltante y la regla incorrecta que se intentó usar en su lugar. La otra vía (desactivar seguridad) no parece haber sido explorada completamente o descartada explícitamente en la traza proporcionada, posiblemente por la falta de disponibilidad o uso de todos los hechos relevantes (como no poseer el dispositivo especial).",
+  "recurring_failure_patterns": [
+    "La conexión entre una condición intermedia necesaria ('acceso_sala_servidores') y el objetivo final ('extraer_datos_secretos') está ausente en las reglas utilizadas para el paso final.",
+    "Las reglas intentadas en los pasos finales no reflejan correctamente la secuencia lógica descrita en el problema (ej. intentando saltar el paso de acceso a la sala de servidores)."
+  ],
+  "problematic_assumptions_identified": [
+    "La regla utilizada en el último paso ('extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).') asume incorrectamente que tener los códigos y un informante fiable conduce directamente a la extracción de datos, omitiendo el paso intermedio de acceder a la sala de servidores."
+  ],
+  "promising_paths_to_explore_further_or_reinforce": [
+    "La derivación exitosa de 'acceso_sala_servidores('agente_x')' utilizando 'codigos_nivel_3_obtenidos(agente_x).', 'informante_no_es_agente_doble(informante).' y la regla correcta para el acceso ('acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).') es un paso prometedor. Este camino solo necesita la regla 'extraer_datos_secretos(Agente) :- acceso_sala_servidores(Agente).' (identificada por ARA) para intentar completar la inferencia.",
+    "La vía de 'desactivar_sistema_seguridad' no se exploró completamente en la traza mostrada. Incorporar hechos como 'no_tiene_dispositivo_especial('agente_x')' y 'linea_comunicacion_externa_cortada('agente_x')' permitiría descartar o confirmar correctamente esta vía alternativa."
+  ],
+  "overall_confidence_in_knowledge_base": "Media - La base de conocimiento (o el conjunto de reglas y hechos disponibles para MISA-J en ese intento) fue suficiente para realizar inferencias parciales correctas (derivar el acceso a la sala de servidores) basándose en hechos proporcionados. Sin embargo, fue incompleta al no contener la conexión lógica final necesaria para el objetivo, y posiblemente al no integrar o utilizar efectivamente todos los hechos relevantes para evaluar la otra vía del problema.",
+  "reasoning_log": "Revisé la descripción del problema, identificando las dos vías para el éxito. Analicé la traza de MISA-J, observando el punto de fallo después de derivar el acceso a la sala de servidores. Contrasté esto con el análisis abductivo de ARA, que identificó la regla faltante crucial ('acceso_sala_servidores' -> 'extraer_datos_secretos') y la regla incorrecta utilizada. Confirmé que la traza mostraba el uso de una regla que se saltaba el paso de acceso. Evalué qué hechos del problema no parecían haber sido utilizados para explorar o descartar la vía alternativa. Concluí que la base de conocimiento permitió avances parciales correctos pero falló en el paso final clave debido a la falta de una regla que complete la lógica, y posiblemente por no aprovechar todos los hechos disponibles para evaluar ambas opciones de manera exhaustiva."
+}
+
+        Estado Actual del KR-Store:
+        Estado Actual del KR-Store:
+  Axiomas Base:
+    - extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). (ID: cfd5b93a-0153-4ce4-b5a2-7617cb476742, Origen: mmrc_added)
+  Cláusulas del Problema:
+    - extraer_datos_secretos(agente_x) :- sistema_seguridad_principal_desactivado(agente_x). (ID: 03e3d6dd-c1d5-4e69-a3d1-acc4de286669, Origen: problem_derived_llm)
+    - extraer_datos_secretos(agente_x) :- acceso_sala_servidores(agente_x). (ID: b68d5a81-1610-4f16-a14a-b450230b7866, Origen: problem_derived_llm)
+    - sistema_seguridad_principal_desactivado(agente_x) :- posee_dispositivo_especial(agente_x). (ID: ae7a2ac9-3db8-47e5-b238-d11a4c42471a, Origen: problem_derived_llm)
+    - acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). (ID: 8935641e-e8d2-4aa8-bbc5-c0280ea0304b, Origen: problem_derived_llm)
+    - linea_comunicacion_externa_cortada(agente_x). (ID: 0d305646-c20e-4437-852f-f5731653c57b, Origen: problem_derived_llm)
+    - informante_no_es_agente_doble(informante). (ID: 087d011e-4f5e-4d6a-a4ec-28b284a540c9, Origen: problem_derived_llm)
+    - codigos_nivel_3_obtenidos(agente_x). (ID: c131bfbc-7c39-411a-a103-2e2688890e2c, Origen: problem_derived_llm)
+  Cláusulas Objetivo:
+    - OBJETIVO:
+extraer_datos_secretos('agente_x'). (ID: b5c81491-da3b-4d51-b907-3e3366988a6a, Origen: llm_formalized_objetivo)
+
+        Instrucciones para proponer modificaciones:
+        1.  **Acciones Válidas:** Para cada modificación, especifica una acción: "add" (añadir nueva cláusula), "delete" (eliminar cláusula existente), o "modify" (modificar una cláusula existente).
+        2.  **Especificidad:** Las cláusulas deben ser sintácticamente válidas como Cláusulas de Horn (ej: `pred(X) :- cuerpo(X).` o `hecho(a).`).
+        3.  **Justificación:** CADA propuesta de modificación DEBE ir acompañada de una justificación explícita que explique POR QUÉ esta modificación es necesaria o beneficiosa, basándose en el análisis SGA y el objetivo de resolver el problema.
+        4.  **Contexto:** Considera la descripción original del problema para asegurar que las modificaciones sean coherentes con el dominio.
+        5.  **Priorización (implícita):** Enfócate en los cambios que parezcan más impactantes para resolver el problema o corregir los fallos identificados por SGA.
+        6.  **Evitar Redundancia:** No sugieras añadir cláusulas que ya existen o son semánticamente equivalentes a las existentes, a menos que la modificación sea para cambiar su categoría o fuente (lo cual es menos común para este LLM).
+
+        Proporciona tus propuestas en el siguiente formato JSON (una lista de objetos, solo el JSON, sin texto introductorio o posterior):
+        [
+          {
+            "action": "add",
+            "clause_str": "nuevo_hecho(detalle_importante).",
+            "justification": "El análisis SGA indicó que faltaba información sobre 'detalle_importante', que es mencionado en el problema y necesario para la regla X."
+          },
+          {
+            "action": "delete",
+            "clause_str": "regla_problematica(A) :- cuerpo(A).",
+            "justification": "SGA identificó esta regla como causante de derivaciones irrelevantes y no contribuye a la solución."
+          },
+          {
+            "action": "modify",
+            "clause_str": "regla_a_mejorar(X) :- condicion_actual(X).",
+            "new_clause_str": "regla_a_mejorar(X) :- condicion_actual(X), nueva_condicion(X).",
+            "justification": "SGA sugirió que esta regla es demasiado general. Añadir 'nueva_condicion(X)' la hace más específica y alineada con el objetivo, como se desprende de la necesidad de conectar X con Y."
+          }
+        ]
+        Si no hay modificaciones que proponer, devuelve una lista vacía [].
+        Para las cláusulas en `clause_str` (para delete/modify), usa su representación de string exacta como aparece en el KR-Store si es posible (incluyendo su ID si lo ves relevante para identificarla, aunque el matching se hará por string). Para `clause_str` en "add" y `new_clause_str` en "modify", solo la cláusula lógica.
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: ```json
+[
+  {
+    "action": "delete",
+    "clause_str": "extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).",
+    "justification": "El análisis SGA identificó esta regla (o una semánticamente equivalente utilizada en el intento) como una 'suposición problemática' que llevó a la falla al intentar saltar el paso intermedio necesario de 'acceso_sala_servidores'. Esta regla no refleja la lógica del problema donde los códigos y el informante permiten el acceso a la sala, y es el acceso a la sala lo que permite la extracción."
+  },
+  {
+    "action": "add",
+    "clause_str": "no_posee_dispositivo_especial(agente_x).",
+    "justification": "El análisis SGA señaló que la otra vía de solución ('desactivar seguridad') no fue explorada completamente, posiblemente por la falta de disponibilidad o uso de todos los hechos relevantes. La descripción del problema especifica explícitamente que el Agente X 'no posee' el dispositivo especial necesario para desactivar el sistema de seguridad principal. Añadir este hecho es esencial para permitir que el motor de inferencia evalúe y descarte correctamente esta vía."
+  }
+]
+```
+
+-------------------------------------------------------------------
+
+
+LLM-KRM: Propuestas de refinamiento generadas: 2
+MMRC: Ciclo completado. 2 modificaciones propuestas.
+INFO: Checkpoint guardado: checkpoints/mmrc_modifications_cycle1_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl
+
+--- MMRC: Aplicando 2 Modificaciones al KR-Store ---
+  DELETED: 'extraer_datos_secretos(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).' from base_axiom (Just.: El análisis SGA identificó esta regla (o una semánticamente equivalente utilizada en el intento) como una 'suposición problemática' que llevó a la falla al intentar saltar el paso intermedio necesario de 'acceso_sala_servidores'. Esta regla no refleja la lógica del problema donde los códigos y el informante permiten el acceso a la sala, y es el acceso a la sala lo que permite la extracción.)
+  ADDED: no_posee_dispositivo_especial(agente_x). to base_axiom (Just.: El análisis SGA señaló que la otra vía de solución ('desactivar seguridad') no fue explorada completamente, posiblemente por la falta de disponibilidad o uso de todos los hechos relevantes. La descripción del problema especifica explícitamente que el Agente X 'no posee' el dispositivo especial necesario para desactivar el sistema de seguridad principal. Añadir este hecho es esencial para permitir que el motor de inferencia evalúe y descarte correctamente esta vía.)
+MMRC Apply: 2 modificaciones aplicadas exitosamente al KR-Store.
+INFO: Forzando re-ejecución de MFSA en el siguiente ciclo debido a modificaciones de MMRC (si no se cargó KR Store de checkpoint).
+
+--- CICLO DE REFINAMIENTO 3 / 3 ---
+
+INFO: Cláusula Objetivo Principal: OBJETIVO:
+extraer_datos_secretos('agente_x').
+
+--- Ejecutando OHI ---
+
+--- OHI: Iniciando Selección Heurística de Cláusulas ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (select_clauses_OBJETIVO:
+extraer_datos_secretos_initial) ---
+Prompt: 
+        Tu tarea es actuar como una Unidad de Selección de Políticas (Policy Selection Unit).
+        Debes seleccionar un subconjunto estratégico de cláusulas para intentar probar un objetivo.
+
+        Objetivo Principal a Probar: OBJETIVO:
+extraer_datos_secretos('agente_x').
+
+        Cláusulas Disponibles (Axiomas y Hechos del Problema):
+        ID: a50e9ea1-7b23-4f47-8e82-7ee98290c3c6 | no_posee_dispositivo_especial(agente_x). (Fuente: mmrc_added)
+ID: 03e3d6dd-c1d5-4e69-a3d1-acc4de286669 | extraer_datos_secretos(agente_x) :- sistema_seguridad_principal_desactivado(agente_x). (Fuente: problem_derived_llm)
+ID: b68d5a81-1610-4f16-a14a-b450230b7866 | extraer_datos_secretos(agente_x) :- acceso_sala_servidores(agente_x). (Fuente: problem_derived_llm)
+ID: ae7a2ac9-3db8-47e5-b238-d11a4c42471a | sistema_seguridad_principal_desactivado(agente_x) :- posee_dispositivo_especial(agente_x). (Fuente: problem_derived_llm)
+ID: 8935641e-e8d2-4aa8-bbc5-c0280ea0304b | acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). (Fuente: problem_derived_llm)
+ID: 0d305646-c20e-4437-852f-f5731653c57b | linea_comunicacion_externa_cortada(agente_x). (Fuente: problem_derived_llm)
+ID: 087d011e-4f5e-4d6a-a4ec-28b284a540c9 | informante_no_es_agente_doble(informante). (Fuente: problem_derived_llm)
+ID: c131bfbc-7c39-411a-a103-2e2688890e2c | codigos_nivel_3_obtenidos(agente_x). (Fuente: problem_derived_llm)
+
+        Historial de Intentos de Inferencia Anteriores (si existe):
+        No hay historial de inferencias previas.
+
+        Instrucciones para la Selección:
+        1. Enfócate en cláusulas que parezcan directamente relevantes para alcanzar el Objetivo Principal.
+        2. Considera el historial: Si ciertos caminos fallaron por falta de cláusulas específicas, y esas cláusulas (o similares) están ahora disponibles, podrían ser buenas candidatas.
+        3. Evita cláusulas que consistentemente llevaron a análisis negativos en el historial, a menos que tengas una nueva razón para incluirlas.
+        4. El objetivo es reducir el espacio de búsqueda. No selecciones todas las cláusulas. Intenta seleccionar un conjunto prometedor de no más de 10 cláusulas.
+        5. Si crees que faltan cláusulas cruciales o ninguna de las disponibles es útil, puedes indicarlo.
+
+        Formato de Respuesta Esperado:
+        Lista las cláusulas seleccionadas. Es preferible que uses los IDs de las cláusulas si puedes identificarlos en la lista de arriba.
+        Si no usas IDs, escribe el contenido exacto de la cláusula.
+        Puedes añadir una justificación breve para tu selección general o para cláusulas específicas si es importante.
+        Ejemplo de formato de respuesta si usas IDs:
+        SELECCIONADAS:
+        ID: [ID_de_la_clausula_1]
+        ID: [ID_de_la_clausula_2]
+        /* Justificación general: Estas cláusulas conectan directamente los términos del objetivo. */
+
+        Tu Selección:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: SELECCIONADAS:
+ID: b68d5a81-1610-4f16-a14a-b450230b7866
+ID: 8935641e-e8d2-4aa8-bbc5-c0280ea0304b
+ID: c131bfbc-7c39-411a-a103-2e2688890e2c
+ID: 087d011e-4f5e-4d6a-a4ec-28b284a540c9
+/* Justificación general: Se han seleccionado las cláusulas que forman una cadena de inferencia directa para probar el objetivo 'extraer_datos_secretos(agente_x)'. La cláusula b68d5a81-1610-4f16-a14a-b450230b7866 es una regla cuyo encabezado coincide con el objetivo. Su cuerpo, acceso_sala_servidores(agente_x), se puede probar utilizando la regla 8935641e-e8d2-4aa8-bbc5-c0280ea0304b. Los subobjetivos de esta última regla, codigos_nivel_3_obtenidos(agente_x) e informante_no_es_agente_doble(informante), son hechos proporcionados directamente por las cláusulas c131bfbc-7c39-411a-a103-2e2688890e2c y 087d011e-4f5e-4d6a-a4ec-28b284a540c9 respectivamente. La otra posible regla para el objetivo (03e3d6dd-c1d5-4e69-a3d1-acc4de286669) requiere 'sistema_seguridad_principal_desactivado', lo cual a su vez requiere 'posee_dispositivo_especial', un hecho que no está disponible y es contradicho por 'no_posee_dispositivo_especial'. Las cláusulas irrelevantes se han omitido para reducir el espacio de búsqueda. */
+
+-------------------------------------------------------------------
+
+
+OHI: El LLM-PSU ha seleccionado 4 cláusulas:
+  - extraer_datos_secretos(agente_x) :- acceso_sala_servidores(agente_x). (ID: b68d5a81-1610-4f16-a14a-b450230b7866)
+  - codigos_nivel_3_obtenidos(agente_x). (ID: c131bfbc-7c39-411a-a103-2e2688890e2c)
+  - informante_no_es_agente_doble(informante). (ID: 087d011e-4f5e-4d6a-a4ec-28b284a540c9)
+  - acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). (ID: 8935641e-e8d2-4aa8-bbc5-c0280ea0304b)
+INFO: Checkpoint guardado: checkpoints/ohi_selected_clauses_cycle2_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl
+
+Cláusulas Seleccionadas por OHI:
+- extraer_datos_secretos(agente_x) :- acceso_sala_servidores(agente_x). (ID: b68d5a81-1610-4f16-a14a-b450230b7866, Origen: problem_derived_llm)
+- codigos_nivel_3_obtenidos(agente_x). (ID: c131bfbc-7c39-411a-a103-2e2688890e2c, Origen: problem_derived_llm)
+- informante_no_es_agente_doble(informante). (ID: 087d011e-4f5e-4d6a-a4ec-28b284a540c9, Origen: problem_derived_llm)
+- acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante). (ID: 8935641e-e8d2-4aa8-bbc5-c0280ea0304b, Origen: problem_derived_llm)
+INFO: Checkpoint no encontrado: checkpoints/misa_j_trace_cycle2_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando MISA-J (CFCS) ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (general) ---
+Prompt: Dadas las siguientes premisas: [codigos_nivel_3_obtenidos(agente_x).; informante_no_es_agente_doble(informante).; acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).], se ha derivado la conclusión: 'acceso_sala_servidores(agente_x).'. Por favor, proporciona una breve justificación en lenguaje natural para este paso de inferencia.
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: La conclusión `acceso_sala_servidores(agente_x)` se deriva porque la premisa tercera (`acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).`) establece que el acceso a la sala de servidores se concede si se cumplen dos condiciones: tener los códigos de nivel 3 y que el informante no sea un agente doble. Las dos primeras premisas (`codigos_nivel_3_obtenidos(agente_x).` y `informante_no_es_agente_doble(informante).`) confirman que ambas condiciones se cumplen. Por lo tanto, al cumplirse los requisitos de la regla, se puede inferir la conclusión.
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (general) ---
+Prompt: Dadas las siguientes premisas: [acceso_sala_servidores(agente_x).; extraer_datos_secretos(agente_x) :- acceso_sala_servidores(agente_x).], se ha derivado la conclusión: 'extraer_datos_secretos(agente_x).'. Por favor, proporciona una breve justificación en lenguaje natural para este paso de inferencia.
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: La justificación es la siguiente:
+
+1.  La segunda premisa establece una regla: **si** el agente_x tiene acceso a la sala de servidores, **entonces** puede extraer datos secretos.
+2.  La primera premisa afirma como un hecho que **el agente_x tiene acceso a la sala de servidores**.
+3.  Dado que la condición de la regla (tener acceso) se cumple según la primera premisa, se puede aplicar la regla para inferir su consecuencia: que **el agente_x puede extraer datos secretos**.
+
+Este es un ejemplo clásico de la regla de inferencia conocida como Modus Ponens.
+
+-------------------------------------------------------------------
+
+
+INFO: Checkpoint guardado: checkpoints/misa_j_trace_cycle2_Para_que_el_Agente_X_pueda_extraer_los_datos_secre.pkl
+
+--- Traza de Inferencia ---
+Objetivo: OBJETIVO:
+extraer_datos_secretos('agente_x').
+Paso 1: 'codigos_nivel_3_obtenidos(agente_x).' (Derivado de: [Hecho inicial])
+      Justificación: Hecho inicial proporcionado.
+Paso 2: 'informante_no_es_agente_doble(informante).' (Derivado de: [Hecho inicial])
+      Justificación: Hecho inicial proporcionado.
+Paso 3: 'acceso_sala_servidores(agente_x).' (Derivado de: [codigos_nivel_3_obtenidos(agente_x)., informante_no_es_agente_doble(informante)., acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).])
+      Justificación: La conclusión `acceso_sala_servidores(agente_x)` se deriva porque la premisa tercera (`acceso_sala_servidores(agente_x) :- codigos_nivel_3_obtenidos(agente_x), informante_no_es_agente_doble(informante).`) establece que el acceso a la sala de servidores se concede si se cumplen dos condiciones: tener los códigos de nivel 3 y que el informante no sea un agente doble. Las dos primeras premisas (`codigos_nivel_3_obtenidos(agente_x).` y `informante_no_es_agente_doble(informante).`) confirman que ambas condiciones se cumplen. Por lo tanto, al cumplirse los requisitos de la regla, se puede inferir la conclusión.
+Paso 4: 'extraer_datos_secretos(agente_x).' (Derivado de: [acceso_sala_servidores(agente_x)., extraer_datos_secretos(agente_x) :- acceso_sala_servidores(agente_x).])
+      Justificación: La justificación es la siguiente:
+
+1.  La segunda premisa establece una regla: **si** el agente_x tiene acceso a la sala de servidores, **entonces** puede extraer datos secretos.
+2.  La primera premisa afirma como un hecho que **el agente_x tiene acceso a la sala de servidores**.
+3.  Dado que la condición de la regla (tener acceso) se cumple según la primera premisa, se puede aplicar la regla para inferir su consecuencia: que **el agente_x puede extraer datos secretos**.
+
+Este es un ejemplo clásico de la regla de inferencia conocida como Modus Ponens.
+
+--- Fin de la Traza ---
+Resultado: Objetivo 'OBJETIVO:
+extraer_datos_secretos('agente_x').' no alcanzado.
+
+Solución NO encontrada en el ciclo 3.
+Límite de ciclos de refinamiento alcanzado o es el último ciclo. No se ejecutará MMRC.
+
+======================================================================
+FIN DEL PROCESAMIENTO PARA PROBLEMA 1
+======================================================================
+
+TODOS LOS PROBLEMAS CONFIGURADOS PROCESADOS.

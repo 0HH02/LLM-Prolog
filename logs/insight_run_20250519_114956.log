@@ -1,0 +1,325 @@
+
+======================================================================
+PROCESANDO PROBLEMA 1: "Sócrates es un hombre. Todos los hombres son mortales. ¿Es Sócrates mortal?..."
+======================================================================
+
+--- CICLO DE REFINAMIENTO 1 / 3 ---
+INFO: Checkpoint no encontrado: checkpoints/mfsa_kr_store_Sócrates_es_un_hombre_Todos_los_hombres_son_mortal.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando MFSA ---
+
+--- Iniciando Formalización Semántica y Axiomatización (MFSA) ---
+Descripción del Problema (NL): Sócrates es un hombre. Todos los hombres son mortales. ¿Es Sócrates mortal?
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (initial_analysis_sócrates_es_un_hombr) ---
+Prompt: 
+        Analiza la siguiente descripción del problema en lenguaje natural.
+        1. Reformula el problema en tus propias palabras para asegurar la comprensión.
+        2. Identifica las entidades clave, sus propiedades y las relaciones entre ellas (reificación).
+        3. ¿Cuál es la pregunta principal o la proposición que se busca probar (objetivo en lenguaje natural)?
+        4. ¿Detectas alguna ambigüedad, vaguedad o información faltante que requiera aclaración del usuario? Si es así, enuméralas. Si no, indica "Ninguna ambigüedad aparente".
+
+        Descripción del Problema: "Sócrates es un hombre. Todos los hombres son mortales. ¿Es Sócrates mortal?"
+
+        Proporciona tu análisis de forma estructurada:
+        Reformulación: [Tu respuesta]
+        Entidades y Relaciones: [Tu respuesta]
+        Objetivo Principal (Lenguaje Natural): [Tu respuesta]
+        Ambigüedades: [Tu respuesta]
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: Aquí tienes el análisis de la descripción del problema:
+
+**Reformulación:**
+Dadas dos afirmaciones: la primera establece que un individuo específico llamado Sócrates pertenece a la categoría de "hombre", y la segunda afirma que todos los individuos pertenecientes a la categoría de "hombre" poseen la característica de ser "mortal". Se pregunta si, lógicamente, el individuo Sócrates debe poseer la característica de ser "mortal".
+
+**Entidades y Relaciones:**
+*   **Entidades Clave (Reificadas):**
+    *   Sócrates (Individual)
+    *   Hombre (Categoría/Conjunto/Propiedad)
+    *   Mortal (Propiedad/Característica/Conjunto)
+*   **Relaciones Clave:**
+    *   "Es un" / "Pertenece a": Vincula un individuo a una categoría (Sócrates pertenece a la categoría Hombre).
+    *   "Son" / "Poseen la propiedad" / "Todo miembro es": Vincula una categoría a una propiedad o a otra categoría (Todos los miembros de la categoría Hombre poseen la propiedad Mortal).
+
+**Objetivo Principal (Lenguaje Natural):**
+Determinar si se puede concluir, basándose estrictamente en las dos afirmaciones proporcionadas, que Sócrates es mortal.
+
+**Ambigüedades:**
+Ninguna ambigüedad aparente. El problema presenta un silogismo clásico con términos claramente definidos en el contexto de la lógica proposicional/categórica básica.
+
+-------------------------------------------------------------------
+
+
+MFSA LLM-KGE - Reformulación: **
+Dadas dos afirmaciones: la primera establece que un individuo específico llamado Sócrates pertenece a la categoría de "hombre", y la segunda afirma que todos los individuos pertenecientes a la categoría de "hombre" poseen la característica de ser "mortal". Se pregunta si, lógicamente, el individuo Sócrates debe poseer la característica de ser "mortal".
+
+**
+MFSA LLM-KGE - Entidades/Relaciones: **
+*   **Entidades Clave (Reificadas):**
+    *   Sócrates (Individual)
+    *   Hombre (Categoría/Conjunto/Propiedad)
+    *   Mortal (Propiedad/Característica/Conjunto)
+*   **Relaciones Clave:**
+    *   "Es un" / "Pertenece a": Vincula un individuo a una categoría (Sócrates pertenece a la categoría Hombre).
+    *   "Son" / "Poseen la propiedad" / "Todo miembro es": Vincula una categoría a una propiedad o a otra categoría (Todos los miembros de la categoría Hombre poseen la propiedad Mortal).
+
+**
+MFSA LLM-KGE - Objetivo NL: **
+Determinar si se puede concluir, basándose estrictamente en las dos afirmaciones proporcionadas, que Sócrates es mortal.
+
+**
+MFSA LLM-KGE - Ambigüedades: []
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (formalize_objetivo_**
+determi) ---
+Prompt: 
+        Traduce la siguiente declaración en lenguaje natural a una única cláusula de Horn formal.
+        Omite detalles o datos que estén implicados en la resolución del problema porque la tarea final es solamente determinar la cláusula o afirmación que se quiere verificar.
+        Formato de Cláusula de Horn:
+        - Hechos: predicado(termino1, terminoConstant).
+        - Reglas: cabeza(X, Y) :- cuerpo1(X, Z), cuerpo2(Z, Y).
+        Usa variables en mayúsculas (ej: X, Y, Z) y constantes en minúsculas o como strings citados si es necesario.
+
+        EJEMPLOS:
+        PROBLEMA 1:
+        Si llovió anoche, entonces el césped está mojado. Si el sistema de riego (aspersor) estuvo encendido, entonces el césped está mojado. Observamos que el césped efectivamente está mojado. Queremos saber si podemos concluir que llovió.
+
+        REGLAS:
+        césped(mojado) :- clima(llovió)
+        césped(mojado) :- aspersor(encendido)
+
+        HECHOS:
+        césped(mojado)
+
+        OBJETIVO:
+        clima(llovió)
+
+
+        PROBLEMA 2:
+        Para que una conferencia sea considerada un éxito, el orador principal debe ser carismático y la participación de la audiencia debe ser alta. La participación de la audiencia es alta si el tema es de actualidad. El orador principal, el Dr. Lógica, es carismático, y el tema de "Inteligencia Artificial Generativa" es de actualidad. ¿Será la conferencia un éxito?
+
+        REGLAS:
+        participacion(alta) :- tema(actual)
+        conferencia(exitosa) :- orador(carismático), participacion(alta)
+
+        HECHOS:
+        orador(drlogica)
+        orador(carismático)
+        tema(inteligencia_artificial)
+        tema(actual)
+
+        OBJETIVO:
+        conferencia(exitosa)
+
+
+        PROBLEMA 3:
+        Un estudiante aprueba un examen si estudia mucho o si tiene suerte en las preguntas. Sabemos que si un estudiante asiste a todas las clases, entonces estudia mucho. María asistió a todas las clases. ¿Aprobó María el examen?
+
+        REGLAS:
+        examen(X, aprobó) :- estudia_mucho(X)
+        examen(X, aprobó) :- tuvo_suerte(X)
+        estudia_mucho(X) :- asiste_siempre(X)
+
+        HECHOS:
+        asiste_siempre(maría)
+
+        OBJETIVO:
+        examen(maría, aprobó)
+
+        Declaración a traducir: "**
+Determinar si se puede concluir, basándose estrictamente en las dos afirmaciones proporcionadas, que Sócrates es mortal.
+
+**"
+        Contexto del problema (si ayuda): "Sócrates es un hombre. Todos los hombres son mortales. ¿Es Sócrates mortal?"
+        Tipo de declaración esperada: objetivo
+
+        Cláusula de Horn resultante (OBJETIVO):
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: mortal(socrates)
+
+-------------------------------------------------------------------
+
+
+MFSA: Cláusula Objetivo Formalizada: mortal(socrates).
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (extract_problem_clauses_sócrates_es_un_hombr) ---
+Prompt: 
+        Basado en la siguiente descripción de un problema (y posibles aclaraciones), y el análisis de entidades/relaciones:
+        Descripción: "Sócrates es un hombre. Todos los hombres son mortales. ¿Es Sócrates mortal?"
+        Entidades/Relaciones Clave: "**
+*   **Entidades Clave (Reificadas):**
+    *   Sócrates (Individual)
+    *   Hombre (Categoría/Conjunto/Propiedad)
+    *   Mortal (Propiedad/Característica/Conjunto)
+*   **Relaciones Clave:**
+    *   "Es un" / "Pertenece a": Vincula un individuo a una categoría (Sócrates pertenece a la categoría Hombre).
+    *   "Son" / "Poseen la propiedad" / "Todo miembro es": Vincula una categoría a una propiedad o a otra categoría (Todos los miembros de la categoría Hombre poseen la propiedad Mortal).
+
+**"
+        Causas del Objetivo: "mortal(socrates)."
+
+        Extrae todos los hechos y reglas relevantes directamente mencionados o implícitos en la descripción.
+        Expresa cada uno como una cláusula de Horn.
+        - Hechos: predicado(termino1, terminoConstant).
+        - Reglas: cabeza(X, Y) :- cuerpo1(X, Z), cuerpo2(Z, Y).
+        Usa variables en mayúsculas (X, Y) y constantes en minúsculas.
+        Sé consistente con las cláusulas objetivo y con las que estés generando
+        Sé consistente con las entidades/relaciones clave, si dos cláusulas refieren a nombres de persona o objetos deben estar escritos de la misma forma en ambas cláusulas y verifica que sea consistente con la cláusula objetivo.
+        Proporciona una cláusula por línea. Incluye un breve comentario /* en lenguaje natural de dónde viene cada cláusula */.
+        Ejemplo:
+        padre(pedro, juan). /* De "pedro es padre de juan" */
+        padre(juan, maria). /* De "juan es padre de maria" */
+        abuelo(X, Y) :- padre(X, Z), padre(Z, Y). /* De "X es abuelo de Y si X es padre de Z y Z es padre de Y" */
+
+        Cláusulas de Horn del Problema:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: Cláusulas de Horn del Problema:
+
+hombre(socrates). /* De "Sócrates es un hombre" */
+mortal(X) :- hombre(X). /* De "Todos los hombres son mortales" */
+
+-------------------------------------------------------------------
+
+
+MFSA: Cláusulas del Problema Extraídas: 3
+--- Formalización Completada ---
+KR-Store:
+  Axiomas Base: 0
+  Cláusulas del Problema: 3
+  Cláusulas Objetivo: 1
+INFO: Checkpoint guardado: checkpoints/mfsa_kr_store_Sócrates_es_un_hombre_Todos_los_hombres_son_mortal.pkl
+
+INFO: Cláusula Objetivo Principal: mortal(socrates).
+INFO: Checkpoint no encontrado: checkpoints/ohi_selected_clauses_cycle0_Sócrates_es_un_hombre_Todos_los_hombres_son_mortal.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando OHI ---
+
+--- OHI: Iniciando Selección Heurística de Cláusulas ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (select_clauses_mortal_initial) ---
+Prompt: 
+        Tu tarea es actuar como una Unidad de Selección de Políticas (Policy Selection Unit).
+        Debes seleccionar un subconjunto estratégico de cláusulas para intentar probar un objetivo.
+
+        Objetivo Principal a Probar: mortal(socrates).
+
+        Cláusulas Disponibles (Axiomas y Hechos del Problema):
+        ID: 1a97f297-7dcf-4107-ac9a-0af625fff1b2 | Cláusulas de Horn del Problema:(). (Fuente: problem_derived_llm)
+ID: 9b40ba88-de1e-4be2-a8e1-88a4790ec7ed | hombre(socrates). (Fuente: problem_derived_llm)
+ID: c526a3e0-b976-4c13-be2f-7d73da37d270 | mortal(X) :- hombre(X). (Fuente: problem_derived_llm)
+
+        Historial de Intentos de Inferencia Anteriores (si existe):
+        No hay historial de inferencias previas.
+
+        Instrucciones para la Selección:
+        1. Enfócate en cláusulas que parezcan directamente relevantes para alcanzar el Objetivo Principal.
+        2. Considera el historial: Si ciertos caminos fallaron por falta de cláusulas específicas, y esas cláusulas (o similares) están ahora disponibles, podrían ser buenas candidatas.
+        3. Evita cláusulas que consistentemente llevaron a análisis negativos en el historial, a menos que tengas una nueva razón para incluirlas.
+        4. El objetivo es reducir el espacio de búsqueda. No selecciones todas las cláusulas. Intenta seleccionar un conjunto prometedor de no más de 10 cláusulas.
+        5. Si crees que faltan cláusulas cruciales o ninguna de las disponibles es útil, puedes indicarlo.
+
+        Formato de Respuesta Esperado:
+        Lista las cláusulas seleccionadas. Es preferible que uses los IDs de las cláusulas si puedes identificarlos en la lista de arriba.
+        Si no usas IDs, escribe el contenido exacto de la cláusula.
+        Puedes añadir una justificación breve para tu selección general o para cláusulas específicas si es importante.
+        Ejemplo de formato de respuesta si usas IDs:
+        SELECCIONADAS:
+        ID: [ID_de_la_clausula_1]
+        ID: [ID_de_la_clausula_2]
+        /* Justificación general: Estas cláusulas conectan directamente los términos del objetivo. */
+
+        Tu Selección:
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: SELECCIONADAS:
+ID: 9b40ba88-de1e-4be2-a8e1-88a4790ec7ed
+ID: c526a3e0-b976-4c13-be2f-7d73da37d270
+/* Justificación general: La cláusula con ID: c526a3e0-b976-4c13-be2f-7d73da37d270 establece la regla general de que "todos los hombres son mortales". La cláusula con ID: 9b40ba88-de1e-4be2-a8e1-88a4790ec7ed proporciona el hecho específico de que "Sócrates es hombre". Combinando estas dos cláusulas, se puede deducir directamente que "Sócrates es mortal", que es el objetivo principal. La cláusula con ID: 1a97f297-7dcf-4107-ac9a-0af625fff1b2 parece irrelevante o mal formada. */
+
+-------------------------------------------------------------------
+
+
+OHI: El LLM-PSU ha seleccionado 2 cláusulas:
+  - mortal(X) :- hombre(X). (ID: c526a3e0-b976-4c13-be2f-7d73da37d270)
+  - hombre(socrates). (ID: 9b40ba88-de1e-4be2-a8e1-88a4790ec7ed)
+INFO: Checkpoint guardado: checkpoints/ohi_selected_clauses_cycle0_Sócrates_es_un_hombre_Todos_los_hombres_son_mortal.pkl
+
+Cláusulas Seleccionadas por OHI:
+- mortal(X) :- hombre(X). (ID: c526a3e0-b976-4c13-be2f-7d73da37d270, Origen: problem_derived_llm)
+- hombre(socrates). (ID: 9b40ba88-de1e-4be2-a8e1-88a4790ec7ed, Origen: problem_derived_llm)
+INFO: Checkpoint no encontrado: checkpoints/misa_j_trace_cycle0_Sócrates_es_un_hombre_Todos_los_hombres_son_mortal.pkl. Se ejecutará el módulo correspondiente.
+
+--- Ejecutando MISA-J (CFCS) ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (general) ---
+Prompt: Dadas las siguientes premisas: [hombre(socrates).; mortal(X) :- hombre(X).], se ha derivado la conclusión: 'mortal(socrates).'. Por favor, proporciona una breve justificación en lenguaje natural para este paso de inferencia.
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: Aquí tienes la justificación en lenguaje natural:
+
+1.  **Premisa 1 (`hombre(socrates).`)**: Sabemos como un hecho que **Sócrates es un hombre**.
+2.  **Premisa 2 (`mortal(X) :- hombre(X).`)**: Tenemos una regla general que dice que **si algo es un hombre (hombre(X)), entonces es mortal (mortal(X))**.
+3.  **Inferencia (`mortal(socrates).`)**: Dado que Sócrates cumple la condición de ser un hombre (por la Premisa 1) y la regla general establece que todos los hombres son mortales (por la Premisa 2), se sigue lógicamente que Sócrates también es mortal.
+
+En resumen: **Como Sócrates es un hombre y todos los hombres son mortales, entonces Sócrates es mortal.**
+
+-------------------------------------------------------------------
+
+
+INFO: Checkpoint guardado: checkpoints/misa_j_trace_cycle0_Sócrates_es_un_hombre_Todos_los_hombres_son_mortal.pkl
+
+--- Traza de Inferencia ---
+Objetivo: mortal(socrates).
+Paso 1: 'hombre(socrates).' (Derivado de: [Hecho inicial])
+      Justificación: Hecho inicial proporcionado.
+Paso 2: 'mortal(socrates).' (Derivado de: [hombre(socrates)., mortal(X) :- hombre(X).])
+      Justificación: Aquí tienes la justificación en lenguaje natural:
+
+1.  **Premisa 1 (`hombre(socrates).`)**: Sabemos como un hecho que **Sócrates es un hombre**.
+2.  **Premisa 2 (`mortal(X) :- hombre(X).`)**: Tenemos una regla general que dice que **si algo es un hombre (hombre(X)), entonces es mortal (mortal(X))**.
+3.  **Inferencia (`mortal(socrates).`)**: Dado que Sócrates cumple la condición de ser un hombre (por la Premisa 1) y la regla general establece que todos los hombres son mortales (por la Premisa 2), se sigue lógicamente que Sócrates también es mortal.
+
+En resumen: **Como Sócrates es un hombre y todos los hombres son mortales, entonces Sócrates es mortal.**
+
+--- Fin de la Traza ---
+Resultado: ¡Objetivo 'mortal(socrates).' alcanzado!
+
+¡SOLUCIÓN ENCONTRADA en el ciclo 1!
+
+======================================================================
+FIN DEL PROCESAMIENTO PARA PROBLEMA 1
+======================================================================
+
+TODOS LOS PROBLEMAS CONFIGURADOS PROCESADOS.
