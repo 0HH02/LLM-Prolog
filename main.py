@@ -2,7 +2,7 @@ from mfsa.mfsa_module import SemanticFormalizationAxiomatizationModule
 from mfsa.kr_store import KnowledgeRepresentationStore
 from ohi.ohi import HeuristicInferenceOrchestrator
 from misa_j.cfcs import PrologSolver
-# from mmrc.mmrc_module import MetaCognitionKnowledgeRefinementModule
+from mmrc.mmrc_module import MetaCognitionKnowledgeRefinementModule
 from common.gemini_interface import ask_gemini
 from checkpoints_utils import save_checkpoint, load_checkpoint, clear_all_checkpoints, clear_checkpoint
 
@@ -19,10 +19,10 @@ import shutil
 # Estos valores pueden ser sobrescritos por argumentos de línea de comandos
 CONFIG = {
     "force_run_mfsa": False,      # Si True, siempre ejecuta MFSA ignorando checkpoint.
-    "force_run_ohi": False,       # Si True, siempre ejecuta OHI ignorando checkpoint.
-    "force_run_misa_j": False,    # <--- AÑADIDO para MISA-J/CFCS
-    "force_run_mmrc": False,      # <--- AÑADIDO para MMRC
-    "save_checkpoints": True,     # Si True, guarda checkpoints después de ejecutar módulos.
+    "force_run_ohi": True,       # Si True, siempre ejecuta OHI ignorando checkpoint.
+    "force_run_misa_j": True,    # <--- AÑADIDO para MISA-J/CFCS
+    "force_run_mmrc": True,      # <--- AÑADIDO para MMRC
+    "save_checkpoints": False,     # Si True, guarda checkpoints después de ejecutar módulos.
     "problem_indices_to_run": None, # Lista de índices de problemas a ejecutar, ej: [0, 2]. None para todos.
     "max_refinement_cycles": 3,    # <--- AÑADIDO: Número máximo de ciclos de refinamiento
     "log_to_file": True,          # <--- AÑADIDO: Si True, guarda la salida en un archivo
@@ -135,7 +135,11 @@ def clear_solutions():
 def main():
     # Carga de problemas
     ds = load_dataset("yale-nlp/FOLIO")
-    # mmrc_module = MetaCognitionKnowledgeRefinementModule()
+    
+    # Instanciación de módulos principales
+    ohi = HeuristicInferenceOrchestrator()
+    misa_j_solver = PrologSolver()
+    mmrc_module = MetaCognitionKnowledgeRefinementModule()
 
     for index, problem_data in enumerate(ds['train']):
         if index < 4:
@@ -171,70 +175,98 @@ def main():
         print(f"PROCESANDO PROBLEMA {index + 1}: \"{problem_description[:80]}...\"")
         print("="*70)
 
-        # --- Ciclo Iterativo de Razonamiento y Refinamiento ---
         current_kr_store = None
         thought_tree = None
         goal_clauses_mfsa = []
         goal_clause_str_for_llms = ""
 
+        # --- 1. MFSA (Formalización Semántica y Axiomatización) ---
+        checkpoint_kr_store_name = "mfsa_kr_store"
+        loaded_kr = None
+        if not CONFIG["force_run_mfsa"]:
+            loaded_kr = load_checkpoint(checkpoint_kr_store_name, problem_description)
+        
+        if loaded_kr:
+            current_kr_store = loaded_kr
+            print("INFO: MFSA omitido, KR-Store cargado desde checkpoint.")
+        else:
+            print("\n--- Ejecutando MFSA ---")
+            temp_kr_store = KnowledgeRepresentationStore()
+            mfsa_instance_problem = SemanticFormalizationAxiomatizationModule(temp_kr_store)
+            mfsa_instance_problem.formalize_problem(
+                problem_description, 
+                problem_topic_hint=problem_topic_hint
+            )
+            current_kr_store = temp_kr_store
+            if CONFIG["save_checkpoints"]:
+                save_checkpoint(current_kr_store, checkpoint_kr_store_name, problem_description)
+
         for cycle in range(CONFIG["max_refinement_cycles"]):
             print(f"\n--- CICLO DE REFINAMIENTO {cycle + 1} / {CONFIG['max_refinement_cycles']} ---")
-            # --- Limpieza de soluciones anteriores ---
-            # Limpiar archivos dentro de los directorios de soluciones
-            clear_solutions()
 
-            # --- 1. MFSA (Formalización Semántica y Axiomatización) ---
-            if cycle == 0 or (CONFIG["force_run_mfsa"] and not current_kr_store):
-                checkpoint_kr_store_name = "mfsa_kr_store"
-                loaded_kr = None
-                if not CONFIG["force_run_mfsa"]:
-                    loaded_kr = load_checkpoint(checkpoint_kr_store_name, problem_description)
-                
-                if loaded_kr:
-                    current_kr_store = loaded_kr
-                    print("INFO: MFSA omitido, KR-Store cargado desde checkpoint.")
-                else:
-                    print("\n--- Ejecutando MFSA ---")
-                    temp_kr_store = KnowledgeRepresentationStore()
-                    mfsa_instance_problem = SemanticFormalizationAxiomatizationModule(temp_kr_store)
-                    mfsa_instance_problem.formalize_problem(
-                        problem_description, 
-                        problem_topic_hint=problem_topic_hint
-                    )
-                    current_kr_store = temp_kr_store
-                    if CONFIG["save_checkpoints"]:
-                        save_checkpoint(current_kr_store, checkpoint_kr_store_name, problem_description)
-            
-            if not current_kr_store: 
-                print(f"ERROR CRÍTICO: KR-Store no disponible para el problema {index + 1} en ciclo {cycle + 1}. Omitiendo problema.")
-                break
+            # --- Limpieza de soluciones anteriores ---
+            clear_solutions()
 
             goal_clauses_mfsa = current_kr_store.get_clauses_by_category("goal_clause")
             if not goal_clauses_mfsa:
                 print("\nAdvertencia: MFSA no generó cláusulas objetivo. No se puede continuar con este problema.")
                 break
-            goal_clause_str_for_llms = str(goal_clauses_mfsa[0]) # Usar la primera para los prompts
+            goal_clause_str_for_llms = str(goal_clauses_mfsa[0])
             print(f"\nINFO: Cláusula Objetivo Principal: {goal_clause_str_for_llms}")
 
-            selected_clauses_by_ohi = current_kr_store.get_clauses_by_category("problem_clause")
-
-            # --- 3. MISA-J (Motor de Inferencia Simbólica Asistido por Justificación) ---
-            misa_j_solver = PrologSolver()
+            selected_clauses = current_kr_store.get_clauses_by_category("problem_clause")
+            
+            # --- 2. MISA-J (Motor de Inferencia Simbólica Asistido por Justificación) ---
             checkpoint_misa_trace_name = f"misa_j_trace_cycle{cycle}"
-            if not CONFIG["force_run_misa_j"]:
-                thought_tree = load_checkpoint(checkpoint_misa_trace_name, problem_description)
-
-            if thought_tree is None: # Si no se cargó o se fuerza
+            if CONFIG["force_run_misa_j"]:
                 print("\n--- Ejecutando MISA-J (CFCS) ---")
-                thought_tree = misa_j_solver.solve(selected_clauses_by_ohi, goal_clauses_mfsa[0])
+                thought_tree = misa_j_solver.solve(selected_clauses, goal_clauses_mfsa[0])
                 if CONFIG["save_checkpoints"] and thought_tree:
                     save_checkpoint(thought_tree, checkpoint_misa_trace_name, problem_description)
             else:
                 print("INFO: MISA-J omitido, traza cargada desde checkpoint.")
-            break
-
+                thought_tree = load_checkpoint(checkpoint_misa_trace_name, problem_description)           
+            
+            # --- 3. MMRC (Meta-cognición y Refinamiento del Conocimiento) ---
+            print("\n--- Ejecutando MMRC ---")
+            mmrc_result = mmrc_module.analyze_thought_tree(thought_tree, problem_description, selected_clauses)
+            
+            print("\n=== RESULTADO DEL ANÁLISIS MMRC ===")
+            if mmrc_result["status"] == "success":
+                print("✅ SE ENCONTRÓ UNA SOLUCIÓN EXITOSA")
+                print("\n--- RESPUESTA GENERADA ---")
+                print(mmrc_result["response"])
+                print(f"\n--- ESTADÍSTICAS ---")
+                print(f"Ramas exitosas encontradas: {mmrc_result['successful_branches_count']}")
+                break  # Salir del ciclo si se encontró solución
+                
+            elif mmrc_result["status"] == "failure_analysis":
+                print("❌ NO SE ENCONTRÓ SOLUCIÓN - ANÁLISIS DE ERRORES")
+                print("\n--- ANÁLISIS DE FALLAS ---")
+                print(mmrc_result["analysis"])
+                print(f"\n--- ESTADÍSTICAS ---")
+                print(f"Total de ramas analizadas: {mmrc_result['total_branches']}")
+                print(f"Ramas más prometedoras: {mmrc_result['promising_branches_count']}")
+                
+                # --- 4. OHI (Orquestación Heurística de Inferencia) ---
+                print("\n--- Ejecutando OHI (Refinamiento del Conocimiento) ---")
+                
+                # Convertir cláusulas HornClause a strings para OHI
+                current_clauses_str = [str(clause) for clause in selected_clauses]
+                
+                # Refinar el conocimiento usando el análisis del MMRC
+                refined_kr_store = ohi.refine_knowledge(
+                    mmrc_result, 
+                    problem_description, 
+                    current_clauses_str
+                )
+                
+                # Actualizar el KR Store actual con el refinado
+                current_kr_store = refined_kr_store
+                
+                print("OHI: Conocimiento refinado. Continuando con el siguiente ciclo...")
+            
         print("\n" + "="*70 + f"\nFIN DEL PROCESAMIENTO PARA PROBLEMA {index + 1}" + "\n" + "="*70)
-        input("Presiona Enter para continuar con el siguiente problema...")
         break
     print("\nTODOS LOS PROBLEMAS CONFIGURADOS PROCESADOS.")
 

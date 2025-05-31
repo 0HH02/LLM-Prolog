@@ -83,7 +83,7 @@ def initial_analysis_promt(problem_description_nl):
 
 def extract_problem_clauses_promt(problem_description_nl, problem_reformulation):
     return f"""
-        Hola, basándote en tu respuesta anterior sobre el problema de lógica de Tweedledum y Tweedledee (la cual he incluido al final de este prompt para tu referencia), necesito que extraigas y estructures la información de la siguiente manera en un formato JSON:
+        Hola, basándote en tu respuesta anterior sobre el problema de lógica, necesito que extraigas y estructures la información de la siguiente manera en un formato JSON:
 
         El JSON debe tener tres claves principales en el nivel raíz:
 

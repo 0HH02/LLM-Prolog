@@ -1,7 +1,7 @@
 from typing import List, Dict, Optional, Tuple
 from common.gemini_interface import ask_gemini, ask_gemini_json # Asumiendo que la función ask_gemini está definida como antes
 from .kr_store import KnowledgeRepresentationStore, PREDEFINED_AXIOM_MODULES
-from .horn_clause import verify_horn_clause_sintaxys
+from common.horn_clause import verify_horn_clause_sintaxys
 from mfsa.promts import initial_analysis_promt, formalize_statement_promt, extract_problem_clauses_promt, enrich_axioms_promt, formalize_in_logic_statement_promt
 
 class SemanticFormalizationAxiomatizationModule:
