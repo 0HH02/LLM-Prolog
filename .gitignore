@@ -26,3 +26,6 @@ Thumbs.db
 
 # Archivos con tokens y secretos
 benchmarks/references.txt 
+
+# Soluciones
+solutions/
