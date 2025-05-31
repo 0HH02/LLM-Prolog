@@ -1,17 +1,76 @@
 import os
 import tempfile
 import subprocess
+import re
+import copy
+from graphviz import Digraph
 from typing import List, Dict, Optional, Set, Tuple
-from .llm_jem import LLMJEM
-from .trace import InferenceTrace, InferenceStep, StepStatus
+import json
+from pathlib import Path
+
+class Clausula:
+    def __init__(self, nombre, valor=None, veracidad="", padre=None):
+        self.nombre = nombre
+        self.valor = valor if valor is not None else []  # array de Clausula
+        self.veracidad = veracidad  # string
+        self.padre = padre  # Clausula
+
+    def __eq__(self, other):
+        if not isinstance(other, Clausula):
+            return False
+        self_nombre = self.nombre.split('(')[0].strip()
+        self_aridad = len(self.nombre.split('(')[1].split(',')) if '(' in self.nombre else 0
+
+        # Extraer nombre y aridad del contenido
+        other_nombre = other.nombre.split('(')[0].strip()
+        other_aridad = len(other.nombre.split('(')[1].split(',')) if '(' in other.nombre else 0
+        return (self_nombre == other_nombre and self_aridad == other_aridad and self.veracidad == other.veracidad and len(self.valor) == len(other.valor))
+
+    def to_dict(self):
+        output_dict = {
+            "nombre": self.nombre,
+            "veracidad": self.veracidad
+        }
+
+        if self.valor:  # Si hay nodos hijos
+            # Llama recursivamente 'to_dict' en cada hijo
+            output_dict["valor"] = [child.to_dict() for child in self.valor]
+
+        return output_dict
+
+    def pretty_print(self, indent_level=0):
+        indent = "  " * indent_level
+        output = []
+        output.append(f"{indent}{{")
+        output.append(f"{indent}  \"nombre\": \"{self.nombre}\",")
+        
+        # La línea de veracidad no lleva coma si no hay 'valor' o si 'valor' está vacío.
+        veracidad_line = f"{indent}  \"veracidad\": \"{self.veracidad}\""
+
+        if self.valor:
+            output.append(veracidad_line + ",") # Añadir coma si 'valor' sigue
+            output.append(f"{indent}  \"valor\": [")
+            child_strings = []
+            for i, child in enumerate(self.valor):
+                child_strings.append(child.pretty_print(indent_level + 2))
+            output.append(",\n".join(child_strings)) # Los hijos se unen con ',\n'
+            output.append(f"{indent}  ]")
+        else:
+            output.append(veracidad_line) # Sin coma si 'valor' no sigue o está vacío.
+
+        output.append(f"{indent}}}")
+        return "\n".join(output)
+
+    def __repr__(self):
+        # Representación útil para depuración, no para la salida final solicitada.
+        padre_nombre = self.padre.nombre if self.padre else "None"
+        return (f"Clausula(nombre='{self.nombre}', veracidad='{self.veracidad}', "
+                f"num_hijos={len(self.valor)}, padre='{padre_nombre}')")
 
 class PrologSolver:
     """
     Implementa un solver basado en Prolog para inferencia lógica con justificaciones.
     """
-
-    def __init__(self, llm_jem: LLMJEM):
-        self.llm_jem = llm_jem
 
     def _create_prolog_program(self, clauses: List[str]) -> str:
         """Crea un programa Prolog a partir de una lista de HornClauses."""
@@ -69,128 +128,184 @@ class PrologSolver:
             print(stdout_capture) # Debería estar vacío o con pocos mensajes si todo va a user_error
         
         return stderr_capture
+    
+    def _procesar_traza(self, traza_str):
+        # Inicializamos un array de Clausulas llamado ramas_de_pensamientos
+        ramas_de_pensamientos = []
+        # Inicializamos una variable llamada root con la Clausula root con el nombre root, array vacío, valor = "" y padre = None
+        root = Clausula(nombre="root", veracidad="", padre=None)
+        # Inicializamos una variable llamada nodo_actual que será igual a root
+        nodo_actual = root
 
-    def _parse_prolog_trace(self, raw_trace: str, trace: InferenceTrace, initial_clauses: List[str]):
-        """
-        Parsea la traza cruda de Prolog y construye el árbol de inferencia.
-        """
-        if not raw_trace:
-            return
+        # Regex para parsear: Tipo, Nivel (ignorado por ahora), Contenido
+        line_regex = re.compile(r"^\s*(Call|Exit|Fail|Redo):\s*\(\d+\)\s*(.*)$")
+
+        traza = traza_str.strip().split('\n')
+        # Por cada linea en la traza:
+        for index, line_raw in enumerate(traza):
+            line = line_raw.strip()
+            if not line:
+                continue
+
+            # Parseala para determinar el contenido de la linea y desestrúcturalo en nombre, aridad y tipo de llamada.
+            match = line_regex.match(line)
+            if not match:
+                # print(f"Advertencia: No se pudo parsear la línea: {line}")
+                continue
+
+            tipo_llamada, contenido_str = match.group(1), match.group(2).strip()
+            # 'nombre' y 'aridad' se infieren del 'contenido_str' según el contexto.
+
+            if tipo_llamada == "Call":
+                # Si la linea es de tipo Call, si el contenido es fail salta la linea
+                if contenido_str == "fail":
+                    continue
+                # si no crea una Clausula con nombre = al contenido y padre = nodo_actual, esta será el nuevo nodo_actual
+                nueva_clausula = Clausula(nombre=contenido_str, padre=nodo_actual)
+                nodo_actual.valor.append(nueva_clausula)
+                nodo_actual = nueva_clausula
             
-        lineas = raw_trace.split('\n')
-        step_stack = []  # Stack para mantener la jerarquía de llamadas
-        depth_to_step_id = {}  # Mapeo de profundidad a step_id
-        
-        for linea in lineas:
-            if linea == lineas[0]:
-                continue
-            if "Fail: (10)" in linea:
-                break
-            linea = linea.strip()
-            if not linea:
-                continue
+            elif tipo_llamada == "Exit":
+                # El nodo_actual es el que fue llamado y ahora está saliendo (Exit)
+                exiting_node = nodo_actual
                 
-            # Extraer información de la línea de traza
-            if any(keyword in linea for keyword in ["Call:", "Exit:", "Fail:", "Redo:"]):
-                depth, predicate, status = self._parse_trace_line(linea)
-                if depth is None or predicate is None:
+                # Si el array valor está vacío crea una Cláusula con el nombre = al contenido, veracidad = "verde" y agrégalo al array de cláusulas de valor del nodo_actual.
+                if not exiting_node.valor: 
+                    clausula_resultado = Clausula(nombre=contenido_str, veracidad="verde", padre=exiting_node)
+                    exiting_node.valor.append(clausula_resultado)
+                exiting_node.veracidad = "verde"
+                
+                # Nodo_actual será nodo_actual.padre (para ambos casos de Exit)
+                if exiting_node.padre:
+                    nodo_actual = exiting_node.padre
+                
+            elif tipo_llamada == "Fail":
+                # si el contenido es fail salta la linea
+                if contenido_str == "fail":
                     continue
                 
-                # Determinar el padre basado en la profundidad
-                parent_step_id = None
-                if depth > 0:
-                    # Buscar el padre en profundidades menores
-                    for d in range(depth - 1, -1, -1):
-                        if d in depth_to_step_id:
-                            parent_step_id = depth_to_step_id[d]
-                            break
+                failing_node = nodo_actual # El nodo que fue llamado y ahora está fallando (Fail)
                 
-                # Agregar el paso al árbol
-                step_id = trace.add_step(
-                    predicate=predicate,
-                    status=status,
-                    depth=depth,
-                    parent_step_id=parent_step_id
-                )
+                # si no si el array valor está vacío crea una Cláusula con el nombre = al contenido, veracidad = "rojo" y agrégalo al array de cláusulas de valor del nodo_actual.
+                if not failing_node.valor:
+                    clausula_resultado = Clausula(nombre=contenido_str, veracidad="rojo", padre=failing_node)
+                    failing_node.valor.append(clausula_resultado)
+
+                failing_node.veracidad = "rojo"
                 
-                # Actualizar el mapeo de profundidad
-                depth_to_step_id[depth] = step_id
+                # y el nodo_actual será nodo_actual.padre (para ambos casos de Fail)
+                if failing_node.padre:
+                    nodo_actual = failing_node.padre
+
+            elif tipo_llamada == "Redo":
+                # Hacemos una copia del arbol almacenado en root y la guardamos en el array de ramas_de_pensamientos.
+                while nodo_actual.padre:
+                    nodo_actual.veracidad = "rojo"
+                    nodo_actual = nodo_actual.padre
+                ramas_de_pensamientos.append(copy.deepcopy(root))
                 
-                # Agregar anotaciones específicas
-                if status == StepStatus.SUCCEEDED:
-                    # Verificar si es un hecho inicial
-                    for clause in initial_clauses:
-                        if not clause.body and str(clause).strip('.') in predicate:
-                            trace.annotate_step(step_id, "source", "initial_fact")
-                            trace.annotate_step(step_id, "clause", str(clause))
-                            break
+                # Luego bajamos por el arbol desde root hasta encontrar una de las cláusulas 
+                # ... con nombre igual al contenido de la linea
+                # (contenido_str es, por ej., "hola(_4668)")
+                
+                q = [root] # Cola para búsqueda BFS para encontrar el nodo
+                node_to_redo_found = None
+                # Usamos un set para evitar ciclos en la búsqueda si la estructura del árbol fuera inesperada,
+                # aunque con padres no debería haber ciclos descendentes.
+                visited_for_bfs = set() 
+
+                while q:
+                    curr_search_node = q.pop(0)
+                    
+                    if id(curr_search_node) in visited_for_bfs: # Comprobar por id del objeto
+                        continue
+                    visited_for_bfs.add(id(curr_search_node))
+
+                    # Extraer nombre y aridad del nodo actual
+                    curr_nombre = curr_search_node.nombre.split('(')[0].strip()
+                    curr_aridad = len(curr_search_node.nombre.split('(')[1].split(',')) if '(' in curr_search_node.nombre else 0
+
+                    # Extraer nombre y aridad del contenido
+                    cont_nombre = contenido_str.split('(')[0].strip()
+                    cont_aridad = len(contenido_str.split('(')[1].split(',')) if '(' in contenido_str else 0
+
+                    # Comparar nombre y aridad
+                    if curr_nombre == cont_nombre and curr_aridad == cont_aridad:
+                        node_to_redo_found = curr_search_node
+                        break
+                    for child in curr_search_node.valor:
+                        if isinstance(child, Clausula): # Asegurarse de que el hijo es una Clausula
+                            q.append(child)
+                
+                if node_to_redo_found:
+                    next_clausule = traza[index + 1]
+                    next_contenido = line_regex.match(next_clausule).group(2).strip()
+                    nombre = next_contenido.split('(')[0].strip()
+                    aridad = len(next_contenido.split('(')[1].split(',')) if '(' in next_contenido else 0
+                    if node_to_redo_found.valor != []:
+                        for index, clausula in enumerate(node_to_redo_found.valor):
+                            if clausula.nombre == nombre and len(clausula.nombre.split('(')[1].split(',')) if '(' in clausula.nombre else 0 == aridad:
+                                node_to_redo_found.valor = node_to_redo_found.valor[:index + 1]
+                                break
                     else:
-                        # Es una derivación
-                        trace.annotate_step(step_id, "source", "derived")
+                        # Limpiar el array de valor del nodo encontrado y reiniciar su veracidad
+                        node_to_redo_found.valor = [] 
+                    node_to_redo_found.veracidad = ""  # Reiniciar su estado de veracidad
+                    nodo_actual = node_to_redo_found
+                    current = node_to_redo_found
+                    while current.padre:
+
+                        indice = current.padre.valor.index(current)
+                        # Truncar el array de valor del padre hasta el índice encontrado
+                        current.padre.valor = current.padre.valor[:indice + 1]
+                        current = current.padre
                         
-                        # Intentar obtener justificación del LLM
-                        premises = self._get_premises_for_step(step_id, trace)
-                        if premises:
-                            justification = self.llm_jem.get_justification(predicate, premises)
-                            trace.steps[step_id].justification = justification
+                else:
+                    # Este caso idealmente no debería ocurrir si la traza es consistente.
+                    # print(f"Advertencia: Objetivo de REDO '{contenido_str}' no encontrado en el estado actual del árbol.")
+                    pass
 
-    def _parse_trace_line(self, linea: str) -> Tuple[Optional[int], Optional[str], Optional[StepStatus]]:
-        """
-        Parsea una línea de traza de Prolog y extrae profundidad, predicado y estado.
-        """
-        try:
-            # Extraer profundidad del número entre paréntesis
-            if "(" in linea and ")" in linea:
-                depth_part = linea[linea.find("(") + 1:linea.find(")")]
-                depth = int(depth_part) if depth_part.isdigit() else 0
-            else:
-                depth = 0
-            
-            # Determinar el estado
-            if "Call:" in linea:
-                status = StepStatus.CALLED
-                predicate = linea.split("Call:")[1].strip()
-            elif "Exit:" in linea:
-                status = StepStatus.SUCCEEDED
-                predicate = linea.split("Exit:")[1].strip()
-            elif "Fail:" in linea:
-                status = StepStatus.FAILED
-                predicate = linea.split("Fail:")[1].strip()
-            elif "Redo:" in linea:
-                status = StepStatus.BACKTRACKED
-                predicate = linea.split("Redo:")[1].strip()
-            else:
-                return None, None, None
-            
-            # Limpiar el predicado
-            predicate = predicate.split(") ")[1].strip()
-            
-            return depth, predicate, status
-            
-        except Exception as e:
-            print(f"Error parseando línea de traza: {linea} - {e}")
-            return None, None, None
+        ramas_de_pensamientos.append(copy.deepcopy(root))
 
-    def _get_premises_for_step(self, step_id: int, trace: InferenceTrace) -> List[str]:
+        return ramas_de_pensamientos
+    
+    def _create_thought_graph(self, data, graph=None, parent_id=None, node_counter=[0]):
         """
-        Obtiene las premisas para un paso dado basándose en sus pasos hijo exitosos.
+        Recursively creates nodes and edges for the Graphviz diagram from the JSON data.
         """
-        if step_id not in trace.steps:
-            return []
-        
-        step = trace.steps[step_id]
-        premises = []
-        
-        # Buscar pasos hijo que fueron exitosos
-        for child_id in step.children_step_ids:
-            if child_id in trace.steps:
-                child_step = trace.steps[child_id]
-                if child_step.status == StepStatus.SUCCEEDED:
-                    premises.append(child_step.predicate)
-        
-        return premises
+        if graph is None:
+            graph = Digraph(comment='Cadena de Pensamientos', format='png') # You can change 'png' to 'svg', 'jpg', etc.
+            graph.attr(rankdir='TB') # Top to bottom layout
+            graph.attr('node', shape='box', style='filled', fontname='Arial')
 
-    def solve(self, initial_clauses: List[str], goal_clause_obj: Optional[str] = None, problem_name: str = "Problema") -> InferenceTrace:
+        current_node_id = f"node_{node_counter[0]}"
+        node_counter[0] += 1
+
+        name = data.get("nombre", "N/A")
+        veracidad = data.get("veracidad", "")
+
+        # Define node color based on 'veracidad'
+        fill_color = "lightblue" # Default
+        if veracidad == "verde":
+            fill_color = "lightgreen"
+        elif veracidad == "rojo":
+            fill_color = "salmon"
+
+        # Add the node to the graph
+        graph.node(current_node_id, label=f"{name.replace("\\", "\\\\")}\\n({veracidad})", fillcolor=fill_color)
+
+        # Add an edge from the parent node if it exists
+        if parent_id:
+            graph.edge(parent_id, current_node_id)
+
+        # Recursively process children
+        if "valor" in data and isinstance(data["valor"], list):
+            for child in data["valor"]:
+                self._create_thought_graph(child, graph, current_node_id, node_counter)
+
+        return graph
+
+    def solve(self, initial_clauses: List[str], goal_clause_obj: Optional[str] = None, problem_name: str = "Problema") -> List[Clausula]:
         """
         Ejecuta el proceso de inferencia usando Prolog.
 
@@ -209,22 +324,39 @@ class PrologSolver:
 
         # Ejecutar Prolog y obtener la traza
         raw_trace = self._ejecutar_prolog_con_traza_modificado(program_string, consulta)
-        # raw_trace = "\n".join(raw_trace.split("\n")[1:-6])
+        raw_trace = "\n".join(raw_trace.split("\n")[1:-6])
         print("--- Traza cruda de Prolog ---")
         print(raw_trace)
         print("--- Fin de traza cruda ---")
         
-        # # Crear la traza de inferencia
-        # trace = InferenceTrace(goal_clause=str(goal_clause_obj) if goal_clause_obj else None)
+        # Procesar la traza
+        ramas = self._procesar_traza(raw_trace)
         
-        # # Parsear la traza de Prolog y construir el árbol
-        # self._parse_prolog_trace(raw_trace, trace, initial_clauses)
-        
-        # # Extraer las cadenas de razonamiento
-        # trace.extract_reasoning_chains()
+        # Crear directorios si no existen
+        solutions_dir = Path("solutions")
+        success_dir = solutions_dir / "success"
+        fails_dir = solutions_dir / "fails"
 
-        return raw_trace
+        # Guardar el JSON
+        json_path = solutions_dir / f"ramas_de_pensamiento.json"
+        with open(json_path, 'w', encoding='utf-8') as f:
+            # Convertir cada objeto Clausula a diccionario antes de guardar
+            ramas_dict = [rama.to_dict() for rama in ramas]
+            json.dump(ramas_dict, f, indent=2, ensure_ascii=False)
+        
+        for i, arbol_pensamiento in enumerate(ramas):
+            # Convertir el árbol a diccionario
+            arbol_dict = arbol_pensamiento.to_dict()
+            
+            # Determinar la carpeta basada en la veracidad del primer nodo
+            target_dir = success_dir if arbol_pensamiento.valor[0].veracidad == "verde" else fails_dir
+            
+            # Generar y guardar el gráfico
+            dot = self._create_thought_graph(arbol_dict)
+            dot.render(str(target_dir / f'arbol_pensamiento_{i}'), view=False, cleanup=True)
+
+        return ramas
 
 if __name__ == "__main__":
-    solver = PrologSolver(llm_jem=LLMJEM())
+    solver = PrologSolver()
     solver.solve(["contraseña(X, Y, Z) :- alfa(X), beta(Y), ganma(Z).","alfa(1).", "alfa(2).", "beta(1).", "ganma(Z) :- hola(Z).", "hola(1).", "hola(2)."], "contraseña(X,Y,Z).")

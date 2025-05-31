@@ -2,7 +2,6 @@ from mfsa.mfsa_module import SemanticFormalizationAxiomatizationModule
 from mfsa.kr_store import KnowledgeRepresentationStore
 from ohi.ohi import HeuristicInferenceOrchestrator
 from misa_j.cfcs import PrologSolver
-from misa_j.llm_jem import LLMJEM
 # from mmrc.mmrc_module import MetaCognitionKnowledgeRefinementModule
 from common.gemini_interface import ask_gemini
 from checkpoints_utils import save_checkpoint, load_checkpoint, clear_all_checkpoints, clear_checkpoint
@@ -14,6 +13,7 @@ import os
 from datetime import datetime
 import contextlib
 from datasets import load_dataset
+import shutil
 
 # --- CONFIGURACIÓN DEL FRAMEWORK ---
 # Estos valores pueden ser sobrescritos por argumentos de línea de comandos
@@ -110,35 +110,58 @@ def parse_arguments():
     if args.log_dir:
         CONFIG["log_directory"] = args.log_dir
 
+def clear_solutions():
+    solutions_dir = os.path.join(os.path.dirname(__file__), "solutions")
+    success_dir = os.path.join(solutions_dir, "success")
+    fails_dir = os.path.join(solutions_dir, "fails")
+    
+    # Crear directorios si no existen
+    os.makedirs(success_dir, exist_ok=True)
+    os.makedirs(fails_dir, exist_ok=True)
+    
+    # Eliminar archivos dentro de success
+    for file in os.listdir(success_dir):
+        file_path = os.path.join(success_dir, file)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+    
+    # Eliminar archivos dentro de fails
+    for file in os.listdir(fails_dir):
+        file_path = os.path.join(fails_dir, file)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+
+
 def main():
     # Carga de problemas
     ds = load_dataset("yale-nlp/FOLIO")
-
-    # Instanciación de módulos principales
-    mfsa = SemanticFormalizationAxiomatizationModule()
-    ohi = HeuristicInferenceOrchestrator()
-    llm_jem_instance = LLMJEM()
-    misa_j_solver = PrologSolver(llm_jem=llm_jem_instance)
     # mmrc_module = MetaCognitionKnowledgeRefinementModule()
 
     for index, problem_data in enumerate(ds['train']):
         if index < 4:
             continue
         problem_description = f"""
-            Tweedledum y Tweedledee visitaban frecuentemente el bosque.
-            Ahora bien, uno de los dos es como el León: miente los lunes, martes y miércoles y
-            dice la verdad los restantes días de la semana. El otro es como el Unicornio: miente
-            los jueves, viernes y sábados y dice la verdad los restantes días de la semana. Alicia
-            no sabía que uno era como el León y que otro era como el Unicornio. Para terminar
-            de arreglarlo, los hermanos se parecían tanto que Alicia no podía ni siquiera
-            distinguirlos (excepto cuando llevaban sus cuellos bordados, cosa que raramente
-            hacían). Así pues, la pobre Alicia se encontró realmente en una situación muy
-            confusa. He aquí ahora alguna de las aventuras de Alicia con Tweedledum y
-            Tweedledee.
-            Un día Alicia se encontró a los hermanos juntos que le hablaron así:
-            El primero de ellos dijo: Yo soy Tweedledum.
-            El segundo dijo: Yo soy Tweedledee.
-            ¿Cuál de ellos era realmente Tweedledum y cuál de ellos Tweedledee?"""
+            Habían aparecido cuatro cofres, dos de oro y dos de plata; se sabía que constituían
+            dos juegos, pero se habían mezclado y ahora no se sabía qué cofre de oro y qué cofre
+            de plata formaban pareja. Me los enseñaron y pronto pude resolver el problema por lo
+            que recibí unos excelentes honorarios. Pero además pude establecer también quién
+            había hecho cada cofre, por lo que recibí un extra (que consistía, entre otras cosas, en
+            una excelente caja de botellas de Chianti) y un beso de una de las florentinas más
+            maravillosas que haya existido nunca
+            He aquí los cuatro cofres:
+            Cofre A (Oro)
+            EL COFRE DE PLATA ES OBRA DE UN CELLINI
+            Cofre B (Plata)
+            EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON
+            DE BELLINI
+            Cofre C (Oro)
+            EL COFRE DE ORO ES OBRA DE UN BELLINI
+            Cofre D (Plata)
+            EL COFRE DE ORO ES OBRA DE UN BELLINI Y POR LO MENOS UNO DE
+            ESTOS COFRES ES OBRA DE UN HIJO O DE BELLINI O CELLINI
+            Tenemos ahora un problema:
+            ¿Quién hizo cada uno de los cofres?
+            """
         problem_topic_hint = None
 
         if CONFIG["problem_indices_to_run"] is not None and index not in CONFIG["problem_indices_to_run"]:
@@ -150,12 +173,15 @@ def main():
 
         # --- Ciclo Iterativo de Razonamiento y Refinamiento ---
         current_kr_store = None
-        current_inference_trace = None
+        thought_tree = None
         goal_clauses_mfsa = []
         goal_clause_str_for_llms = ""
 
         for cycle in range(CONFIG["max_refinement_cycles"]):
             print(f"\n--- CICLO DE REFINAMIENTO {cycle + 1} / {CONFIG['max_refinement_cycles']} ---")
+            # --- Limpieza de soluciones anteriores ---
+            # Limpiar archivos dentro de los directorios de soluciones
+            clear_solutions()
 
             # --- 1. MFSA (Formalización Semántica y Axiomatización) ---
             if cycle == 0 or (CONFIG["force_run_mfsa"] and not current_kr_store):
@@ -190,26 +216,26 @@ def main():
             goal_clause_str_for_llms = str(goal_clauses_mfsa[0]) # Usar la primera para los prompts
             print(f"\nINFO: Cláusula Objetivo Principal: {goal_clause_str_for_llms}")
 
-        
-
             selected_clauses_by_ohi = current_kr_store.get_clauses_by_category("problem_clause")
+
             # --- 3. MISA-J (Motor de Inferencia Simbólica Asistido por Justificación) ---
+            misa_j_solver = PrologSolver()
             checkpoint_misa_trace_name = f"misa_j_trace_cycle{cycle}"
             if not CONFIG["force_run_misa_j"]:
-                current_inference_trace = load_checkpoint(checkpoint_misa_trace_name, problem_description)
+                thought_tree = load_checkpoint(checkpoint_misa_trace_name, problem_description)
 
-            if current_inference_trace is None: # Si no se cargó o se fuerza
+            if thought_tree is None: # Si no se cargó o se fuerza
                 print("\n--- Ejecutando MISA-J (CFCS) ---")
-                current_inference_trace = misa_j_solver.solve(selected_clauses_by_ohi, goal_clauses_mfsa[0])
-                if CONFIG["save_checkpoints"] and current_inference_trace:
-                    save_checkpoint(current_inference_trace, checkpoint_misa_trace_name, problem_description)
+                thought_tree = misa_j_solver.solve(selected_clauses_by_ohi, goal_clauses_mfsa[0])
+                if CONFIG["save_checkpoints"] and thought_tree:
+                    save_checkpoint(thought_tree, checkpoint_misa_trace_name, problem_description)
             else:
                 print("INFO: MISA-J omitido, traza cargada desde checkpoint.")
-            
+            break
 
         print("\n" + "="*70 + f"\nFIN DEL PROCESAMIENTO PARA PROBLEMA {index + 1}" + "\n" + "="*70)
         input("Presiona Enter para continuar con el siguiente problema...")
-
+        break
     print("\nTODOS LOS PROBLEMAS CONFIGURADOS PROCESADOS.")
 
 
