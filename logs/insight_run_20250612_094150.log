@@ -1,0 +1,396 @@
+
+======================================================================
+PROCESANDO PROBLEMA 5: "
+Hay una amplia variedad de adivinanzas relativas a una isla en la que ciertos
+h..."
+======================================================================
+
+--- Ejecutando MFSA ---
+
+--- Iniciando Formalización Semántica y Axiomatización (MFSA) ---
+Descripción del Problema (NL): 
+Hay una amplia variedad de adivinanzas relativas a una isla en la que ciertos
+habitantes llamados «caballeros» dicen siempre la verdad, y otros llamados
+«escuderos» mienten siempre. Se supone que todo habitante de la isla es o caballero o
+escudero. Empezaré con una adivinanza de este tipo que es muy conocida, para luego
+seguir con otras varias de mi propia cosecha.
+En este problema hay sólo dos individuos, A y B, cada uno de los cuales es o
+caballero o escudero. A dice: «Uno al menos de nosotros es escudero.»
+¿Qué son A y B?
+
+            
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (initial_analysis_
+hay_una_amplia_vari) ---
+Prompt: 
+        Hola, necesito tu ayuda para analizar y resolver un problema de lógica de manera sistemática. Por favor, sigue los siguientes pasos:
+
+        1. Entendimiento del Problema: 
+        - Identifica los elementos clave (personas, objetos, lugares, eventos, etc.) involucrados en el problema.
+        - Extrae todas las declaraciones lógicas o pistas proporcionadas, y anótalas claramente. Distingue entre hechos directos e inferencias posibles.
+
+        2. Análisis e Inferencia Preliminar:
+        - Basándote en la información organizada, realiza inferencias lógicas paso a paso. Elimina posibilidades o deduce nuevos hechos. Si es aplicable, actualiza tu representación de la información con cada nueva inferencia hasta que se clarifiquen las relaciones.
+        
+        3. Hipótesis de Solución:
+        - A partir de tu análisis e inferencias, propón una hipótesis clara sobre cuál es la solución al problema de lógica.
+        
+        4. Comprobación Formal con Prolog:
+        - Vas a crear un programa en Prolog (hechos y reglas) basado en tu hipótesis de solución y las pistas originales. Este programa debe ser capaz de demostrar la validez de tu hipótesis a través de consultas.
+        - Esto es sumamente importante: La corrección semántica y sintáctica del programa Prolog es crucial, ya que la verdad de tu hipótesis se deduce de la capacidad del programa para probarla. Asegúrate de que el código esté bien escrito y refleje lógicamente el problema y tu solución propuesta.
+
+        A continuación, te presento el problema de lógica:
+        
+Hay una amplia variedad de adivinanzas relativas a una isla en la que ciertos
+habitantes llamados «caballeros» dicen siempre la verdad, y otros llamados
+«escuderos» mienten siempre. Se supone que todo habitante de la isla es o caballero o
+escudero. Empezaré con una adivinanza de este tipo que es muy conocida, para luego
+seguir con otras varias de mi propia cosecha.
+En este problema hay sólo dos individuos, A y B, cada uno de los cuales es o
+caballero o escudero. A dice: «Uno al menos de nosotros es escudero.»
+¿Qué son A y B?
+
+            
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: Okay, procedamos a analizar y resolver este problema de lógica sistemáticamente, siguiendo los pasos que has indicado.
+
+---
+
+**1. Entendimiento del Problema**
+
+*   **Elementos Clave:**
+    *   Dos individuos: A y B.
+    *   Dos tipos posibles para cada individuo: Caballero (siempre dice la verdad) y Escudero (siempre miente).
+    *   Regla fundamental: Cada individuo es *exactamente* uno de estos tipos (o caballero o escudero).
+
+*   **Declaraciones Lógicas/Pistas:**
+    *   Pista 1: A dice la afirmación S: "Al menos uno de nosotros es escudero."
+    *   Pista 2 (Regla): Un Caballero dice algo si y solo si esa afirmación es verdadera.
+    *   Pista 3 (Regla): Un Escudero dice algo si y solo si esa afirmación es falsa (es decir, miente).
+    *   Pista 4 (Regla): Todo habitante es Caballero o Escudero.
+
+---
+
+**2. Análisis e Inferencia Preliminar**
+
+Analizaremos las posibilidades para el tipo de A y veremos si son consistentes con su declaración y las reglas de la isla.
+
+*   Consideremos la afirmación S que A dice: "Al menos uno de nosotros es escudero."
+    *   Esto significa lógicamente: (A es escudero) O (B es escudero).
+
+*   **Caso 1: Suponemos que A es Caballero.**
+    *   Si A es Caballero, entonces A dice la verdad.
+    *   Esto implica que la afirmación S ("Al menos uno de nosotros es escudero") debe ser verdadera.
+    *   Si S es verdadera, entonces (A es escudero) O (B es escudero) es verdadero.
+    *   Pero en este caso (Caso 1), estamos suponiendo que A es Caballero, lo cual significa que A *no* es escudero.
+    *   Para que la disyunción ("A es escudero O B es escudero") sea verdadera y sabiendo que "A es escudero" es falso (según nuestra suposición), la otra parte de la disyunción debe ser verdadera.
+    *   Por lo tanto, B *debe* ser escudero.
+    *   Verifiquemos si esta combinación (A es Caballero, B es Escudero) es consistente:
+        *   A (Caballero) dice S ("Al menos uno de nosotros es escudero").
+        *   ¿Es S verdadera si A es Caballero y B es Escudero? Sí, porque B es escudero, cumpliendo la condición de "al menos uno".
+        *   Un Caballero dice la verdad, y S es verdadera en este escenario. Esto es **consistente**.
+
+*   **Caso 2: Suponemos que A es Escudero.**
+    *   Si A es Escudero, entonces A miente.
+    *   Esto implica que la afirmación S ("Al menos uno de nosotros es escudero") debe ser falsa.
+    *   Si S es falsa, entonces su negación es verdadera.
+    *   La negación de "Al menos uno de nosotros es escudero" es "Ninguno de nosotros es escudero."
+    *   "Ninguno de nosotros es escudero" significa lógicamente: (A *no* es escudero) Y (B *no* es escudero).
+    *   Esto es equivalente a: (A es Caballero) Y (B es Caballero).
+    *   Según nuestra suposición inicial para este caso (Caso 2), A es Escudero.
+    *   Pero la negación de S, que debe ser verdadera si A miente, implica que A es Caballero.
+    *   Esto lleva a una contradicción: A debe ser Escudero (por suposición) y A debe ser Caballero (por lo que dice un Escudero A). Un individuo no puede ser ambos.
+    *   Por lo tanto, la suposición de que A es Escudero es **inconsistente**.
+
+*   **Conclusión del Análisis:** El único caso consistente es el Caso 1, donde A es Caballero y B es Escudero.
+
+---
+
+**3. Hipótesis de Solución**
+
+Basado en el análisis lógico, la única posibilidad consistente con la declaración de A y las reglas de la isla es:
+A es un Caballero y B es un Escudero.
+
+---
+
+**4. Comprobación Formal con Prolog**
+
+Ahora crearemos un programa en Prolog para modelar el problema y verificar nuestra hipótesis.
+
+Modelaremos:
+*   Los posibles tipos: `caballero` y `escudero`.
+*   La regla de consistencia: Lo que dice una persona es compatible con su tipo si es caballero y la proposición es verdadera, o si es escudero y la proposición es falsa.
+*   La proposición que A dice: "Al menos uno de nosotros es escudero". Definiremos cuándo esta proposición es verdadera dados los tipos de A y B.
+*   La condición general: Encontrar los tipos de A y B tales que la declaración de A sea consistente.
+
+```prolog
+% --- Hechos y Reglas del Problema ---
+
+% Posibles tipos de habitantes
+tipo(caballero).
+tipo(escudero).
+
+% Regla de la isla: La consistencia entre el tipo de una persona y lo que dice.
+% consistente(TipoPersona, ValorVerdadProposicion)
+% Un caballero es consistente si dice la verdad (la proposición es verdadera).
+consistente(caballero, true).
+% Un escudero es consistente si miente (la proposición es falsa).
+consistente(escudero, false).
+
+% Definición de la proposición que dice A: "Al menos uno de nosotros es escudero".
+% La verdad de esta proposición depende de los tipos de A y B.
+% verdad_proposicion(Proposicion, TipoA, TipoB, ValorVerdad)
+% La proposición "al_menos_uno_escudero" es verdadera si A es escudero (independientemente de B).
+verdad_proposicion(al_menos_uno_escudero, TipoA, _, true) :- TipoA = escudero.
+% La proposición "al_menos_uno_escudero" es verdadera si B es escudero (y A no era ya escudero).
+verdad_proposicion(al_menos_uno_escudero, _, TipoB, true) :- TipoB = escudero.
+% La proposición "al_menos_uno_escudero" es falsa solo si NI A es escudero NI B es escudero.
+% Esto ocurre únicamente si ambos son caballeros.
+verdad_proposicion(al_menos_uno_escudero, caballero, caballero, false).
+
+
+% Predicado para encontrar la solución:
+% Busca tipos TipoA y TipoB para A y B que sean consistentes con la declaración de A.
+solucion(TipoA, TipoB) :-
+    tipo(TipoA), % A debe tener un tipo válido (caballero o escudero)
+    tipo(TipoB), % B debe tener un tipo válido (caballero o escudero)
+    % Determinar el valor de verdad de la proposición "al_menos_uno_escudero"
+    % para la combinación actual de TipoA y TipoB.
+    verdad_proposicion(al_menos_uno_escudero, TipoA, TipoB, ValorProposicionA),
+    % Verificar si A, con su TipoA, es consistente al decir esta proposición con su ValorProposicionA.
+    consistente(TipoA, ValorProposicionA).
+
+% --- Consulta ---
+% Para encontrar la solución, preguntamos a Prolog:
+% ?- solucion(TipoA, TipoB).
+```
+
+**Ejecución de la Consulta en Prolog:**
+
+Si cargas este código en un intérprete de Prolog y haces la consulta:
+`?- solucion(TipoA, TipoB).`
+
+Prolog buscará combinaciones de `TipoA` y `TipoB` (caballero/escudero para ambos) que satisfagan todas las condiciones.
+
+*   Intentará `TipoA = caballero`, `TipoB = caballero`.
+    *   `verdad_proposicion(al_menos_uno_escudero, caballero, caballero, false)`.
+    *   `consistente(caballero, false)` falla. (Un caballero no es consistente diciendo algo falso).
+*   Intentará `TipoA = caballero`, `TipoB = escudero`.
+    *   `verdad_proposicion(al_menos_uno_escudero, caballero, escudero, true)`. (Porque B es escudero).
+    *   `consistente(caballero, true)` tiene éxito. (Un caballero es consistente diciendo algo verdadero).
+    *   **¡Encuentra una solución!** `TipoA = caballero`, `TipoB = escudero`.
+*   Intentará `TipoA = escudero`, `TipoB = caballero`.
+    *   `verdad_proposicion(al_menos_uno_escudero, escudero, caballero, true)`. (Porque A es escudero).
+    *   `consistente(escudero, true)` falla. (Un escudero no es consistente diciendo algo verdadero).
+*   Intentará `TipoA = escudero`, `TipoB = escudero`.
+    *   `verdad_proposicion(al_menos_uno_escudero, escudero, escudero, true)`. (Porque A es escudero y B es escudero).
+    *   `consistente(escudero, true)` falla. (Un escudero no es consistente diciendo algo verdadero).
+
+**Resultado de la Consulta:**
+
+La consulta `?- solucion(TipoA, TipoB).` producirá:
+
+```
+TipoA = caballero,
+TipoB = escudero.
+```
+
+Esto coincide exactamente con nuestra hipótesis derivada del análisis lógico manual. El programa Prolog confirma que la única asignación de tipos que es consistente con la declaración de A y las reglas de la isla es que A sea un Caballero y B sea un Escudero.
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini JSON (general) ---
+Prompt: 
+        Hola, basándote en tu respuesta anterior sobre el problema de lógica, necesito que extraigas y estructures la información de la siguiente manera en un formato JSON:
+
+        El JSON debe tener tres claves principales en el nivel raíz:
+
+        "facts": Un array de strings, donde cada string es un hecho Prolog completo tal como lo definiste.
+        "rules": Un array de strings, donde cada string es una regla Prolog completa tal como la definiste.
+        "objective": Un string que represente la consulta principal de Prolog que se usaría para obtener la solución (por ejemplo, solucion(Tweedledum, Tweedledee).).
+
+        Consejos importantes para asegurar la compatibilidad con Prolog al generar los strings de hechos y reglas:
+            Átomos: Los nombres de predicados y las constantes (átomos) en Prolog deben comenzar con una letra minúscula. Si un átomo necesita contener espacios, caracteres especiales, o comenzar con una letra mayúscula, debe ir entre comillas simples (ej: 'Yo soy Fidel', 'Luna').
+            Variables: Las variables en Prolog siempre comienzan con una letra mayúscula o un guion bajo (ej: Dia, Hermano, _Ignorado).
+            Sintaxis de Hechos: Asegúrate de que cada hecho termine con un punto (.). Ejemplo: miente_leon(lunes).
+            Sintaxis de Reglas: Las reglas deben seguir el formato cabeza :- cuerpo., donde cabeza es la conclusión, :- significa "si", y cuerpo puede ser una o más metas separadas por comas (,) que representan una conjunción lógica. Cada regla debe terminar con un punto (.). Ejemplo: dice_verdad(leon, Dia) :- + miente_leon(Dia).
+            Strings dentro de Prolog: Las frases como "Yo soy Fidel" deben ser tratadas como átomos en Prolog, es decir, encerradas en comillas simples si contienen espacios o mayúsculas no iniciales (ej: 'Yo soy Fidel').
+            Escapado en JSON: Dado que los hechos y reglas de Prolog serán strings dentro de un JSON, si alguna vez usaras comillas dobles dentro de tu código Prolog (lo cual es menos común para átomos que las comillas simples), necesitarían ser escapadas (") dentro del string JSON. Usar comillas simples para los átomos Prolog evita este problema. Las barras invertidas () en Prolog (como en + para negación) son caracteres válidos y no necesitan doble escapado a menos que el propio string JSON lo requiera para el carácter .
+            Los símbolos correctos de prolog son: \+ para negación, :- para implicación, ; para disyunción, . para final de cláusula, = para unificación, \= para desigualdad.
+            Evita usar el \ innecesariamente puesto a que por si solo es un error de sintaxis
+
+        Problema original:
+            
+Hay una amplia variedad de adivinanzas relativas a una isla en la que ciertos
+habitantes llamados «caballeros» dicen siempre la verdad, y otros llamados
+«escuderos» mienten siempre. Se supone que todo habitante de la isla es o caballero o
+escudero. Empezaré con una adivinanza de este tipo que es muy conocida, para luego
+seguir con otras varias de mi propia cosecha.
+En este problema hay sólo dos individuos, A y B, cada uno de los cuales es o
+caballero o escudero. A dice: «Uno al menos de nosotros es escudero.»
+¿Qué son A y B?
+
+            
+
+        Por favor, procesa la siguiente respuesta tuya y genera el JSON:
+        Tu respuesta: 
+            Okay, procedamos a analizar y resolver este problema de lógica sistemáticamente, siguiendo los pasos que has indicado.
+
+---
+
+**1. Entendimiento del Problema**
+
+*   **Elementos Clave:**
+    *   Dos individuos: A y B.
+    *   Dos tipos posibles para cada individuo: Caballero (siempre dice la verdad) y Escudero (siempre miente).
+    *   Regla fundamental: Cada individuo es *exactamente* uno de estos tipos (o caballero o escudero).
+
+*   **Declaraciones Lógicas/Pistas:**
+    *   Pista 1: A dice la afirmación S: "Al menos uno de nosotros es escudero."
+    *   Pista 2 (Regla): Un Caballero dice algo si y solo si esa afirmación es verdadera.
+    *   Pista 3 (Regla): Un Escudero dice algo si y solo si esa afirmación es falsa (es decir, miente).
+    *   Pista 4 (Regla): Todo habitante es Caballero o Escudero.
+
+---
+
+**2. Análisis e Inferencia Preliminar**
+
+Analizaremos las posibilidades para el tipo de A y veremos si son consistentes con su declaración y las reglas de la isla.
+
+*   Consideremos la afirmación S que A dice: "Al menos uno de nosotros es escudero."
+    *   Esto significa lógicamente: (A es escudero) O (B es escudero).
+
+*   **Caso 1: Suponemos que A es Caballero.**
+    *   Si A es Caballero, entonces A dice la verdad.
+    *   Esto implica que la afirmación S ("Al menos uno de nosotros es escudero") debe ser verdadera.
+    *   Si S es verdadera, entonces (A es escudero) O (B es escudero) es verdadero.
+    *   Pero en este caso (Caso 1), estamos suponiendo que A es Caballero, lo cual significa que A *no* es escudero.
+    *   Para que la disyunción ("A es escudero O B es escudero") sea verdadera y sabiendo que "A es escudero" es falso (según nuestra suposición), la otra parte de la disyunción debe ser verdadera.
+    *   Por lo tanto, B *debe* ser escudero.
+    *   Verifiquemos si esta combinación (A es Caballero, B es Escudero) es consistente:
+        *   A (Caballero) dice S ("Al menos uno de nosotros es escudero").
+        *   ¿Es S verdadera si A es Caballero y B es Escudero? Sí, porque B es escudero, cumpliendo la condición de "al menos uno".
+        *   Un Caballero dice la verdad, y S es verdadera en este escenario. Esto es **consistente**.
+
+*   **Caso 2: Suponemos que A es Escudero.**
+    *   Si A es Escudero, entonces A miente.
+    *   Esto implica que la afirmación S ("Al menos uno de nosotros es escudero") debe ser falsa.
+    *   Si S es falsa, entonces su negación es verdadera.
+    *   La negación de "Al menos uno de nosotros es escudero" es "Ninguno de nosotros es escudero."
+    *   "Ninguno de nosotros es escudero" significa lógicamente: (A *no* es escudero) Y (B *no* es escudero).
+    *   Esto es equivalente a: (A es Caballero) Y (B es Caballero).
+    *   Según nuestra suposición inicial para este caso (Caso 2), A es Escudero.
+    *   Pero la negación de S, que debe ser verdadera si A miente, implica que A es Caballero.
+    *   Esto lleva a una contradicción: A debe ser Escudero (por suposición) y A debe ser Caballero (por lo que dice un Escudero A). Un individuo no puede ser ambos.
+    *   Por lo tanto, la suposición de que A es Escudero es **inconsistente**.
+
+*   **Conclusión del Análisis:** El único caso consistente es el Caso 1, donde A es Caballero y B es Escudero.
+
+---
+
+**3. Hipótesis de Solución**
+
+Basado en el análisis lógico, la única posibilidad consistente con la declaración de A y las reglas de la isla es:
+A es un Caballero y B es un Escudero.
+
+---
+
+**4. Comprobación Formal con Prolog**
+
+Ahora crearemos un programa en Prolog para modelar el problema y verificar nuestra hipótesis.
+
+Modelaremos:
+*   Los posibles tipos: `caballero` y `escudero`.
+*   La regla de consistencia: Lo que dice una persona es compatible con su tipo si es caballero y la proposición es verdadera, o si es escudero y la proposición es falsa.
+*   La proposición que A dice: "Al menos uno de nosotros es escudero". Definiremos cuándo esta proposición es verdadera dados los tipos de A y B.
+*   La condición general: Encontrar los tipos de A y B tales que la declaración de A sea consistente.
+
+```prolog
+% --- Hechos y Reglas del Problema ---
+
+% Posibles tipos de habitantes
+tipo(caballero).
+tipo(escudero).
+
+% Regla de la isla: La consistencia entre el tipo de una persona y lo que dice.
+% consistente(TipoPersona, ValorVerdadProposicion)
+% Un caballero es consistente si dice la verdad (la proposición es verdadera).
+consistente(caballero, true).
+% Un escudero es consistente si miente (la proposición es falsa).
+consistente(escudero, false).
+
+% Definición de la proposición que dice A: "Al menos uno de nosotros es escudero".
+% La verdad de esta proposición depende de los tipos de A y B.
+% verdad_proposicion(Proposicion, TipoA, TipoB, ValorVerdad)
+% La proposición "al_menos_uno_escudero" es verdadera si A es escudero (independientemente de B).
+verdad_proposicion(al_menos_uno_escudero, TipoA, _, true) :- TipoA = escudero.
+% La proposición "al_menos_uno_escudero" es verdadera si B es escudero (y A no era ya escudero).
+verdad_proposicion(al_menos_uno_escudero, _, TipoB, true) :- TipoB = escudero.
+% La proposición "al_menos_uno_escudero" es falsa solo si NI A es escudero NI B es escudero.
+% Esto ocurre únicamente si ambos son caballeros.
+verdad_proposicion(al_menos_uno_escudero, caballero, caballero, false).
+
+
+% Predicado para encontrar la solución:
+% Busca tipos TipoA y TipoB para A y B que sean consistentes con la declaración de A.
+solucion(TipoA, TipoB) :-
+    tipo(TipoA), % A debe tener un tipo válido (caballero o escudero)
+    tipo(TipoB), % B debe tener un tipo válido (caballero o escudero)
+    % Determinar el valor de verdad de la proposición "al_menos_uno_escudero"
+    % para la combinación actual de TipoA y TipoB.
+    verdad_proposicion(al_menos_uno_escudero, TipoA, TipoB, ValorProposicionA),
+    % Verificar si A, con su TipoA, es consistente al decir esta proposición con su ValorProposicionA.
+    consistente(TipoA, ValorProposicionA).
+
+% --- Consulta ---
+% Para encontrar la solución, preguntamos a Prolog:
+% ?- solucion(TipoA, TipoB).
+```
+
+**Ejecución de la Consulta en Prolog:**
+
+Si cargas este código en un intérprete de Prolog y haces la consulta:
+`?- solucion(TipoA, TipoB).`
+
+Prolog buscará combinaciones de `TipoA` y `TipoB` (caballero/escudero para ambos) que satisfagan todas las condiciones.
+
+*   Intentará `TipoA = caballero`, `TipoB = caballero`.
+    *   `verdad_proposicion(al_menos_uno_escudero, caballero, caballero, false)`.
+    *   `consistente(caballero, false)` falla. (Un caballero no es consistente diciendo algo falso).
+*   Intentará `TipoA = caballero`, `TipoB = escudero`.
+    *   `verdad_proposicion(al_menos_uno_escudero, caballero, escudero, true)`. (Porque B es escudero).
+    *   `consistente(caballero, true)` tiene éxito. (Un caballero es consistente diciendo algo verdadero).
+    *   **¡Encuentra una solución!** `TipoA = caballero`, `TipoB = escudero`.
+*   Intentará `TipoA = escudero`, `TipoB = caballero`.
+    *   `verdad_proposicion(al_menos_uno_escudero, escudero, caballero, true)`. (Porque A es escudero).
+    *   `consistente(escudero, true)` falla. (Un escudero no es consistente diciendo algo verdadero).
+*   Intentará `TipoA = escudero`, `TipoB = escudero`.
+    *   `verdad_proposicion(al_menos_uno_escudero, escudero, escudero, true)`. (Porque A es escudero y B es escudero).
+    *   `consistente(escudero, true)` falla. (Un escudero no es consistente diciendo algo verdadero).
+
+**Resultado de la Consulta:**
+
+La consulta `?- solucion(TipoA, TipoB).` producirá:
+
+```
+TipoA = caballero,
+TipoB = escudero.
+```
+
+Esto coincide exactamente con nuestra hipótesis derivada del análisis lógico manual. El programa Prolog confirma que la única asignación de tipos que es consistente con la declaración de A y las reglas de la isla es que A sea un Caballero y B sea un Escudero.
+        
+
+-------------------------------------------------------------------
+Error al llamar a la API de Gemini: 500 INTERNAL. {'error': {'code': 500, 'message': 'An internal error has occurred. Please retry or report in https://developers.generativeai.google/guide/troubleshooting', 'status': 'INTERNAL'}}

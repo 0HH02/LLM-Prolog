@@ -1,0 +1,199 @@
+
+======================================================================
+PROCESANDO PROBLEMA: "
+    Habían aparecido cuatro cofres, dos de oro y dos de plata; se sabía que con..."
+======================================================================
+INFO: Checkpoint cargado: checkpoints/mfsa_kr_store_Habían_aparecido_cuatro_cofres_dos_de_oro_y_dos_de.pkl
+INFO: MFSA omitido, KR-Store cargado desde checkpoint.
+
+--- CICLO DE REFINAMIENTO 1 / 3 ---
+INFO: MISA-J omitido, traza cargada desde checkpoint.
+INFO: Checkpoint cargado: checkpoints/misa_j_trace_cycle0_Habían_aparecido_cuatro_cofres_dos_de_oro_y_dos_de.pkl
+[Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None')]
+
+--- Ejecutando MMRC ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (general) ---
+Prompt: 
+Como experto en lógica y razonamiento, necesito que analices por qué no se pudo resolver el siguiente problema:
+
+PROBLEMA ORIGINAL:
+
+    Habían aparecido cuatro cofres, dos de oro y dos de plata; se sabía que constituían
+    dos juegos, pero se habían mezclado y ahora no se sabía qué cofre de oro y qué cofre
+    de plata formaban pareja. Me los enseñaron y pronto pude resolver el problema por lo
+    que recibí unos excelentes honorarios. Pero además pude establecer también quién
+    había hecho cada cofre, por lo que recibí un extra (que consistía, entre otras cosas, en
+    una excelente caja de botellas de Chianti) y un beso de una de las florentinas más
+    maravillosas que haya existido nunca
+    He aquí los cuatro cofres:
+    Cofre A (Oro)
+    EL COFRE DE PLATA ES OBRA DE UN CELLINI
+    Cofre B (Plata)
+    EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON
+    DE BELLINI
+    Cofre C (Oro)
+    EL COFRE DE ORO ES OBRA DE UN BELLINI
+    Cofre D (Plata)
+    EL COFRE DE ORO ES OBRA DE UN BELLINI Y POR LO MENOS UNO DE
+    ESTOS COFRES ES OBRA DE UN HIJO O DE BELLINI O CELLINI
+
+    Tenemos ahora un problema:
+    ¿Quién hizo cada uno de los cofres?
+    
+
+CLAUSULAS USADAS:
+['poss_maker(bellini).', 'poss_maker(cellini).', 'poss_maker(hijo).', 'cofre(a, oro).', 'cofre(b, plata).', 'cofre(c, oro).', 'cofre(d, plata).', 'solucion(MA, MB, MC, MD) :- poss_maker(MA), poss_maker(MB), poss_maker(MC), poss_maker(MD), MB == cellini, ( MD == cellini ; (MB == bellini, MD == bellini) ), MA == bellini, MC == bellini.']
+
+ERRORES DEL SOLVER DETECTADOS:
+- El árbol de pensamiento generado está vacío
+
+RAMAS DE PENSAMIENTO MÁS PROMETEDORAS:
+[]
+
+CONTEXTO:
+El sistema de razonamiento lógico no pudo encontrar una solución exitosa. Todas las ramas de pensamiento terminaron sin éxito.
+Además, se detectaron errores durante la ejecución del solver que pueden haber afectado el proceso de razonamiento.
+
+INSTRUCCIONES:
+1. Analiza las ramas de pensamiento que más se acercaron al éxito
+2. Identifica posibles errores en:
+   - Las premisas del problema (¿faltan premisas importantes?)
+   - Las premisas formuladas (¿hay premisas incorrectas o mal interpretadas?)
+   - La lógica implementada (¿hay problemas en el razonamiento?)
+   - Inconsistencias o contradicciones en las premisas
+   - Errores técnicos del solver que pudieron haber impedido una resolución exitosa
+
+3. Proporciona sugerencias específicas para:
+   - Premisas que podrían estar faltando
+   - Premisas que podrían estar mal formuladas
+   - Mejoras en la lógica de razonamiento
+   - Resolución de inconsistencias
+   - Soluciones para los errores técnicos detectados
+
+Por favor, proporciona un análisis estructurado que incluya:
+- Diagnóstico del problema principal
+- Análisis detallado de las ramas más prometedoras
+- Análisis de los errores técnicos del solver
+- Sugerencias específicas de mejora
+- Recomendaciones para futuras iteraciones
+
+
+-------------------------------------------------------------------
+Error al llamar a la API de Gemini: 500 INTERNAL. {'error': {'code': 500, 'message': 'An internal error has occurred. Please retry or report in https://developers.generativeai.google/guide/troubleshooting', 'status': 'INTERNAL'}}
+INFO: Checkpoint guardado: checkpoints/mmrc_result_cycle0_Habían_aparecido_cuatro_cofres_dos_de_oro_y_dos_de.pkl
+
+=== RESULTADO DEL ANÁLISIS MMRC ===
+❌ NO SE ENCONTRÓ SOLUCIÓN - ANÁLISIS DE ERRORES
+
+--- ANÁLISIS DE FALLAS ---
+Error: 500 INTERNAL. {'error': {'code': 500, 'message': 'An internal error has occurred. Please retry or report in https://developers.generativeai.google/guide/troubleshooting', 'status': 'INTERNAL'}}
+
+--- ESTADÍSTICAS ---
+Total de ramas analizadas: 0
+Ramas más prometedoras: 0
+
+--- Ejecutando OHI (Refinamiento del Conocimiento) ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (general) ---
+Prompt: 
+Como experto en lógica formal y razonamiento, necesito que realices un nuevo análisis del siguiente problema considerando el análisis previo que no logró encontrar una solución:
+
+PROBLEMA ORIGINAL:
+
+    Habían aparecido cuatro cofres, dos de oro y dos de plata; se sabía que constituían
+    dos juegos, pero se habían mezclado y ahora no se sabía qué cofre de oro y qué cofre
+    de plata formaban pareja. Me los enseñaron y pronto pude resolver el problema por lo
+    que recibí unos excelentes honorarios. Pero además pude establecer también quién
+    había hecho cada cofre, por lo que recibí un extra (que consistía, entre otras cosas, en
+    una excelente caja de botellas de Chianti) y un beso de una de las florentinas más
+    maravillosas que haya existido nunca
+    He aquí los cuatro cofres:
+    Cofre A (Oro)
+    EL COFRE DE PLATA ES OBRA DE UN CELLINI
+    Cofre B (Plata)
+    EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON
+    DE BELLINI
+    Cofre C (Oro)
+    EL COFRE DE ORO ES OBRA DE UN BELLINI
+    Cofre D (Plata)
+    EL COFRE DE ORO ES OBRA DE UN BELLINI Y POR LO MENOS UNO DE
+    ESTOS COFRES ES OBRA DE UN HIJO O DE BELLINI O CELLINI
+
+    Tenemos ahora un problema:
+    ¿Quién hizo cada uno de los cofres?
+    
+
+CLÁUSULAS ACTUALES (QUE NO FUNCIONARON):
+['poss_maker(bellini).', 'poss_maker(cellini).', 'poss_maker(hijo).', 'cofre(a, oro).', 'cofre(b, plata).', 'cofre(c, oro).', 'cofre(d, plata).', 'solucion(MA, MB, MC, MD) :- poss_maker(MA), poss_maker(MB), poss_maker(MC), poss_maker(MD), MB == cellini, ( MD == cellini ; (MB == bellini, MD == bellini) ), MA == bellini, MC == bellini.']
+
+ANÁLISIS PREVIO DE FALLAS:
+Error: 500 INTERNAL. {'error': {'code': 500, 'message': 'An internal error has occurred. Please retry or report in https://developers.generativeai.google/guide/troubleshooting', 'status': 'INTERNAL'}}
+
+RAMAS MÁS PROMETEDORAS DEL INTENTO PREVIO:
+[]
+
+INSTRUCCIONES:
+1. Analiza completamente el problema original desde cero
+2. Considera las lecciones aprendidas del análisis de fallas previo
+3. Identifica qué aspectos del problema no fueron capturados correctamente en las cláusulas anteriores
+4. Proporciona un análisis paso a paso de:
+   - Los elementos clave del problema
+   - Las relaciones lógicas fundamentales
+   - Las restricciones y condiciones que deben modelarse
+   - Los objetivos específicos que se deben alcanzar
+
+5. Basándote en el análisis de fallas, identifica específicamente:
+   - Qué premisas podrían estar faltando
+   - Qué relaciones lógicas no fueron modeladas adecuadamente
+   - Qué restricciones o condiciones fueron omitidas
+   - Qué aspectos del problema requieren un enfoque diferente
+
+6. Hipótesis de Solución: Basándote en tu análisis, propón una hipótesis clara sobre cuál podría ser la solución al problema.
+7. Premisas para Prolog: Identifica y enumera todas las premisas (hechos y reglas) que serían necesarias para modelar y resolver este problema utilizando el lenguaje de programación lógica Prolog. Asegúrate de que estas premisas sean suficientes para llegar a la solución que has hipotetizado.
+8. Cuando vayas a escribir el código que solucione el problema enciérralo entre etiquetas: <solucion>
+
+Por favor, proporciona un análisis estructurado y detallado que sirva como base para una mejor formalización lógica del problema.
+
+
+-------------------------------------------------------------------
+Error al llamar a la API de Gemini: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}
+OHI: Análisis refinado generado exitosamente.
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini JSON (general) ---
+Prompt: 
+Necesito que extraigas y estructures la información de la siguiente manera en un formato JSON:
+
+El JSON debe tener tres claves principales en el nivel raíz:
+
+"facts": Un array de strings, donde cada string es un hecho Prolog completo tal como lo definiste.
+"rules": Un array de strings, donde cada string es una regla Prolog completa tal como la definiste.
+"objective": Un string que represente la consulta principal de Prolog que se usaría para obtener la solución (por ejemplo, solucion(Tweedledum, Tweedledee).).
+
+Consejos importantes para asegurar la compatibilidad con Prolog al generar los strings de hechos y reglas:
+    Átomos: Los nombres de predicados y las constantes (átomos) en Prolog deben comenzar con una letra minúscula. Si un átomo necesita contener espacios, caracteres especiales, o comenzar con una letra mayúscula, debe ir entre comillas simples (ej: 'Yo soy Fidel', 'Luna').
+    Variables: Las variables en Prolog siempre comienzan con una letra mayúscula o un guion bajo (ej: Dia, Hermano, _Ignorado).
+    Sintaxis de Hechos: Asegúrate de que cada hecho termine con un punto (.). Ejemplo: miente_leon(lunes).
+    Sintaxis de Reglas: Las reglas deben seguir el formato cabeza :- cuerpo., donde cabeza es la conclusión, :- significa "si", y cuerpo puede ser una o más metas separadas por comas (,) que representan una conjunción lógica. Cada regla debe terminar con un punto (.). Ejemplo: dice_verdad(leon, Dia) :- + miente_leon(Dia).
+    Strings dentro de Prolog: Las frases como "Yo soy Fidel" deben ser tratadas como átomos en Prolog, es decir, encerradas en comillas simples si contienen espacios o mayúsculas no iniciales (ej: 'Yo soy Fidel').
+    Escapado en JSON: Dado que los hechos y reglas de Prolog serán strings dentro de un JSON, si alguna vez usaras comillas dobles dentro de tu código Prolog (lo cual es menos común para átomos que las comillas simples), necesitarían ser escapadas (") dentro del string JSON. Usar comillas simples para los átomos Prolog evita este problema. Las barras invertidas () en Prolog (como en + para negación) son caracteres válidos y no necesitan doble escapado a menos que el propio string JSON lo requiera para el carácter .
+    Los símbolos correctos de prolog son: \+ para negación, :- para implicación, ; para disyunción, . para final de cláusula, = para unificación, \= para desigualdad.
+    Evita usar el \ innecesariamente puesto a que por si solo es un error de sintaxis
+
+CÓDIGO PROLOG:
+Error: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}
+
+Por favor, genera el JSON:
+
+
+-------------------------------------------------------------------
+Error al llamar a la API de Gemini: 500 INTERNAL. {'error': {'code': 500, 'message': 'An internal error has occurred. Please retry or report in https://developers.generativeai.google/guide/troubleshooting', 'status': 'INTERNAL'}}

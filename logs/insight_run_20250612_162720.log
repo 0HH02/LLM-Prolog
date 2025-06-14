@@ -1,0 +1,677 @@
+
+======================================================================
+PROCESANDO PROBLEMA: "
+    Habían aparecido cuatro cofres, dos de oro y dos de plata; se sabía que con..."
+======================================================================
+INFO: Checkpoint cargado: checkpoints/mfsa_kr_store_Habían_aparecido_cuatro_cofres_dos_de_oro_y_dos_de.pkl
+INFO: MFSA omitido, KR-Store cargado desde checkpoint.
+
+--- CICLO DE REFINAMIENTO 1 / 3 ---
+
+--- Ejecutando MISA-J (CFCS) ---
+Programa Prolog: poss_maker(bellini).
+poss_maker(cellini).
+poss_maker(hijo).
+cofre(a, oro).
+cofre(b, plata).
+cofre(c, oro).
+cofre(d, plata).
+solucion(MA, MB, MC, MD) :- poss_maker(MA), poss_maker(MB), poss_maker(MC), poss_maker(MD), MB == cellini, ( MD == cellini ; (MB == bellini, MD == bellini) ), MA == bellini, MC == bellini.
+--- Traza cruda de Prolog ---
+   Call: (12) solucion(_4664, _4666, _4668, _4670)
+   Call: (13) poss_maker(_4664)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_4666)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_4668)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4668)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4668)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4666)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_4668)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(bellini, cellini, bellini, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==bellini
+   Exit: (13) bellini==bellini
+   Call: (13) bellini==bellini
+   Exit: (13) bellini==bellini
+   Exit: (12) solucion(bellini, cellini, bellini, cellini)
+   Call: (12) fail
+   Fail: (12) fail
+   Redo: (12) solucion(bellini, cellini, bellini, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(bellini, cellini, bellini, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_4668)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(bellini, cellini, cellini, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==bellini
+   Exit: (13) bellini==bellini
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (12) solucion(bellini, cellini, cellini, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(bellini, cellini, cellini, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(bellini, cellini, hijo, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==bellini
+   Exit: (13) bellini==bellini
+   Call: (13) hijo==bellini
+   Fail: (13) hijo==bellini
+   Redo: (12) solucion(bellini, cellini, hijo, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(bellini, cellini, hijo, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_52)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_54)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_50)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_52)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_54)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_52)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_54)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(cellini, cellini, bellini, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (12) solucion(cellini, cellini, bellini, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(cellini, cellini, bellini, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(cellini, cellini, cellini, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (12) solucion(cellini, cellini, cellini, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(cellini, cellini, cellini, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(cellini, cellini, hijo, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (12) solucion(cellini, cellini, hijo, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(cellini, cellini, hijo, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_52)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_54)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_50)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_52)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_54)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_52)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_54)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(hijo, cellini, bellini, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==bellini
+   Fail: (13) hijo==bellini
+   Redo: (12) solucion(hijo, cellini, bellini, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(hijo, cellini, bellini, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(hijo, cellini, cellini, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==bellini
+   Fail: (13) hijo==bellini
+   Redo: (12) solucion(hijo, cellini, cellini, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(hijo, cellini, cellini, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(hijo, cellini, hijo, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==bellini
+   Fail: (13) hijo==bellini
+   Redo: (12) solucion(hijo, cellini, hijo, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(hijo, cellini, hijo, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_52)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_54)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Fail: (12) solucion(_50, _52, _54, _56)
+--- Fin de traza cruda ---
+INFO: Checkpoint guardado: checkpoints/misa_j_trace_cycle0_Habían_aparecido_cuatro_cofres_dos_de_oro_y_dos_de.pkl
+[Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None'), Clausula(nombre='root', veracidad='', num_hijos=1, padre='None')]
+
+--- Ejecutando MMRC ---
+[]
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (general) ---
+Prompt: 
+Como experto en lógica y razonamiento, necesito que analices por qué no se pudo resolver el siguiente problema:
+
+PROBLEMA ORIGINAL:
+
+    Habían aparecido cuatro cofres, dos de oro y dos de plata; se sabía que constituían
+    dos juegos, pero se habían mezclado y ahora no se sabía qué cofre de oro y qué cofre
+    de plata formaban pareja. Me los enseñaron y pronto pude resolver el problema por lo
+    que recibí unos excelentes honorarios. Pero además pude establecer también quién
+    había hecho cada cofre, por lo que recibí un extra (que consistía, entre otras cosas, en
+    una excelente caja de botellas de Chianti) y un beso de una de las florentinas más
+    maravillosas que haya existido nunca
+    He aquí los cuatro cofres:
+    Cofre A (Oro)
+    EL COFRE DE PLATA ES OBRA DE UN CELLINI
+    Cofre B (Plata)
+    EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON
+    DE BELLINI
+    Cofre C (Oro)
+    EL COFRE DE ORO ES OBRA DE UN BELLINI
+    Cofre D (Plata)
+    EL COFRE DE ORO ES OBRA DE UN BELLINI Y POR LO MENOS UNO DE
+    ESTOS COFRES ES OBRA DE UN HIJO O DE BELLINI O CELLINI
+
+    Tenemos ahora un problema:
+    ¿Quién hizo cada uno de los cofres?
+    
+
+CLAUSULAS USADAS:
+['poss_maker(bellini).', 'poss_maker(cellini).', 'poss_maker(hijo).', 'cofre(a, oro).', 'cofre(b, plata).', 'cofre(c, oro).', 'cofre(d, plata).', 'solucion(MA, MB, MC, MD) :- poss_maker(MA), poss_maker(MB), poss_maker(MC), poss_maker(MD), MB == cellini, ( MD == cellini ; (MB == bellini, MD == bellini) ), MA == bellini, MC == bellini.']
+
+ERRORES DEL SOLVER DETECTADOS:
+- El árbol de pensamiento generado está vacío
+
+RAMAS DE PENSAMIENTO MÁS PROMETEDORAS:
+[]
+
+CONTEXTO:
+El sistema de razonamiento lógico no pudo encontrar una solución exitosa. Todas las ramas de pensamiento terminaron sin éxito.
+Además, se detectaron errores durante la ejecución del solver que pueden haber afectado el proceso de razonamiento.
+
+INSTRUCCIONES:
+1. Analiza las ramas de pensamiento que más se acercaron al éxito
+2. Identifica posibles errores en:
+   - Las premisas del problema (¿faltan premisas importantes?)
+   - Las premisas formuladas (¿hay premisas incorrectas o mal interpretadas?)
+   - La lógica implementada (¿hay problemas en el razonamiento?)
+   - Inconsistencias o contradicciones en las premisas
+   - Errores técnicos del solver que pudieron haber impedido una resolución exitosa
+
+3. Proporciona sugerencias específicas para:
+   - Premisas que podrían estar faltando
+   - Premisas que podrían estar mal formuladas
+   - Mejoras en la lógica de razonamiento
+   - Resolución de inconsistencias
+   - Soluciones para los errores técnicos detectados
+
+Por favor, proporciona un análisis estructurado que incluya:
+- Diagnóstico del problema principal
+- Análisis detallado de las ramas más prometedoras
+- Análisis de los errores técnicos del solver
+- Sugerencias específicas de mejora
+- Recomendaciones para futuras iteraciones
+
+
+-------------------------------------------------------------------
+Error al llamar a la API de Gemini: 500 INTERNAL. {'error': {'code': 500, 'message': 'An internal error has occurred. Please retry or report in https://developers.generativeai.google/guide/troubleshooting', 'status': 'INTERNAL'}}
+INFO: Checkpoint guardado: checkpoints/mmrc_result_cycle0_Habían_aparecido_cuatro_cofres_dos_de_oro_y_dos_de.pkl
+
+=== RESULTADO DEL ANÁLISIS MMRC ===
+❌ NO SE ENCONTRÓ SOLUCIÓN - ANÁLISIS DE ERRORES
+
+--- ANÁLISIS DE FALLAS ---
+Error: 500 INTERNAL. {'error': {'code': 500, 'message': 'An internal error has occurred. Please retry or report in https://developers.generativeai.google/guide/troubleshooting', 'status': 'INTERNAL'}}
+
+--- ESTADÍSTICAS ---
+Total de ramas analizadas: 0
+Ramas más prometedoras: 0
+
+TODOS LOS PROBLEMAS CONFIGURADOS PROCESADOS.

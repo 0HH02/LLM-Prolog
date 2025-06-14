@@ -1,0 +1,839 @@
+
+======================================================================
+PROCESANDO PROBLEMA: "
+    Habían aparecido cuatro cofres, dos de oro y dos de plata; se sabía que con..."
+======================================================================
+INFO: Checkpoint cargado: checkpoints/mfsa_kr_store_Habían_aparecido_cuatro_cofres_dos_de_oro_y_dos_de.pkl
+INFO: MFSA omitido, KR-Store cargado desde checkpoint.
+
+--- CICLO DE REFINAMIENTO 1 / 3 ---
+
+--- Ejecutando MISA-J (CFCS) ---
+Programa Prolog: poss_maker(bellini).
+poss_maker(cellini).
+poss_maker(hijo).
+cofre(a, oro).
+cofre(b, plata).
+cofre(c, oro).
+cofre(d, plata).
+solucion(MA, MB, MC, MD) :- poss_maker(MA), poss_maker(MB), poss_maker(MC), poss_maker(MD), MB == cellini, ( MD == cellini ; (MB == bellini, MD == bellini) ), MA == bellini, MC == bellini.
+--- Traza cruda de Prolog ---
+   Call: (12) solucion(_4664, _4666, _4668, _4670)
+   Call: (13) poss_maker(_4664)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_4666)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_4668)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4668)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4668)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_4666)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_4668)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(bellini, cellini, bellini, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==bellini
+   Exit: (13) bellini==bellini
+   Call: (13) bellini==bellini
+   Exit: (13) bellini==bellini
+   Exit: (12) solucion(bellini, cellini, bellini, cellini)
+   Call: (12) fail
+   Fail: (12) fail
+   Redo: (12) solucion(bellini, cellini, bellini, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_4670)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(bellini, cellini, bellini, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_4668)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(bellini, cellini, cellini, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==bellini
+   Exit: (13) bellini==bellini
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (12) solucion(bellini, cellini, cellini, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(bellini, cellini, cellini, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(bellini, cellini, hijo, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==bellini
+   Exit: (13) bellini==bellini
+   Call: (13) hijo==bellini
+   Fail: (13) hijo==bellini
+   Redo: (12) solucion(bellini, cellini, hijo, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(bellini, cellini, hijo, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_52)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_54)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_50)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_52)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_54)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_52)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_54)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(cellini, cellini, bellini, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (12) solucion(cellini, cellini, bellini, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(cellini, cellini, bellini, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(cellini, cellini, cellini, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (12) solucion(cellini, cellini, cellini, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(cellini, cellini, cellini, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(cellini, cellini, hijo, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (12) solucion(cellini, cellini, hijo, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(cellini, cellini, hijo, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_52)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_54)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_50)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_52)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_54)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (13) poss_maker(_52)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_54)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(hijo, cellini, bellini, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==bellini
+   Fail: (13) hijo==bellini
+   Redo: (12) solucion(hijo, cellini, bellini, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(hijo, cellini, bellini, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(hijo, cellini, cellini, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==bellini
+   Fail: (13) hijo==bellini
+   Redo: (12) solucion(hijo, cellini, cellini, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(hijo, cellini, cellini, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) bellini==cellini
+   Fail: (13) bellini==cellini
+   Redo: (12) solucion(hijo, cellini, hijo, bellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==bellini
+   Fail: (13) hijo==bellini
+   Redo: (12) solucion(hijo, cellini, hijo, cellini)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) cellini==cellini
+   Exit: (13) cellini==cellini
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (12) solucion(hijo, cellini, hijo, hijo)
+   Call: (13) cellini==bellini
+   Fail: (13) cellini==bellini
+   Redo: (13) poss_maker(_52)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_54)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_54)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) poss_maker(_56)
+   Exit: (13) poss_maker(bellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(cellini)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Redo: (13) poss_maker(_56)
+   Exit: (13) poss_maker(hijo)
+   Call: (13) hijo==cellini
+   Fail: (13) hijo==cellini
+   Fail: (12) solucion(_50, _52, _54, _56)
+--- Fin de traza cruda ---
+INFO: Checkpoint guardado: checkpoints/misa_j_trace_cycle0_Habían_aparecido_cuatro_cofres_dos_de_oro_y_dos_de.pkl
+
+--- Ejecutando MMRC ---
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (general) ---
+Prompt: 
+Como experto en lógica y razonamiento, necesito que analices el siguiente problema y su solución:
+
+PROBLEMA ORIGINAL:
+
+    Habían aparecido cuatro cofres, dos de oro y dos de plata; se sabía que constituían
+    dos juegos, pero se habían mezclado y ahora no se sabía qué cofre de oro y qué cofre
+    de plata formaban pareja. Me los enseñaron y pronto pude resolver el problema por lo
+    que recibí unos excelentes honorarios. Pero además pude establecer también quién
+    había hecho cada cofre, por lo que recibí un extra (que consistía, entre otras cosas, en
+    una excelente caja de botellas de Chianti) y un beso de una de las florentinas más
+    maravillosas que haya existido nunca
+    He aquí los cuatro cofres:
+    Cofre A (Oro)
+    EL COFRE DE PLATA ES OBRA DE UN CELLINI
+    Cofre B (Plata)
+    EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON
+    DE BELLINI
+    Cofre C (Oro)
+    EL COFRE DE ORO ES OBRA DE UN BELLINI
+    Cofre D (Plata)
+    EL COFRE DE ORO ES OBRA DE UN BELLINI Y POR LO MENOS UNO DE
+    ESTOS COFRES ES OBRA DE UN HIJO O DE BELLINI O CELLINI
+
+    Tenemos ahora un problema:
+    ¿Quién hizo cada uno de los cofres?
+    
+
+CLAUSULAS USADAS:
+['poss_maker(bellini).', 'poss_maker(cellini).', 'poss_maker(hijo).', 'cofre(a, oro).', 'cofre(b, plata).', 'cofre(c, oro).', 'cofre(d, plata).', 'solucion(MA, MB, MC, MD) :- poss_maker(MA), poss_maker(MB), poss_maker(MC), poss_maker(MD), MB == cellini, ( MD == cellini ; (MB == bellini, MD == bellini) ), MA == bellini, MC == bellini.']
+
+RAMAS DE PENSAMIENTOS EXITOSAS:
+[
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "solucion(_4664, _4666, _4668, _4670)",
+        "veracidad": "verde",
+        "valor": [
+          {
+            "nombre": "poss_maker(_4664)",
+            "veracidad": "verde",
+            "valor": [
+              {
+                "nombre": "poss_maker(bellini)",
+                "veracidad": "verde"
+              }
+            ]
+          },
+          {
+            "nombre": "cellini==cellini",
+            "veracidad": "verde",
+            "valor": [
+              {
+                "nombre": "cellini==cellini",
+                "veracidad": "verde"
+              }
+            ]
+          },
+          {
+            "nombre": "cellini==cellini",
+            "veracidad": "verde",
+            "valor": [
+              {
+                "nombre": "cellini==cellini",
+                "veracidad": "verde"
+              }
+            ]
+          },
+          {
+            "nombre": "bellini==bellini",
+            "veracidad": "verde",
+            "valor": [
+              {
+                "nombre": "bellini==bellini",
+                "veracidad": "verde"
+              }
+            ]
+          },
+          {
+            "nombre": "bellini==bellini",
+            "veracidad": "verde",
+            "valor": [
+              {
+                "nombre": "bellini==bellini",
+                "veracidad": "verde"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
+
+INSTRUCCIONES:
+1. Analiza las ramas de pensamientos que llevaron a una solución exitosa
+2. Formula una respuesta bien argumentada y clara al problema original
+3. Explica paso a paso cómo se llegó a esta solución
+4. Asegúrate de que la respuesta sea comprensible para alguien sin conocimientos técnicos de lógica formal
+
+Por favor, proporciona una respuesta estructurada que incluya:
+- La respuesta directa al problema
+- La justificación lógica paso a paso
+- Una explicación clara del razonamiento utilizado
+- Un resumen siendo contundente y breve con la pregunta que se te presentó al principio.
+
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: Okay, analicemos el problema, las cláusulas proporcionadas y las ramas de pensamiento exitosas.
+
+**Análisis de los Materiales Proporcionados:**
+
+1.  **Problema Original:** Presenta un escenario con cuatro cofres (dos de oro, dos de plata) y sus inscripciones, pidiendo determinar quién hizo cada uno (Bellini, Cellini, o un hijo). La historia de fondo sobre la resolución del problema de los pares y la recompensa es contextual pero no directamente parte del problema lógico de determinar los fabricantes basado en las inscripciones (aunque la mención del "hijo" en la inscripción D es relevante para los posibles fabricantes).
+
+2.  **Cláusulas Usadas:**
+    *   `poss_maker(bellini).`, `poss_maker(cellini).`, `poss_maker(hijo).`: Definen el conjunto de posibles fabricantes.
+    *   `cofre(a, oro).`, `cofre(b, plata).`, `cofre(c, oro).`, `cofre(d, plata).`: Describen los cofres y su material.
+    *   `solucion(MA, MB, MC, MD) :- ...`: **Esta es la pieza clave.** No es una derivación paso a paso a partir de las inscripciones, sino una *definición directa* de cuál es la solución correcta en términos de quién hizo cada cofre (MA es el fabricante de A, MB de B, etc.). Las condiciones que impone son:
+        *   `poss_maker(MA), poss_maker(MB), poss_maker(MC), poss_maker(MD)`: Los fabricantes asignados deben estar en la lista de posibles fabricantes.
+        *   `MB == cellini`: El fabricante del cofre B es Cellini.
+        *   `( MD == cellini ; (MB == bellini, MD == bellini) )`: El fabricante del cofre D es Cellini O (el fabricante de B es Bellini Y el fabricante de D es Bellini). Dada la condición anterior (`MB == cellini`), la segunda parte del `OR` (`MB == bellini, MD == bellini`) es falsa. Por lo tanto, esta condición se simplifica a `MD == cellini`. El fabricante del cofre D es Cellini.
+        *   `MA == bellini`: El fabricante del cofre A es Bellini.
+        *   `MC == bellini`: El fabricante del cofre C es Bellini.
+
+    *   **Conclusión de las Cláusulas:** La cláusula `solucion` ya nos está diciendo cuál es la respuesta: A lo hizo Bellini, B lo hizo Cellini, C lo hizo Bellini y D lo hizo Cellini. Las inscripciones de los cofres (el texto en A, B, C, D) no se utilizan en esta cláusula `solucion`. Esto significa que la lógica para *derivar* la solución a partir de las inscripciones no está representada en las cláusulas proporcionadas; la cláusula `solucion` simplemente *establece* cuál es la respuesta correcta.
+
+3.  **Ramas de Pensamientos Exitosas:**
+    *   Este fragmento muestra el proceso de verificar si una combinación de fabricantes satisface la cláusula `solucion`.
+    *   Comienza intentando encontrar valores para `_4664` (MA), `_4666` (MB), `_4668` (MC), `_4670` (MD) que satisfagan `solucion(MA, MB, MC, MD)`.
+    *   Sigue evaluando las condiciones dentro de `solucion`:
+        *   `poss_maker(_4664)` verifica si el fabricante asignado a A es posible (el trace muestra que eligió 'bellini' y tuvo éxito).
+        *   `cellini==cellini` verifica si el fabricante asignado a B es Cellini (confirma que MB debe ser Cellini).
+        *   `cellini==cellini` verifica si el fabricante asignado a D es Cellini (confirma que MD debe ser Cellini, basado en la simplificación del OR).
+        *   `bellini==bellini` verifica si el fabricante asignado a A es Bellini (confirma que MA debe ser Bellini).
+        *   `bellini==bellini` verifica si el fabricante asignado a C es Bellini (confirma que MC debe ser Bellini).
+    *   **Conclusión de las Ramas:** El trace muestra la validación de una solución contra las condiciones preestablecidas en la cláusula `solucion`. Confirma que asignar Bellini a A, Cellini a B, Bellini a C y Cellini a D cumple con los requisitos de la `solucion` definida. No muestra el proceso de *cómo se llegó* a esa definición de `solucion` a partir del texto de las inscripciones de los cofres.
+
+---
+
+**Respuesta Argumentada al Problema Original:**
+
+Basándonos estrictamente en las "Cláusulas Usadas" proporcionadas, que incluyen una definición directa de la solución, y en el análisis de las "Ramas de Pensamientos Exitosas" que verifican esta definición:
+
+*   **La respuesta directa al problema:**
+    *   El cofre A (Oro) fue hecho por **Bellini**.
+    *   El cofre B (Plata) fue hecho por **Cellini**.
+    *   El cofre C (Oro) fue hecho por **Bellini**.
+    *   El cofre D (Plata) fue hecho por **Cellini**.
+
+*   **Justificación lógica paso a paso (basada en las cláusulas proporcionadas):**
+    1.  El problema define los posibles fabricantes: Bellini, Cellini e Hijo.
+    2.  El problema define los cofres A, B, C, D y sus materiales.
+    3.  La cláusula `solucion(MA, MB, MC, MD)` proporciona las condiciones que deben cumplir los fabricantes (MA para A, MB para B, MC para C, MD para D) para ser la solución correcta.
+    4.  Esta cláusula establece explícitamente:
+        *   Que el fabricante de B (`MB`) debe ser `cellini`.
+        *   Que el fabricante de D (`MD`) debe ser `cellini` (tras simplificar la condición `( MD == cellini ; (MB == bellini, MD == bellini) )` sabiendo que `MB` es `cellini`).
+        *   Que el fabricante de A (`MA`) debe ser `bellini`.
+        *   Que el fabricante de C (`MC`) debe ser `bellini`.
+    5.  Por lo tanto, la única asignación de fabricantes que satisface la definición de `solucion` es MA=Bellini, MB=Cellini, MC=Bellini, MD=Cellini.
+    6.  Las "Ramas de Pensamientos Exitosas" muestran precisamente cómo el sistema verifica que esta asignación específica (A: Bellini, B: Cellini, C: Bellini, D: Cellini) cumple con todas las condiciones listadas en la cláusula `solucion`, confirmando que es la solución según la definición dada.
+
+*   **Explicación clara del razonamiento utilizado:**
+    El razonamiento empleado, tal como se muestra en las cláusulas y el trace proporcionados, no es una deducción a partir del texto de las inscripciones de los cofres (A, B, C, D). En cambio, se nos ha proporcionado directamente una definición de cuál es la solución correcta (`solucion(MA, MB, MC, MD) :- ...`). El proceso de "pensamiento" exitoso mostrado es simplemente la verificación de que una posible asignación de fabricantes (Bellini para A, Cellini para B, Bellini para C, Cellini para D) cumple con las reglas establecidas en esa definición de `solucion`. Es como si nos dieran la respuesta y luego comprobaran que esa respuesta encaja con los criterios listados para ser una "solución". La lógica de cómo se derivó esa definición de `solucion` a partir de las inscripciones del problema original no se muestra aquí.
+
+*   **Resumen contundente y breve:**
+    El problema pregunta quién hizo cada cofre. Analizando las cláusulas proporcionadas, que incluyen la definición de la solución correcta, y las ramas de pensamiento, que verifican esta definición, se concluye directamente que el cofre A lo hizo Bellini, el B Cellini, el C Bellini y el D Cellini. La derivación de esta solución a partir de las inscripciones de los cofres no está detallada en los materiales analizados.
+
+-------------------------------------------------------------------
+
+
+INFO: Checkpoint guardado: checkpoints/mmrc_result_cycle0_Habían_aparecido_cuatro_cofres_dos_de_oro_y_dos_de.pkl
+
+=== RESULTADO DEL ANÁLISIS MMRC ===
+✅ SE ENCONTRÓ UNA SOLUCIÓN EXITOSA
+
+--- RESPUESTA GENERADA ---
+Okay, analicemos el problema, las cláusulas proporcionadas y las ramas de pensamiento exitosas.
+
+**Análisis de los Materiales Proporcionados:**
+
+1.  **Problema Original:** Presenta un escenario con cuatro cofres (dos de oro, dos de plata) y sus inscripciones, pidiendo determinar quién hizo cada uno (Bellini, Cellini, o un hijo). La historia de fondo sobre la resolución del problema de los pares y la recompensa es contextual pero no directamente parte del problema lógico de determinar los fabricantes basado en las inscripciones (aunque la mención del "hijo" en la inscripción D es relevante para los posibles fabricantes).
+
+2.  **Cláusulas Usadas:**
+    *   `poss_maker(bellini).`, `poss_maker(cellini).`, `poss_maker(hijo).`: Definen el conjunto de posibles fabricantes.
+    *   `cofre(a, oro).`, `cofre(b, plata).`, `cofre(c, oro).`, `cofre(d, plata).`: Describen los cofres y su material.
+    *   `solucion(MA, MB, MC, MD) :- ...`: **Esta es la pieza clave.** No es una derivación paso a paso a partir de las inscripciones, sino una *definición directa* de cuál es la solución correcta en términos de quién hizo cada cofre (MA es el fabricante de A, MB de B, etc.). Las condiciones que impone son:
+        *   `poss_maker(MA), poss_maker(MB), poss_maker(MC), poss_maker(MD)`: Los fabricantes asignados deben estar en la lista de posibles fabricantes.
+        *   `MB == cellini`: El fabricante del cofre B es Cellini.
+        *   `( MD == cellini ; (MB == bellini, MD == bellini) )`: El fabricante del cofre D es Cellini O (el fabricante de B es Bellini Y el fabricante de D es Bellini). Dada la condición anterior (`MB == cellini`), la segunda parte del `OR` (`MB == bellini, MD == bellini`) es falsa. Por lo tanto, esta condición se simplifica a `MD == cellini`. El fabricante del cofre D es Cellini.
+        *   `MA == bellini`: El fabricante del cofre A es Bellini.
+        *   `MC == bellini`: El fabricante del cofre C es Bellini.
+
+    *   **Conclusión de las Cláusulas:** La cláusula `solucion` ya nos está diciendo cuál es la respuesta: A lo hizo Bellini, B lo hizo Cellini, C lo hizo Bellini y D lo hizo Cellini. Las inscripciones de los cofres (el texto en A, B, C, D) no se utilizan en esta cláusula `solucion`. Esto significa que la lógica para *derivar* la solución a partir de las inscripciones no está representada en las cláusulas proporcionadas; la cláusula `solucion` simplemente *establece* cuál es la respuesta correcta.
+
+3.  **Ramas de Pensamientos Exitosas:**
+    *   Este fragmento muestra el proceso de verificar si una combinación de fabricantes satisface la cláusula `solucion`.
+    *   Comienza intentando encontrar valores para `_4664` (MA), `_4666` (MB), `_4668` (MC), `_4670` (MD) que satisfagan `solucion(MA, MB, MC, MD)`.
+    *   Sigue evaluando las condiciones dentro de `solucion`:
+        *   `poss_maker(_4664)` verifica si el fabricante asignado a A es posible (el trace muestra que eligió 'bellini' y tuvo éxito).
+        *   `cellini==cellini` verifica si el fabricante asignado a B es Cellini (confirma que MB debe ser Cellini).
+        *   `cellini==cellini` verifica si el fabricante asignado a D es Cellini (confirma que MD debe ser Cellini, basado en la simplificación del OR).
+        *   `bellini==bellini` verifica si el fabricante asignado a A es Bellini (confirma que MA debe ser Bellini).
+        *   `bellini==bellini` verifica si el fabricante asignado a C es Bellini (confirma que MC debe ser Bellini).
+    *   **Conclusión de las Ramas:** El trace muestra la validación de una solución contra las condiciones preestablecidas en la cláusula `solucion`. Confirma que asignar Bellini a A, Cellini a B, Bellini a C y Cellini a D cumple con los requisitos de la `solucion` definida. No muestra el proceso de *cómo se llegó* a esa definición de `solucion` a partir del texto de las inscripciones de los cofres.
+
+---
+
+**Respuesta Argumentada al Problema Original:**
+
+Basándonos estrictamente en las "Cláusulas Usadas" proporcionadas, que incluyen una definición directa de la solución, y en el análisis de las "Ramas de Pensamientos Exitosas" que verifican esta definición:
+
+*   **La respuesta directa al problema:**
+    *   El cofre A (Oro) fue hecho por **Bellini**.
+    *   El cofre B (Plata) fue hecho por **Cellini**.
+    *   El cofre C (Oro) fue hecho por **Bellini**.
+    *   El cofre D (Plata) fue hecho por **Cellini**.
+
+*   **Justificación lógica paso a paso (basada en las cláusulas proporcionadas):**
+    1.  El problema define los posibles fabricantes: Bellini, Cellini e Hijo.
+    2.  El problema define los cofres A, B, C, D y sus materiales.
+    3.  La cláusula `solucion(MA, MB, MC, MD)` proporciona las condiciones que deben cumplir los fabricantes (MA para A, MB para B, MC para C, MD para D) para ser la solución correcta.
+    4.  Esta cláusula establece explícitamente:
+        *   Que el fabricante de B (`MB`) debe ser `cellini`.
+        *   Que el fabricante de D (`MD`) debe ser `cellini` (tras simplificar la condición `( MD == cellini ; (MB == bellini, MD == bellini) )` sabiendo que `MB` es `cellini`).
+        *   Que el fabricante de A (`MA`) debe ser `bellini`.
+        *   Que el fabricante de C (`MC`) debe ser `bellini`.
+    5.  Por lo tanto, la única asignación de fabricantes que satisface la definición de `solucion` es MA=Bellini, MB=Cellini, MC=Bellini, MD=Cellini.
+    6.  Las "Ramas de Pensamientos Exitosas" muestran precisamente cómo el sistema verifica que esta asignación específica (A: Bellini, B: Cellini, C: Bellini, D: Cellini) cumple con todas las condiciones listadas en la cláusula `solucion`, confirmando que es la solución según la definición dada.
+
+*   **Explicación clara del razonamiento utilizado:**
+    El razonamiento empleado, tal como se muestra en las cláusulas y el trace proporcionados, no es una deducción a partir del texto de las inscripciones de los cofres (A, B, C, D). En cambio, se nos ha proporcionado directamente una definición de cuál es la solución correcta (`solucion(MA, MB, MC, MD) :- ...`). El proceso de "pensamiento" exitoso mostrado es simplemente la verificación de que una posible asignación de fabricantes (Bellini para A, Cellini para B, Bellini para C, Cellini para D) cumple con las reglas establecidas en esa definición de `solucion`. Es como si nos dieran la respuesta y luego comprobaran que esa respuesta encaja con los criterios listados para ser una "solución". La lógica de cómo se derivó esa definición de `solucion` a partir de las inscripciones del problema original no se muestra aquí.
+
+*   **Resumen contundente y breve:**
+    El problema pregunta quién hizo cada cofre. Analizando las cláusulas proporcionadas, que incluyen la definición de la solución correcta, y las ramas de pensamiento, que verifican esta definición, se concluye directamente que el cofre A lo hizo Bellini, el B Cellini, el C Bellini y el D Cellini. La derivación de esta solución a partir de las inscripciones de los cofres no está detallada en los materiales analizados.
+
+--- ESTADÍSTICAS ---
+Ramas exitosas encontradas: 1
+
+TODOS LOS PROBLEMAS CONFIGURADOS PROCESADOS.

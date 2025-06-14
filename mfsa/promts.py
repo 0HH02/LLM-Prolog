@@ -72,12 +72,33 @@ def formalize_in_logic_statement_promt(statement_nl):
 
 def initial_analysis_promt(problem_description_nl):
     return f"""
-        Hola, necesito tu ayuda para analizar un problema de lógica. Por favor, sigue estos pasos:
-        Análisis Paso a Paso del Problema: Describe el problema de lógica que te presentaré a continuación, desglosándolo en sus componentes fundamentales. Explica las entidades involucradas, sus relaciones y las condiciones o restricciones dadas.
-        Hipótesis de Solución: Basándote en tu análisis, propón una hipótesis clara sobre cuál podría ser la solución al problema.
-        Premisas para Prolog: Identifica y enumera todas las premisas (hechos y reglas) que serían necesarias para modelar y resolver este problema utilizando el lenguaje de programación lógica Prolog. Asegúrate de que estas premisas sean suficientes para llegar a la solución que has hipotetizado.
-        A continuación, te presento el problema de lógica:
+        Hola, necesito tu ayuda para analizar y resolver un problema de lógica de manera sistemática. Por favor, sigue los siguientes pasos:
 
+        1. Entendimiento del Problema: 
+        - Extrae todas las declaraciones lógicas o pistas proporcionadas, y anótalas claramente. Debes escribir cada premisa expresada en el problema, impícita o explícitamente. Cada sutileza que pueda ser modelada debe ser modelada. Ejemplo:
+            - Premisa 1
+            - Premisa 2
+            ...
+        - Transforma cada premisa en una o más sentencias de prolog, de forma que cada una esté asociada con alguna sentencia.
+        - Intenta que las sentencias de prolog sean lo más parecida a la premisa que modela.
+        - Cada cláusula y cada palabra conectiva ("y", "o", "si") debe ser representada con total fidelidad en tu código, sin simplificaciones ni interpretaciones que alteren su significado estricto.
+
+        2. Análisis e Inferencia Preliminar:
+        - Basándote en la información organizada, realiza inferencias lógicas paso a paso. Elimina posibilidades o deduce nuevos hechos. Si es aplicable, actualiza tu representación de la información con cada nueva inferencia hasta que se clarifiquen las relaciones.
+        
+        3. Hipótesis de Solución:
+        - A partir de tu análisis e inferencias, propón una hipótesis clara sobre cuál es la solución al problema de lógica.
+        
+        4. Comprobación Formal con Prolog:
+        - Vas a crear un programa en Prolog (hechos y reglas) basado en tu hipótesis de solución y las pistas originales. Este programa debe ser capaz de demostrar la validez de tu hipótesis a través de consultas.
+        - Identifica y codifica primero las reglas globales que rigen el comportamiento de todos los agentes del sistema, pues estas definen el marco en el que se deben evaluar sus acciones individuales.
+        - Modela cada pieza de evidencia o declaración de forma atómica y fiel a su descripción original, evitando crear relaciones o dependencias artificiales entre componentes que el problema no vincula explícitamente.
+        - Garantiza una correspondencia precisa entre las entidades del problema y las variables de tu código, validando que el contexto de cada regla solo afecte a las variables que le conciernen directamente.
+        - Esto es sumamente importante: La corrección semántica y sintáctica del programa Prolog es crucial, ya que la verdad de tu hipótesis se deduce de la capacidad del programa para probarla. Asegúrate de que el código esté bien escrito y refleje lógicamente el problema y tu solución propuesta.
+        - Para modelar implicaciones lógicas en Prolog de forma declarativa, usa la negación para expresar que no puede darse el caso de que el antecedente sea cierto y el consecuente falso.
+        - Comenta el resultado esperado del programa pero nunca hables como si ya se hubiera ejecutado.
+
+        A continuación, te presento el problema de lógica:
         {problem_description_nl}
         """
 

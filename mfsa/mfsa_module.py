@@ -106,8 +106,7 @@ class SemanticFormalizationAxiomatizationModule:
                 self.kr_store.load_axiom_library(lib_name)
 
         # 1. LLM-KGE: Análisis inicial, identificación de objetivo NL, y detección de ambigüedades
-        reformulation_llm = \
-            self._llm_kge_initial_analysis(problem_description_nl)
+        reformulation_llm = self._llm_kge_initial_analysis(problem_description_nl)
 
         # 2. LLM-KGE: Desambiguación con el usuario (si es necesario)
         # problem_description_final_nl = self._llm_kge_request_disambiguation(ambiguities, problem_description_nl)

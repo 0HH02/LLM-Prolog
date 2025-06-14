@@ -93,4 +93,5 @@ def ask_gemini_json(prompt: str, task_hint: str = ""):
         return json.loads(response_text)
     except Exception as e:
         print(f"Error al llamar a la API de Gemini: {e}")
+        
         return None

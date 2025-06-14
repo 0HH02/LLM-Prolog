@@ -1,12 +1,20 @@
 import re
 import copy
+import json
+from pathlib import Path
+from collections import deque
+from graphviz import Digraph
 
 class Clausula:
-    def __init__(self, nombre, valor=None, veracidad="", padre=None):
-        self.nombre = nombre
-        self.valor = valor if valor is not None else []  # array de Clausula
-        self.veracidad = veracidad  # string
-        self.padre = padre  # Clausula
+    def __init__(self, nombre, origen="<dynamic>:0", veracidad="",
+                 profundidad=0, padre=None):
+        self.nombre = nombre                       # p/2(args) …
+        self.origen = origen                       # fichero:línea
+        self.veracidad = veracidad                 # "", "verde", "rojo"
+        self.profundidad = profundidad             # nivel
+        self.padre = padre                         # Clausula | None
+        self.valor = []                            # list[Clausula]
+        self.choice_open = False                   # ¿dejé choice-point?
 
     def __eq__(self, other):
         if not isinstance(other, Clausula):
@@ -20,16 +28,12 @@ class Clausula:
         return (self_nombre == other_nombre and self_aridad == other_aridad and self.veracidad == other.veracidad and len(self.valor) == len(other.valor))
 
     def to_dict(self):
-        output_dict = {
-            "nombre": self.nombre,
-            "veracidad": self.veracidad
-        }
-
-        if self.valor:  # Si hay nodos hijos
-            # Llama recursivamente 'to_dict' en cada hijo
-            output_dict["valor"] = [child.to_dict() for child in self.valor]
-
-        return output_dict
+        d = {"nombre": self.nombre,
+             "origen": self.origen,
+             "veracidad": self.veracidad}
+        if self.valor:
+            d["valor"] = [h.to_dict() for h in self.valor]
+        return d
 
     def pretty_print(self, indent_level=0):
         indent = "  " * indent_level
@@ -55,168 +59,192 @@ class Clausula:
         return "\n".join(output)
 
     def __repr__(self):
-        # Representación útil para depuración, no para la salida final solicitada.
-        padre_nombre = self.padre.nombre if self.padre else "None"
-        return (f"Clausula(nombre='{self.nombre}', veracidad='{self.veracidad}', "
-                f"num_hijos={len(self.valor)}, padre='{padre_nombre}')")
+        return (f"Clausula('{self.nombre}', nivel={self.profundidad}, "
+                f"veracidad='{self.veracidad}', valor={len(self.valor)})")
+
+# -------------  AJUSTA SOLO ESTA FUNCIÓN  ------------------------------------
+LINE_RE = re.compile(
+    r'^(?P<indent>\s*)'
+    r'(?P<port>call|exit|fail|redo)'
+    r'(?:\((?P<idx>\d+)\))?:\s*'
+    r'(?P<meta>[^@]+?)\s*'
+    r'@?\s*(?P<file>.*)$',
+    re.I
+)
+
 
 def procesar_traza(traza_str):
-    # Inicializamos un array de Clausulas llamado ramas_de_pensamientos
-    ramas_de_pensamientos = []
-    # Inicializamos una variable llamada root con la Clausula root con el nombre root, array vacío, valor = "" y padre = None
-    root = Clausula(nombre="root", veracidad="", padre=None)
-    # Inicializamos una variable llamada nodo_actual que será igual a root
-    nodo_actual = root
+        # Inicializamos un array de Clausulas llamado ramas_de_pensamientos
+        ramas_de_pensamientos = []
+        # Inicializamos una variable llamada root con la Clausula root con el nombre root, array vacío, valor = "" y padre = None
+        root = Clausula(nombre="root", veracidad="", padre=None)
+        # Inicializamos una variable llamada nodo_actual que será igual a root
+        nodo_actual = root
 
-    # Regex para parsear: Tipo, Nivel (ignorado por ahora), Contenido
-    line_regex = re.compile(r"^\s*(Call|Exit|Fail|Redo):\s*\(\d+\)\s*(.*)$")
-
-    traza = traza_str.strip().split('\n')
-    # Por cada linea en la traza:
-    for index, line_raw in enumerate(traza):
-        line = line_raw.strip()
-        if not line:
-            continue
-
-        # Parseala para determinar el contenido de la linea y desestrúcturalo en nombre, aridad y tipo de llamada.
-        match = line_regex.match(line)
-        if not match:
-            # print(f"Advertencia: No se pudo parsear la línea: {line}")
-            continue
-
-        tipo_llamada, contenido_str = match.group(1), match.group(2).strip()
-        # 'nombre' y 'aridad' se infieren del 'contenido_str' según el contexto.
-
-        if tipo_llamada == "Call":
-            # Si la linea es de tipo Call, si el contenido es fail salta la linea
-            if contenido_str == "fail":
-                continue
-            # si no crea una Clausula con nombre = al contenido y padre = nodo_actual, esta será el nuevo nodo_actual
-            nueva_clausula = Clausula(nombre=contenido_str, padre=nodo_actual)
-            nodo_actual.valor.append(nueva_clausula)
-            nodo_actual = nueva_clausula
+        # Regex para parsear: Tipo, Nivel (ignorado por ahora), Contenido
+        line_regex = re.compile(r'^\s*(call|exit|fail|redo)(?:\(\d+\))?:\s*([^@]+?)\s*(?:@.*)?$')
         
-        elif tipo_llamada == "Exit":
-            # El nodo_actual es el que fue llamado y ahora está saliendo (Exit)
-            exiting_node = nodo_actual
-            
-            # Si el array valor está vacío crea una Cláusula con el nombre = al contenido, veracidad = "verde" y agrégalo al array de cláusulas de valor del nodo_actual.
-            if not exiting_node.valor: 
-                clausula_resultado = Clausula(nombre=contenido_str, veracidad="verde", padre=exiting_node)
-                exiting_node.valor.append(clausula_resultado)
-            exiting_node.veracidad = "verde"
-            
-            # Nodo_actual será nodo_actual.padre (para ambos casos de Exit)
-            if exiting_node.padre:
-                nodo_actual = exiting_node.padre
-            
-        elif tipo_llamada == "Fail":
-            # si el contenido es fail salta la linea
-            if contenido_str == "fail":
+        traza = traza_str.strip().split('\n')
+        # Por cada linea en la traza:
+        conta = 0
+        for index, line_raw in enumerate(traza):
+            line = line_raw.strip()
+            if not line:
                 continue
-            
-            failing_node = nodo_actual # El nodo que fue llamado y ahora está fallando (Fail)
-            
-            # si no si el array valor está vacío crea una Cláusula con el nombre = al contenido, veracidad = "rojo" y agrégalo al array de cláusulas de valor del nodo_actual.
-            if not failing_node.valor:
-                clausula_resultado = Clausula(nombre=contenido_str, veracidad="rojo", padre=failing_node)
-                failing_node.valor.append(clausula_resultado)
 
-            failing_node.veracidad = "rojo"
-            
-            # y el nodo_actual será nodo_actual.padre (para ambos casos de Fail)
-            if failing_node.padre:
-                nodo_actual = failing_node.padre
+            # Parseala para determinar el contenido de la linea y desestrúcturalo en nombre, aridad y tipo de llamada.
+            match = line_regex.match(line)
+            if not match:
+                # print(f"Advertencia: No se pudo parsear la línea: {line}")
+                continue
 
-        elif tipo_llamada == "Redo":
-            # Hacemos una copia del arbol almacenado en root y la guardamos en el array de ramas_de_pensamientos.
-            while nodo_actual.padre:
-                nodo_actual.veracidad = "rojo"
-                nodo_actual = nodo_actual.padre
-            ramas_de_pensamientos.append(copy.deepcopy(root))
-            
-            # Luego bajamos por el arbol desde root hasta encontrar una de las cláusulas 
-            # ... con nombre igual al contenido de la linea
-            # (contenido_str es, por ej., "hola(_4668)")
-            
-            q = [root] # Cola para búsqueda BFS para encontrar el nodo
-            node_to_redo_found = None
-            # Usamos un set para evitar ciclos en la búsqueda si la estructura del árbol fuera inesperada,
-            # aunque con padres no debería haber ciclos descendentes.
-            visited_for_bfs = set() 
+            tipo_llamada, contenido_str = match.groups()
+            # 'nombre' y 'aridad' se infieren del 'contenido_str' según el contexto.
 
-            while q:
-                curr_search_node = q.pop(0)
-                
-                if id(curr_search_node) in visited_for_bfs: # Comprobar por id del objeto
+
+            if tipo_llamada == "call":
+                # Si la linea es de tipo Call, si el contenido es fail salta la linea
+                if contenido_str == "fail":
                     continue
-                visited_for_bfs.add(id(curr_search_node))
-
-                # Extraer nombre y aridad del nodo actual
-                curr_nombre = curr_search_node.nombre.split('(')[0].strip()
-                curr_aridad = len(curr_search_node.nombre.split('(')[1].split(',')) if '(' in curr_search_node.nombre else 0
-
-                # Extraer nombre y aridad del contenido
-                cont_nombre = contenido_str.split('(')[0].strip()
-                cont_aridad = len(contenido_str.split('(')[1].split(',')) if '(' in contenido_str else 0
-
-                # Comparar nombre y aridad
-                if curr_nombre == cont_nombre and curr_aridad == cont_aridad:
-                    node_to_redo_found = curr_search_node
-                    break
-                for child in curr_search_node.valor:
-                    if isinstance(child, Clausula): # Asegurarse de que el hijo es una Clausula
-                         q.append(child)
+                # si no crea una Clausula con nombre = al contenido y padre = nodo_actual, esta será el nuevo nodo_actual
+                nueva_clausula = Clausula(nombre=contenido_str, padre=nodo_actual)
+                nodo_actual.valor.append(nueva_clausula)
+                nodo_actual = nueva_clausula
             
-            if node_to_redo_found:
-                next_clausule = traza[index + 1]
-                next_contenido = line_regex.match(next_clausule).group(2).strip()
-                nombre = next_contenido.split('(')[0].strip()
-                aridad = len(next_contenido.split('(')[1].split(',')) if '(' in next_contenido else 0
-                if node_to_redo_found.valor != []:
-                    for index, clausula in enumerate(node_to_redo_found.valor):
-                        if clausula.nombre == nombre and len(clausula.nombre.split('(')[1].split(',')) if '(' in clausula.nombre else 0 == aridad:
-                            node_to_redo_found.valor = node_to_redo_found.valor[:index + 1]
-                            break
-                else:
-                    # Limpiar el array de valor del nodo encontrado y reiniciar su veracidad
-                    node_to_redo_found.valor = [] 
-                node_to_redo_found.veracidad = ""  # Reiniciar su estado de veracidad
-                nodo_actual = node_to_redo_found
-                current = node_to_redo_found
-                while current.padre:
+            elif tipo_llamada == "exit":
+                # El nodo_actual es el que fue llamado y ahora está saliendo (Exit)
+                exiting_node = nodo_actual
+                
+                # Si el array valor está vacío crea una Cláusula con el nombre = al contenido, veracidad = "verde" y agrégalo al array de cláusulas de valor del nodo_actual.
+                if not exiting_node.valor: 
+                    clausula_resultado = Clausula(nombre=contenido_str, veracidad="verde", padre=exiting_node)
+                    exiting_node.valor.append(clausula_resultado)
+                exiting_node.veracidad = "verde"
+                
+                # Nodo_actual será nodo_actual.padre (para ambos casos de Exit)
+                if exiting_node.padre:
+                    nodo_actual = exiting_node.padre
+                
+            elif tipo_llamada == "fail":
+                # si el contenido es fail salta la linea
+                if contenido_str == "fail":
+                    continue
+                
+                failing_node = nodo_actual # El nodo que fue llamado y ahora está fallando (Fail)
+                
+                # si no si el array valor está vacío crea una Cláusula con el nombre = al contenido, veracidad = "rojo" y agrégalo al array de cláusulas de valor del nodo_actual.
+                if not failing_node.valor:
+                    clausula_resultado = Clausula(nombre=contenido_str, veracidad="rojo", padre=failing_node)
+                    failing_node.valor.append(clausula_resultado)
 
-                    indice = current.padre.valor.index(current)
-                    # Truncar el array de valor del padre hasta el índice encontrado
-                    current.padre.valor = current.padre.valor[:indice + 1]
-                    current = current.padre
+                failing_node.veracidad = "rojo"
+                
+                # y el nodo_actual será nodo_actual.padre (para ambos casos de Fail)
+                if failing_node.padre:
+                    nodo_actual = failing_node.padre
+
+            elif tipo_llamada == "redo":
+                # Hacemos una copia del arbol almacenado en root y la guardamos en el array de ramas_de_pensamientos.
+                while nodo_actual.padre:
+                    nodo_actual.veracidad = "rojo"
+                    nodo_actual = nodo_actual.padre
+                ramas_de_pensamientos.append(copy.deepcopy(root))
+                arbol_dict = ramas_de_pensamientos[-1].to_dict()
+        
+                # Determinar la carpeta basada en la veracidad del primer nodo
+                target_dir = Path("solutions/pruebas/success")
+                
+                # Generar y guardar el gráfico
+                dot = _create_thought_graph(arbol_dict)
+                dot.render(str(target_dir / f'arbol_pensamiento_{conta}'), view=False, cleanup=True)
+                conta += 1
+                print(line_raw)
+                
+                # Luego bajamos por el arbol desde root hasta encontrar una de las cláusulas 
+                # ... con nombre igual al contenido de la linea
+                # (contenido_str es, por ej., "hola(_4668)")
+                
+                q = [root] # Cola para búsqueda BFS para encontrar el nodo
+                node_to_redo_found = None
+                # Usamos un set para evitar ciclos en la búsqueda si la estructura del árbol fuera inesperada,
+                # aunque con padres no debería haber ciclos descendentes.
+                visited_for_bfs = set() 
+
+                last_last_found = None
+                last_found = None
+
+                while q:
+                    curr_search_node = q.pop(0)
                     
-            else:
-                # Este caso idealmente no debería ocurrir si la traza es consistente.
-                # print(f"Advertencia: Objetivo de REDO '{contenido_str}' no encontrado en el estado actual del árbol.")
-                pass
+                    if id(curr_search_node) in visited_for_bfs: # Comprobar por id del objeto
+                        continue
+                    visited_for_bfs.add(id(curr_search_node))
 
-    ramas_de_pensamientos.append(copy.deepcopy(root))
+                    # Extraer nombre y aridad del nodo actual
+                    curr_nombre = curr_search_node.nombre.split('(')[0].strip()
+                    curr_aridad = len(curr_search_node.nombre.split('(')[1].split(',')) if '(' in curr_search_node.nombre else 0
 
-    return ramas_de_pensamientos, root
+                    # Extraer nombre y aridad del contenido
+                    cont_nombre = contenido_str.split('(')[0].strip()
+                    cont_aridad = len(contenido_str.split('(')[1].split(',')) if '(' in contenido_str else 0
 
-# Procesar la traza
-ramas, arbol_final = procesar_traza(traza_ejemplo)
+                    # Comparar nombre y aridad
+                    if curr_nombre == cont_nombre and curr_aridad == cont_aridad:
+                        last_last_found = last_found
+                        last_found = curr_search_node
 
-# Imprimir cada Clausula en ramas_de_pensamientos
-print("--- Ramas de Pensamientos Generadas ---")
-if not ramas:
-    print("No se generaron ramas de pensamientos (no hubo Redos o la traza fue corta).")
-for i, arbol_pensamiento in enumerate(ramas):
-    print(f"--- Inicio Rama de Pensamiento {i+1} ---")
-    print(arbol_pensamiento.pretty_print())
-    print(f"--- Fin Rama de Pensamiento {i+1} ---\n")
+                    if curr_search_node.nombre == contenido_str:
+                        node_to_redo_found = curr_search_node
+                        print("node_found: ", node_to_redo_found)
+                    for child in curr_search_node.valor:
+                        if isinstance(child, Clausula): # Asegurarse de que el hijo es una Clausula
+                            q.append(child)
+                if node_to_redo_found == None:
+                        print(last_found)
+                        print(last_last_found)
+                        print(contenido_str)
 
+                        node_to_redo_found = last_found
+                        node_to_redo_found.nombre = contenido_str
+                        print("Solo se encontró un nodo con igual nombre, aridad y profundidad")
+                
+                if node_to_redo_found != None:
+                    #ELIMINAR ESTO DESPUES DE LA PRUEBAs
+                    if index + 1 == len(traza):
+                        break
+                    next_clausule = traza[index + 1]
+                    next_contenido = line_regex.match(next_clausule).group(2).strip()
+                    nombre = next_contenido.split('(')[0].strip()
+                    aridad = len(next_contenido.split('(')[1].split(',')) if '(' in next_contenido else 0
+                    if node_to_redo_found.valor != []:
+                        for index, clausula in enumerate(node_to_redo_found.valor):
+                            if clausula.nombre == nombre and len(clausula.nombre.split('(')[1].split(',')) if '(' in clausula.nombre else 0 == aridad:
+                                node_to_redo_found.valor = node_to_redo_found.valor[:index + 1]
+                                break
+                        else:
+                            # Limpiar el array de valor del nodo encontrado y reiniciar su veracidad
+                            node_to_redo_found.valor = [] 
+                    node_to_redo_found.veracidad = ""  # Reiniciar su estado de veracidad
+                    nodo_actual = node_to_redo_found
+                    current = node_to_redo_found
+                    while current.padre:
 
-import json
-from graphviz import Digraph
+                        indice = current.padre.valor.index(current)
+                        # Truncar el array de valor del padre hasta el índice encontrado
+                        current.padre.valor = current.padre.valor[:indice + 1]
+                        current = current.padre
+                        
+                else:
+                    # Este caso idealmente no debería ocurrir si la traza es consistente.
+                    # print(f"Advertencia: Objetivo de REDO '{contenido_str}' no encontrado en el estado actual del árbol.")
+                    pass
 
-def create_thought_graph(data, graph=None, parent_id=None, node_counter=[0]):
+        ramas_de_pensamientos.append(copy.deepcopy(root))
+
+        return ramas_de_pensamientos
+# ------------------------------------------------------------------------------
+
+def _create_thought_graph(data, graph=None, parent_id=None, node_counter=[0]):
     """
     Recursively creates nodes and edges for the Graphviz diagram from the JSON data.
     """
@@ -248,16 +276,2472 @@ def create_thought_graph(data, graph=None, parent_id=None, node_counter=[0]):
     # Recursively process children
     if "valor" in data and isinstance(data["valor"], list):
         for child in data["valor"]:
-            create_thought_graph(child, graph, current_node_id, node_counter)
+            _create_thought_graph(child, graph, current_node_id, node_counter)
 
     return graph
 
+# -------------------
+# Example usage
+# -------------------
+if __name__ == "__main__":
+    import textwrap
 
-for i, arbol_pensamiento in enumerate(ramas):
-    if arbol_pensamiento.valor[0].veracidad == "verde":    
-        dot = create_thought_graph(arbol_pensamiento.to_dict())
+    sample_trace = textwrap.dedent("""
+        call: solucion(_4650,_4652,_4654,_4656,_4658) @ <dynamic>:0
+            call: es_maker(_4650) @ <dynamic>:0
+            exit: es_maker(bellini) @ /tmp/tmpu_qrcaqx.pl:22
+            call: es_maker(_4652) @ <dynamic>:0
+            exit: es_maker(bellini) @ /tmp/tmpu_qrcaqx.pl:22
+            call: es_maker(_4654) @ <dynamic>:0
+            exit: es_maker(bellini) @ /tmp/tmpu_qrcaqx.pl:22
+            call: es_maker(_4656) @ <dynamic>:0
+            exit: es_maker(bellini) @ /tmp/tmpu_qrcaqx.pl:22
+            call: pairing(_4658,_8038,_8040,_8042,_8044) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,bellini,b,bellini,bellini,bellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8228) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),bellini,bellini,bellini,bellini,_8350) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,bellini,bellini,bellini,_8410) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,bellini,bellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_8350) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8350) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(b,cellini),bellini,bellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: false==true @ <dynamic>:0
+                fail: false==true @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+            fail: check_cofre(a,bellini,b,bellini,bellini,bellini,bellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8038,_8040,_8042,_8044) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,bellini,d,bellini,bellini,bellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8300) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),bellini,bellini,bellini,bellini,_8422) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),bellini,bellini,bellini,bellini,_8482) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),bellini,bellini,bellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==bellini,_8422) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8422) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(d,cellini),bellini,bellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: false==true @ <dynamic>:0
+                fail: false==true @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+            fail: check_cofre(a,bellini,d,bellini,bellini,bellini,bellini) @ <dynamic>:0
+            redo(0): es_maker(_4656) @ /tmp/tmpu_qrcaqx.pl:23
+            exit: es_maker(cellini) @ /tmp/tmpu_qrcaqx.pl:23
+            call: pairing(_4658,_8102,_8104,_8106,_8108) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,bellini,b,bellini,bellini,bellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8292) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),bellini,bellini,bellini,cellini,_8414) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,bellini,bellini,cellini,_8474) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,bellini,bellini,cellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_8414) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8414) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(b,cellini),bellini,bellini,bellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: false==true @ <dynamic>:0
+                fail: false==true @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+            fail: check_cofre(a,bellini,b,bellini,bellini,bellini,cellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8102,_8104,_8106,_8108) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,bellini,d,bellini,bellini,bellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8364) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),bellini,bellini,bellini,cellini,_8486) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),bellini,bellini,bellini,cellini,_8546) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),bellini,bellini,bellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==cellini,_8486) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(d,cellini),bellini,bellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: true==true @ <dynamic>:0
+                exit: true==true @ <dynamic>:0
+            exit: regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,bellini,d,bellini,bellini,bellini,cellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,bellini,c,bellini,bellini,bellini,cellini) @ <dynamic>:0
+            call: inscripcion(b,c,_9398) @ <dynamic>:0
+            exit: inscripcion(b,c,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,bellini,cellini,_9544) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,bellini,cellini,_9604) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,bellini,cellini,_9604) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,bellini,cellini,_9544) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),bellini,bellini,bellini,cellini,_9678) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,bellini,bellini,cellini,_9738) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,bellini,bellini,cellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_9678) @ <dynamic>:0
+                    call: cellini==bellini @ <dynamic>:0
+                    fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_9678) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==bellini @ <dynamic>:0
+                    exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,cellini),bellini,bellini,bellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,bellini,cellini,_10216) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,bellini,cellini,_10276) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,bellini,cellini,_10276) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,bellini,cellini,_10216) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),bellini,bellini,bellini,cellini,_10350) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),bellini,bellini,bellini,cellini,_10410) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),bellini,bellini,bellini,cellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==bellini,_10350) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,bellini),bellini,bellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(c,bellini),bellini,bellini,bellini,cellini,_10822) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(c,bellini),bellini,bellini,bellini,cellini,_10882) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(c,bellini),bellini,bellini,bellini,cellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:27
+                    call: evaluate_bool(bellini==bellini,_10822) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(c,bellini),bellini,bellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((true,true),_10216) @ <dynamic>:0
+                    call: evaluate_bool(true,true) @ <dynamic>:0
+                    exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                    call: evaluate_bool(true,true) @ <dynamic>:0
+                    exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                exit: evaluate_bool((true,true),true) @ /tmp/tmpu_qrcaqx.pl:38
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((false;true),_9544) @ <dynamic>:0
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(19): evaluate_bool((false;true),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(true,true) @ <dynamic>:0
+                exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                exit: evaluate_bool((false;true),true) @ /tmp/tmpu_qrcaqx.pl:36
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: true==true @ <dynamic>:0
+                exit: true==true @ <dynamic>:0
+            exit: regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(b,bellini,c,bellini,bellini,bellini,cellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(c,bellini,b,bellini,bellini,bellini,cellini) @ <dynamic>:0
+            call: inscripcion(c,b,_12498) @ <dynamic>:0
+            exit: inscripcion(c,b,es_obra_term(c,bellini)) @ /tmp/tmpu_qrcaqx.pl:42
+            call: get_term_truth(es_obra_term(c,bellini),bellini,bellini,bellini,cellini,_12620) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(c,bellini),bellini,bellini,bellini,cellini,_12680) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(c,bellini),bellini,bellini,bellini,cellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:27
+                call: evaluate_bool(bellini==bellini,_12620) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(c,bellini),bellini,bellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: true==true @ <dynamic>:0
+                exit: true==true @ <dynamic>:0
+            exit: regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(c,bellini,b,bellini,bellini,bellini,cellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(d,cellini,a,bellini,bellini,bellini,cellini) @ <dynamic>:0
+            call: inscripcion(d,a,_13532) @ <dynamic>:0
+            exit: inscripcion(d,a,es_obra_term(a,bellini)) @ /tmp/tmpu_qrcaqx.pl:43
+            call: get_term_truth(es_obra_term(a,bellini),bellini,bellini,bellini,cellini,_13654) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(a,bellini),bellini,bellini,bellini,cellini,_13714) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(a,bellini),bellini,bellini,bellini,cellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:25
+                call: evaluate_bool(bellini==bellini,_13654) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(a,bellini),bellini,bellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(bellini==bellini,_13654) @ /tmp/tmpu_qrcaqx.pl:35
+                call: bellini\==bellini @ <dynamic>:0
+                fail: bellini\==bellini @ <dynamic>:0
+                fail: evaluate_bool(bellini==bellini,_13654) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(a,bellini),bellini,bellini,bellini,cellini,_13654) @ <dynamic>:0
+            fail: check_cofre(d,cellini,a,bellini,bellini,bellini,cellini) @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(bellini==bellini,_12620) @ /tmp/tmpu_qrcaqx.pl:35
+                call: bellini\==bellini @ <dynamic>:0
+                fail: bellini\==bellini @ <dynamic>:0
+                fail: evaluate_bool(bellini==bellini,_12620) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(c,bellini),bellini,bellini,bellini,cellini,_12620) @ <dynamic>:0
+            fail: check_cofre(c,bellini,b,bellini,bellini,bellini,cellini) @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false;true),_9544) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(false,false) @ <dynamic>:0
+                exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                call: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((false;true),_9544) @ <dynamic>:0
+                redo(0): evaluate_bool((true,true),_10216) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                redo(19): evaluate_bool((true,true),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((true,true),_10216) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_10822) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_10822) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(c,bellini),bellini,bellini,bellini,cellini,_10822) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_10350) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_10350) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,bellini),bellini,bellini,bellini,cellini,_10350) @ <dynamic>:0
+                fail: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,bellini,cellini,_10216) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,bellini,cellini,_9544) @ <dynamic>:0
+            fail: check_cofre(b,bellini,c,bellini,bellini,bellini,cellini) @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8486) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8486) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(d,cellini),bellini,bellini,bellini,cellini,_8486) @ <dynamic>:0
+            fail: check_cofre(a,bellini,d,bellini,bellini,bellini,cellini) @ <dynamic>:0
+            redo(0): es_maker(_4654) @ /tmp/tmpu_qrcaqx.pl:23
+            exit: es_maker(cellini) @ /tmp/tmpu_qrcaqx.pl:23
+            call: es_maker(_4656) @ <dynamic>:0
+            exit: es_maker(bellini) @ /tmp/tmpu_qrcaqx.pl:22
+            call: pairing(_4658,_8102,_8104,_8106,_8108) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,bellini,b,bellini,bellini,cellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8292) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),bellini,bellini,cellini,bellini,_8414) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,bellini,cellini,bellini,_8474) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,bellini,cellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_8414) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8414) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(b,cellini),bellini,bellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: false==true @ <dynamic>:0
+                fail: false==true @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+            fail: check_cofre(a,bellini,b,bellini,bellini,cellini,bellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8102,_8104,_8106,_8108) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,bellini,d,bellini,bellini,cellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8364) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),bellini,bellini,cellini,bellini,_8486) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),bellini,bellini,cellini,bellini,_8546) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),bellini,bellini,cellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==bellini,_8486) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8486) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(d,cellini),bellini,bellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: false==true @ <dynamic>:0
+                fail: false==true @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+            fail: check_cofre(a,bellini,d,bellini,bellini,cellini,bellini) @ <dynamic>:0
+            redo(0): es_maker(_4656) @ /tmp/tmpu_qrcaqx.pl:23
+            exit: es_maker(cellini) @ /tmp/tmpu_qrcaqx.pl:23
+            call: pairing(_4658,_8166,_8168,_8170,_8172) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,bellini,b,bellini,bellini,cellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8356) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),bellini,bellini,cellini,cellini,_8478) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,bellini,cellini,cellini,_8538) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,bellini,cellini,cellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_8478) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8478) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(b,cellini),bellini,bellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: false==true @ <dynamic>:0
+                fail: false==true @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+            fail: check_cofre(a,bellini,b,bellini,bellini,cellini,cellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8166,_8168,_8170,_8172) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,bellini,d,bellini,bellini,cellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8428) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),bellini,bellini,cellini,cellini,_8550) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),bellini,bellini,cellini,cellini,_8610) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),bellini,bellini,cellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==cellini,_8550) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(d,cellini),bellini,bellini,cellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: true==true @ <dynamic>:0
+                exit: true==true @ <dynamic>:0
+            exit: regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,bellini,d,bellini,bellini,cellini,cellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,bellini,c,bellini,bellini,cellini,cellini) @ <dynamic>:0
+            call: inscripcion(b,c,_9462) @ <dynamic>:0
+            exit: inscripcion(b,c,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,cellini,cellini,_9608) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,cellini,cellini,_9668) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,cellini,cellini,_9668) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,cellini,cellini,_9608) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),bellini,bellini,cellini,cellini,_9742) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,bellini,cellini,cellini,_9802) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,bellini,cellini,cellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_9742) @ <dynamic>:0
+                    call: cellini==bellini @ <dynamic>:0
+                    fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_9742) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==bellini @ <dynamic>:0
+                    exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,cellini),bellini,bellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,cellini,cellini,_10280) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,cellini,cellini,_10340) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,cellini,cellini,_10340) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,cellini,cellini,_10280) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),bellini,bellini,cellini,cellini,_10414) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),bellini,bellini,cellini,cellini,_10474) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),bellini,bellini,cellini,cellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==bellini,_10414) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,bellini),bellini,bellini,cellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(c,bellini),bellini,bellini,cellini,cellini,_10886) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(c,bellini),bellini,bellini,cellini,cellini,_10946) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(c,bellini),bellini,bellini,cellini,cellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:27
+                    call: evaluate_bool(bellini==cellini,_10886) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_10886) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(c,bellini),bellini,bellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((true,false),_10280) @ <dynamic>:0
+                    call: evaluate_bool(true,true) @ <dynamic>:0
+                    exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                    call: evaluate_bool(false,true) @ <dynamic>:0
+                    fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true,false),_10280) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                redo(19): evaluate_bool((true,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((true,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((false;false),_9608) @ <dynamic>:0
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(19): evaluate_bool((false;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false;false),_9608) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(false,false) @ <dynamic>:0
+                exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                call: evaluate_bool(false,false) @ <dynamic>:0
+                exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false;false),false) @ /tmp/tmpu_qrcaqx.pl:37
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: false==true @ <dynamic>:0
+                fail: false==true @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_10414) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_10414) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,bellini),bellini,bellini,cellini,cellini,_10414) @ <dynamic>:0
+                fail: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,cellini,cellini,_10280) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,bellini,cellini,cellini,_9608) @ <dynamic>:0
+            fail: check_cofre(b,bellini,c,bellini,bellini,cellini,cellini) @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8550) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8550) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(d,cellini),bellini,bellini,cellini,cellini,_8550) @ <dynamic>:0
+            fail: check_cofre(a,bellini,d,bellini,bellini,cellini,cellini) @ <dynamic>:0
+            redo(0): es_maker(_4652) @ /tmp/tmpu_qrcaqx.pl:23
+            exit: es_maker(cellini) @ /tmp/tmpu_qrcaqx.pl:23
+            call: es_maker(_4654) @ <dynamic>:0
+            exit: es_maker(bellini) @ /tmp/tmpu_qrcaqx.pl:22
+            call: es_maker(_4656) @ <dynamic>:0
+            exit: es_maker(bellini) @ /tmp/tmpu_qrcaqx.pl:22
+            call: pairing(_4658,_8102,_8104,_8106,_8108) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,bellini,b,bellini,cellini,bellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8292) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),bellini,cellini,bellini,bellini,_8414) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,bellini,bellini,_8474) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,bellini,bellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_8414) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(b,cellini),bellini,cellini,bellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: true==true @ <dynamic>:0
+                exit: true==true @ <dynamic>:0
+            exit: regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,bellini,b,bellini,cellini,bellini,bellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,cellini,a,bellini,cellini,bellini,bellini) @ <dynamic>:0
+            call: inscripcion(b,a,_9326) @ <dynamic>:0
+            exit: inscripcion(b,a,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,bellini,_9472) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,bellini,_9532) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,bellini,_9532) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,bellini,_9472) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),bellini,cellini,bellini,bellini,_9606) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,bellini,bellini,_9666) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,bellini,bellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_9606) @ <dynamic>:0
+                    call: cellini==cellini @ <dynamic>:0
+                    exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,cellini),bellini,cellini,bellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,bellini,_10078) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,bellini,_10138) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,bellini,_10138) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,bellini,_10078) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),bellini,cellini,bellini,bellini,_10212) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),bellini,cellini,bellini,bellini,_10272) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),bellini,cellini,bellini,bellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==cellini,_10212) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_10212) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,bellini),bellini,cellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(a,bellini),bellini,cellini,bellini,bellini,_10750) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(a,bellini),bellini,cellini,bellini,bellini,_10810) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(a,bellini),bellini,cellini,bellini,bellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:25
+                    call: evaluate_bool(bellini==bellini,_10750) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(a,bellini),bellini,cellini,bellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((false,true),_10078) @ <dynamic>:0
+                    call: evaluate_bool(false,true) @ <dynamic>:0
+                    fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false,true),_10078) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false,true),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((true;false),_9472) @ <dynamic>:0
+                call: evaluate_bool(true,true) @ <dynamic>:0
+                exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                exit: evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(19): evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true;false),_9472) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((true;false),_9472) @ <dynamic>:0
+                redo(19): evaluate_bool((false,true),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((false,true),_10078) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_10750) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_10750) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(a,bellini),bellini,cellini,bellini,bellini,_10750) @ <dynamic>:0
+                fail: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,bellini,_10078) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_9606) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==cellini @ <dynamic>:0
+                    fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_9606) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,cellini),bellini,cellini,bellini,bellini,_9606) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,bellini,_9472) @ <dynamic>:0
+            fail: check_cofre(b,cellini,a,bellini,cellini,bellini,bellini) @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8414) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8414) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(b,cellini),bellini,cellini,bellini,bellini,_8414) @ <dynamic>:0
+            fail: check_cofre(a,bellini,b,bellini,cellini,bellini,bellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8102,_8104,_8106,_8108) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,bellini,d,bellini,cellini,bellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8364) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),bellini,cellini,bellini,bellini,_8486) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),bellini,cellini,bellini,bellini,_8546) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),bellini,cellini,bellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==bellini,_8486) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8486) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(d,cellini),bellini,cellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: false==true @ <dynamic>:0
+                fail: false==true @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+            fail: check_cofre(a,bellini,d,bellini,cellini,bellini,bellini) @ <dynamic>:0
+            redo(0): es_maker(_4656) @ /tmp/tmpu_qrcaqx.pl:23
+            exit: es_maker(cellini) @ /tmp/tmpu_qrcaqx.pl:23
+            call: pairing(_4658,_8166,_8168,_8170,_8172) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,bellini,b,bellini,cellini,bellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8356) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),bellini,cellini,bellini,cellini,_8478) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,bellini,cellini,_8538) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,bellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_8478) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(b,cellini),bellini,cellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: true==true @ <dynamic>:0
+                exit: true==true @ <dynamic>:0
+            exit: regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,bellini,b,bellini,cellini,bellini,cellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,cellini,a,bellini,cellini,bellini,cellini) @ <dynamic>:0
+            call: inscripcion(b,a,_9390) @ <dynamic>:0
+            exit: inscripcion(b,a,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,cellini,_9536) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,cellini,_9596) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,cellini,_9596) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,cellini,_9536) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),bellini,cellini,bellini,cellini,_9670) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,bellini,cellini,_9730) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,bellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_9670) @ <dynamic>:0
+                    call: cellini==cellini @ <dynamic>:0
+                    exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,cellini),bellini,cellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,cellini,_10142) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,cellini,_10202) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,cellini,_10202) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,cellini,_10142) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),bellini,cellini,bellini,cellini,_10276) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),bellini,cellini,bellini,cellini,_10336) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),bellini,cellini,bellini,cellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==cellini,_10276) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_10276) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,bellini),bellini,cellini,bellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(a,bellini),bellini,cellini,bellini,cellini,_10814) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(a,bellini),bellini,cellini,bellini,cellini,_10874) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(a,bellini),bellini,cellini,bellini,cellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:25
+                    call: evaluate_bool(bellini==bellini,_10814) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(a,bellini),bellini,cellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((false,true),_10142) @ <dynamic>:0
+                    call: evaluate_bool(false,true) @ <dynamic>:0
+                    fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false,true),_10142) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false,true),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((true;false),_9536) @ <dynamic>:0
+                call: evaluate_bool(true,true) @ <dynamic>:0
+                exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                exit: evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(19): evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true;false),_9536) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((true;false),_9536) @ <dynamic>:0
+                redo(19): evaluate_bool((false,true),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((false,true),_10142) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_10814) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_10814) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(a,bellini),bellini,cellini,bellini,cellini,_10814) @ <dynamic>:0
+                fail: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,cellini,_10142) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_9670) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==cellini @ <dynamic>:0
+                    fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_9670) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,cellini),bellini,cellini,bellini,cellini,_9670) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,bellini,cellini,_9536) @ <dynamic>:0
+            fail: check_cofre(b,cellini,a,bellini,cellini,bellini,cellini) @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8478) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8478) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(b,cellini),bellini,cellini,bellini,cellini,_8478) @ <dynamic>:0
+            fail: check_cofre(a,bellini,b,bellini,cellini,bellini,cellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8166,_8168,_8170,_8172) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,bellini,d,bellini,cellini,bellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8428) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),bellini,cellini,bellini,cellini,_8550) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),bellini,cellini,bellini,cellini,_8610) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),bellini,cellini,bellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==cellini,_8550) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(d,cellini),bellini,cellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: true==true @ <dynamic>:0
+                exit: true==true @ <dynamic>:0
+            exit: regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,bellini,d,bellini,cellini,bellini,cellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,cellini,c,bellini,cellini,bellini,cellini) @ <dynamic>:0
+            call: inscripcion(b,c,_9462) @ <dynamic>:0
+            exit: inscripcion(b,c,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,bellini,cellini,_9608) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,bellini,cellini,_9668) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,bellini,cellini,_9668) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,bellini,cellini,_9608) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),bellini,cellini,bellini,cellini,_9742) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,bellini,cellini,_9802) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,bellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_9742) @ <dynamic>:0
+                    call: cellini==cellini @ <dynamic>:0
+                    exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,cellini),bellini,cellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,bellini,cellini,_10214) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,bellini,cellini,_10274) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,bellini,cellini,_10274) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,bellini,cellini,_10214) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),bellini,cellini,bellini,cellini,_10348) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),bellini,cellini,bellini,cellini,_10408) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),bellini,cellini,bellini,cellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==cellini,_10348) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_10348) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,bellini),bellini,cellini,bellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(c,bellini),bellini,cellini,bellini,cellini,_10886) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(c,bellini),bellini,cellini,bellini,cellini,_10946) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(c,bellini),bellini,cellini,bellini,cellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:27
+                    call: evaluate_bool(bellini==bellini,_10886) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(c,bellini),bellini,cellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((false,true),_10214) @ <dynamic>:0
+                    call: evaluate_bool(false,true) @ <dynamic>:0
+                    fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false,true),_10214) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false,true),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,bellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((true;false),_9608) @ <dynamic>:0
+                call: evaluate_bool(true,true) @ <dynamic>:0
+                exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                exit: evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(19): evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true;false),_9608) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((true;false),_9608) @ <dynamic>:0
+                redo(19): evaluate_bool((false,true),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((false,true),_10214) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_10886) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_10886) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(c,bellini),bellini,cellini,bellini,cellini,_10886) @ <dynamic>:0
+                fail: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,bellini,cellini,_10214) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_9742) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==cellini @ <dynamic>:0
+                    fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_9742) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,cellini),bellini,cellini,bellini,cellini,_9742) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,bellini,cellini,_9608) @ <dynamic>:0
+            fail: check_cofre(b,cellini,c,bellini,cellini,bellini,cellini) @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8550) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8550) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(d,cellini),bellini,cellini,bellini,cellini,_8550) @ <dynamic>:0
+            fail: check_cofre(a,bellini,d,bellini,cellini,bellini,cellini) @ <dynamic>:0
+            redo(0): es_maker(_4654) @ /tmp/tmpu_qrcaqx.pl:23
+            exit: es_maker(cellini) @ /tmp/tmpu_qrcaqx.pl:23
+            call: es_maker(_4656) @ <dynamic>:0
+            exit: es_maker(bellini) @ /tmp/tmpu_qrcaqx.pl:22
+            call: pairing(_4658,_8166,_8168,_8170,_8172) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,bellini,b,bellini,cellini,cellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8356) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),bellini,cellini,cellini,bellini,_8478) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,cellini,bellini,_8538) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,cellini,bellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_8478) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(b,cellini),bellini,cellini,cellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: true==true @ <dynamic>:0
+                exit: true==true @ <dynamic>:0
+            exit: regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,bellini,b,bellini,cellini,cellini,bellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,cellini,a,bellini,cellini,cellini,bellini) @ <dynamic>:0
+            call: inscripcion(b,a,_9390) @ <dynamic>:0
+            exit: inscripcion(b,a,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,bellini,_9536) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,bellini,_9596) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,bellini,_9596) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,bellini,_9536) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),bellini,cellini,cellini,bellini,_9670) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,cellini,bellini,_9730) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,cellini,bellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_9670) @ <dynamic>:0
+                    call: cellini==cellini @ <dynamic>:0
+                    exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,cellini),bellini,cellini,cellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,bellini,_10142) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,bellini,_10202) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,bellini,_10202) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,bellini,_10142) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),bellini,cellini,cellini,bellini,_10276) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),bellini,cellini,cellini,bellini,_10336) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),bellini,cellini,cellini,bellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==cellini,_10276) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_10276) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,bellini),bellini,cellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(a,bellini),bellini,cellini,cellini,bellini,_10814) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(a,bellini),bellini,cellini,cellini,bellini,_10874) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(a,bellini),bellini,cellini,cellini,bellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:25
+                    call: evaluate_bool(bellini==bellini,_10814) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(a,bellini),bellini,cellini,cellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((false,true),_10142) @ <dynamic>:0
+                    call: evaluate_bool(false,true) @ <dynamic>:0
+                    fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false,true),_10142) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false,true),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((true;false),_9536) @ <dynamic>:0
+                call: evaluate_bool(true,true) @ <dynamic>:0
+                exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                exit: evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(19): evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true;false),_9536) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((true;false),_9536) @ <dynamic>:0
+                redo(19): evaluate_bool((false,true),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((false,true),_10142) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_10814) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_10814) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(a,bellini),bellini,cellini,cellini,bellini,_10814) @ <dynamic>:0
+                fail: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,bellini,_10142) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_9670) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==cellini @ <dynamic>:0
+                    fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_9670) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,cellini),bellini,cellini,cellini,bellini,_9670) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,bellini,_9536) @ <dynamic>:0
+            fail: check_cofre(b,cellini,a,bellini,cellini,cellini,bellini) @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8478) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8478) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(b,cellini),bellini,cellini,cellini,bellini,_8478) @ <dynamic>:0
+            fail: check_cofre(a,bellini,b,bellini,cellini,cellini,bellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8166,_8168,_8170,_8172) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,bellini,d,bellini,cellini,cellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8428) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),bellini,cellini,cellini,bellini,_8550) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),bellini,cellini,cellini,bellini,_8610) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),bellini,cellini,cellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==bellini,_8550) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8550) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(d,cellini),bellini,cellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: false==true @ <dynamic>:0
+                fail: false==true @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+            fail: check_cofre(a,bellini,d,bellini,cellini,cellini,bellini) @ <dynamic>:0
+            redo(0): es_maker(_4656) @ /tmp/tmpu_qrcaqx.pl:23
+            exit: es_maker(cellini) @ /tmp/tmpu_qrcaqx.pl:23
+            call: pairing(_4658,_8230,_8232,_8234,_8236) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,bellini,b,bellini,cellini,cellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8420) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),bellini,cellini,cellini,cellini,_8542) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,cellini,cellini,_8602) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,cellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_8542) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(b,cellini),bellini,cellini,cellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: true==true @ <dynamic>:0
+                exit: true==true @ <dynamic>:0
+            exit: regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,bellini,b,bellini,cellini,cellini,cellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,cellini,a,bellini,cellini,cellini,cellini) @ <dynamic>:0
+            call: inscripcion(b,a,_9454) @ <dynamic>:0
+            exit: inscripcion(b,a,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,cellini,_9600) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,cellini,_9660) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,cellini,_9660) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,cellini,_9600) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),bellini,cellini,cellini,cellini,_9734) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,cellini,cellini,_9794) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,cellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_9734) @ <dynamic>:0
+                    call: cellini==cellini @ <dynamic>:0
+                    exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,cellini),bellini,cellini,cellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,cellini,_10206) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,cellini,_10266) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,cellini,_10266) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,cellini,_10206) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),bellini,cellini,cellini,cellini,_10340) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),bellini,cellini,cellini,cellini,_10400) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),bellini,cellini,cellini,cellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==cellini,_10340) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_10340) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,bellini),bellini,cellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(a,bellini),bellini,cellini,cellini,cellini,_10878) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(a,bellini),bellini,cellini,cellini,cellini,_10938) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(a,bellini),bellini,cellini,cellini,cellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:25
+                    call: evaluate_bool(bellini==bellini,_10878) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(a,bellini),bellini,cellini,cellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((false,true),_10206) @ <dynamic>:0
+                    call: evaluate_bool(false,true) @ <dynamic>:0
+                    fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false,true),_10206) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false,true),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((true;false),_9600) @ <dynamic>:0
+                call: evaluate_bool(true,true) @ <dynamic>:0
+                exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                exit: evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(19): evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true;false),_9600) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((true;false),_9600) @ <dynamic>:0
+                redo(19): evaluate_bool((false,true),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((false,true),_10206) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_10878) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_10878) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(a,bellini),bellini,cellini,cellini,cellini,_10878) @ <dynamic>:0
+                fail: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,cellini,_10206) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_9734) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==cellini @ <dynamic>:0
+                    fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_9734) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,cellini),bellini,cellini,cellini,cellini,_9734) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),bellini,cellini,cellini,cellini,_9600) @ <dynamic>:0
+            fail: check_cofre(b,cellini,a,bellini,cellini,cellini,cellini) @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8542) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8542) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(b,cellini),bellini,cellini,cellini,cellini,_8542) @ <dynamic>:0
+            fail: check_cofre(a,bellini,b,bellini,cellini,cellini,cellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8230,_8232,_8234,_8236) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,bellini,d,bellini,cellini,cellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8492) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),bellini,cellini,cellini,cellini,_8614) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),bellini,cellini,cellini,cellini,_8674) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),bellini,cellini,cellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==cellini,_8614) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(d,cellini),bellini,cellini,cellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: true==true @ <dynamic>:0
+                exit: true==true @ <dynamic>:0
+            exit: regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,bellini,d,bellini,cellini,cellini,cellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,cellini,c,bellini,cellini,cellini,cellini) @ <dynamic>:0
+            call: inscripcion(b,c,_9526) @ <dynamic>:0
+            exit: inscripcion(b,c,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,cellini,cellini,_9672) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,cellini,cellini,_9732) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,cellini,cellini,_9732) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,cellini,cellini,_9672) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),bellini,cellini,cellini,cellini,_9806) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,cellini,cellini,_9866) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),bellini,cellini,cellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_9806) @ <dynamic>:0
+                    call: cellini==cellini @ <dynamic>:0
+                    exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,cellini),bellini,cellini,cellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,cellini,cellini,_10278) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,cellini,cellini,_10338) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,cellini,cellini,_10338) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,cellini,cellini,_10278) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),bellini,cellini,cellini,cellini,_10412) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),bellini,cellini,cellini,cellini,_10472) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),bellini,cellini,cellini,cellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==cellini,_10412) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_10412) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,bellini),bellini,cellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(c,bellini),bellini,cellini,cellini,cellini,_10950) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(c,bellini),bellini,cellini,cellini,cellini,_11010) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(c,bellini),bellini,cellini,cellini,cellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:27
+                    call: evaluate_bool(bellini==cellini,_10950) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_10950) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(c,bellini),bellini,cellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((false,false),_10278) @ <dynamic>:0
+                    call: evaluate_bool(false,true) @ <dynamic>:0
+                    fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false,false),_10278) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((true;false),_9672) @ <dynamic>:0
+                call: evaluate_bool(true,true) @ <dynamic>:0
+                exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                exit: evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,cellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(19): evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true;false),_9672) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((true;false),_9672) @ <dynamic>:0
+                redo(19): evaluate_bool((false,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((true;false),_9672) @ <dynamic>:0
+                call: evaluate_bool(true,true) @ <dynamic>:0
+                exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                exit: evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,cellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(19): evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true;false),_9672) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((true;false),_9672) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_9806) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==cellini @ <dynamic>:0
+                    fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_9806) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,cellini),bellini,cellini,cellini,cellini,_9806) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),bellini,cellini,cellini,cellini,_9672) @ <dynamic>:0
+            fail: check_cofre(b,cellini,c,bellini,cellini,cellini,cellini) @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8614) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8614) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(d,cellini),bellini,cellini,cellini,cellini,_8614) @ <dynamic>:0
+            fail: check_cofre(a,bellini,d,bellini,cellini,cellini,cellini) @ <dynamic>:0
+            redo(0): es_maker(_4650) @ /tmp/tmpu_qrcaqx.pl:23
+            exit: es_maker(cellini) @ /tmp/tmpu_qrcaqx.pl:23
+            call: es_maker(_4652) @ <dynamic>:0
+            exit: es_maker(bellini) @ /tmp/tmpu_qrcaqx.pl:22
+            call: es_maker(_4654) @ <dynamic>:0
+            exit: es_maker(bellini) @ /tmp/tmpu_qrcaqx.pl:22
+            call: es_maker(_4656) @ <dynamic>:0
+            exit: es_maker(bellini) @ /tmp/tmpu_qrcaqx.pl:22
+            call: pairing(_4658,_8102,_8104,_8106,_8108) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,cellini,b,cellini,bellini,bellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8292) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),cellini,bellini,bellini,bellini,_8414) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,bellini,bellini,_8474) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,bellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_8414) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8414) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(b,cellini),cellini,bellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,false) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: false==false @ <dynamic>:0
+                exit: false==false @ <dynamic>:0
+            exit: regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,cellini,b,cellini,bellini,bellini,bellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,bellini,a,cellini,bellini,bellini,bellini) @ <dynamic>:0
+            call: inscripcion(b,a,_9458) @ <dynamic>:0
+            exit: inscripcion(b,a,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,bellini,_9604) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,bellini,_9664) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,bellini,_9664) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,bellini,_9604) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),cellini,bellini,bellini,bellini,_9738) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,bellini,bellini,_9798) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,bellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_9738) @ <dynamic>:0
+                    call: cellini==bellini @ <dynamic>:0
+                    fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_9738) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==bellini @ <dynamic>:0
+                    exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,cellini),cellini,bellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,bellini,_10276) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,bellini,_10336) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,bellini,_10336) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,bellini,_10276) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),cellini,bellini,bellini,bellini,_10410) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),cellini,bellini,bellini,bellini,_10470) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),cellini,bellini,bellini,bellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==bellini,_10410) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,bellini),cellini,bellini,bellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(a,bellini),cellini,bellini,bellini,bellini,_10882) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(a,bellini),cellini,bellini,bellini,bellini,_10942) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(a,bellini),cellini,bellini,bellini,bellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:25
+                    call: evaluate_bool(bellini==cellini,_10882) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_10882) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(a,bellini),cellini,bellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((true,false),_10276) @ <dynamic>:0
+                    call: evaluate_bool(true,true) @ <dynamic>:0
+                    exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                    call: evaluate_bool(false,true) @ <dynamic>:0
+                    fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true,false),_10276) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                redo(19): evaluate_bool((true,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((true,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((false;false),_9604) @ <dynamic>:0
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(19): evaluate_bool((false;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false;false),_9604) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(false,false) @ <dynamic>:0
+                exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                call: evaluate_bool(false,false) @ <dynamic>:0
+                exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false;false),false) @ /tmp/tmpu_qrcaqx.pl:37
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: false==true @ <dynamic>:0
+                fail: false==true @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_10410) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_10410) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,bellini),cellini,bellini,bellini,bellini,_10410) @ <dynamic>:0
+                fail: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,bellini,_10276) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,bellini,_9604) @ <dynamic>:0
+            fail: check_cofre(b,bellini,a,cellini,bellini,bellini,bellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8102,_8104,_8106,_8108) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,cellini,d,cellini,bellini,bellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8364) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),cellini,bellini,bellini,bellini,_8486) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),cellini,bellini,bellini,bellini,_8546) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),cellini,bellini,bellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==bellini,_8486) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8486) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(d,cellini),cellini,bellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,false) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: false==false @ <dynamic>:0
+                exit: false==false @ <dynamic>:0
+            exit: regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,cellini,d,cellini,bellini,bellini,bellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,bellini,c,cellini,bellini,bellini,bellini) @ <dynamic>:0
+            call: inscripcion(b,c,_9530) @ <dynamic>:0
+            exit: inscripcion(b,c,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,bellini,bellini,_9676) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,bellini,bellini,_9736) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,bellini,bellini,_9736) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,bellini,bellini,_9676) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),cellini,bellini,bellini,bellini,_9810) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,bellini,bellini,_9870) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,bellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_9810) @ <dynamic>:0
+                    call: cellini==bellini @ <dynamic>:0
+                    fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_9810) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==bellini @ <dynamic>:0
+                    exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,cellini),cellini,bellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,bellini,bellini,_10348) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,bellini,bellini,_10408) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,bellini,bellini,_10408) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,bellini,bellini,_10348) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),cellini,bellini,bellini,bellini,_10482) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),cellini,bellini,bellini,bellini,_10542) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),cellini,bellini,bellini,bellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==bellini,_10482) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,bellini),cellini,bellini,bellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(c,bellini),cellini,bellini,bellini,bellini,_10954) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(c,bellini),cellini,bellini,bellini,bellini,_11014) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(c,bellini),cellini,bellini,bellini,bellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:27
+                    call: evaluate_bool(bellini==bellini,_10954) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(c,bellini),cellini,bellini,bellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((true,true),_10348) @ <dynamic>:0
+                    call: evaluate_bool(true,true) @ <dynamic>:0
+                    exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                    call: evaluate_bool(true,true) @ <dynamic>:0
+                    exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                exit: evaluate_bool((true,true),true) @ /tmp/tmpu_qrcaqx.pl:38
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,bellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((false;true),_9676) @ <dynamic>:0
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(19): evaluate_bool((false;true),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(true,true) @ <dynamic>:0
+                exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                exit: evaluate_bool((false;true),true) @ /tmp/tmpu_qrcaqx.pl:36
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,bellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: true==true @ <dynamic>:0
+                exit: true==true @ <dynamic>:0
+            exit: regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(b,bellini,c,cellini,bellini,bellini,bellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(c,bellini,b,cellini,bellini,bellini,bellini) @ <dynamic>:0
+            call: inscripcion(c,b,_12630) @ <dynamic>:0
+            exit: inscripcion(c,b,es_obra_term(c,bellini)) @ /tmp/tmpu_qrcaqx.pl:42
+            call: get_term_truth(es_obra_term(c,bellini),cellini,bellini,bellini,bellini,_12752) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(c,bellini),cellini,bellini,bellini,bellini,_12812) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(c,bellini),cellini,bellini,bellini,bellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:27
+                call: evaluate_bool(bellini==bellini,_12752) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(c,bellini),cellini,bellini,bellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: true==true @ <dynamic>:0
+                exit: true==true @ <dynamic>:0
+            exit: regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(c,bellini,b,cellini,bellini,bellini,bellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(d,bellini,a,cellini,bellini,bellini,bellini) @ <dynamic>:0
+            call: inscripcion(d,a,_13664) @ <dynamic>:0
+            exit: inscripcion(d,a,es_obra_term(a,bellini)) @ /tmp/tmpu_qrcaqx.pl:43
+            call: get_term_truth(es_obra_term(a,bellini),cellini,bellini,bellini,bellini,_13786) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(a,bellini),cellini,bellini,bellini,bellini,_13846) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(a,bellini),cellini,bellini,bellini,bellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:25
+                call: evaluate_bool(bellini==cellini,_13786) @ <dynamic>:0
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+                redo(0): evaluate_bool(bellini==cellini,_13786) @ /tmp/tmpu_qrcaqx.pl:35
+                call: bellini\==cellini @ <dynamic>:0
+                exit: bellini\==cellini @ <dynamic>:0
+                exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(a,bellini),cellini,bellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: false==true @ <dynamic>:0
+                fail: false==true @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+            fail: check_cofre(d,bellini,a,cellini,bellini,bellini,bellini) @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(bellini==bellini,_12752) @ /tmp/tmpu_qrcaqx.pl:35
+                call: bellini\==bellini @ <dynamic>:0
+                fail: bellini\==bellini @ <dynamic>:0
+                fail: evaluate_bool(bellini==bellini,_12752) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(c,bellini),cellini,bellini,bellini,bellini,_12752) @ <dynamic>:0
+            fail: check_cofre(c,bellini,b,cellini,bellini,bellini,bellini) @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false;true),_9676) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(false,false) @ <dynamic>:0
+                exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                call: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((false;true),_9676) @ <dynamic>:0
+                redo(0): evaluate_bool((true,true),_10348) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                redo(19): evaluate_bool((true,true),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((true,true),_10348) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_10954) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_10954) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(c,bellini),cellini,bellini,bellini,bellini,_10954) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_10482) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_10482) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,bellini),cellini,bellini,bellini,bellini,_10482) @ <dynamic>:0
+                fail: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,bellini,bellini,_10348) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,bellini,bellini,_9676) @ <dynamic>:0
+            fail: check_cofre(b,bellini,c,cellini,bellini,bellini,bellini) @ <dynamic>:0
+            redo(0): es_maker(_4656) @ /tmp/tmpu_qrcaqx.pl:23
+            exit: es_maker(cellini) @ /tmp/tmpu_qrcaqx.pl:23
+            call: pairing(_4658,_8166,_8168,_8170,_8172) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,cellini,b,cellini,bellini,bellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8356) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),cellini,bellini,bellini,cellini,_8478) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,bellini,cellini,_8538) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,bellini,cellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_8478) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8478) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(b,cellini),cellini,bellini,bellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,false) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: false==false @ <dynamic>:0
+                exit: false==false @ <dynamic>:0
+            exit: regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,cellini,b,cellini,bellini,bellini,cellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,bellini,a,cellini,bellini,bellini,cellini) @ <dynamic>:0
+            call: inscripcion(b,a,_9522) @ <dynamic>:0
+            exit: inscripcion(b,a,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,cellini,_9668) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,cellini,_9728) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,cellini,_9728) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,cellini,_9668) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),cellini,bellini,bellini,cellini,_9802) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,bellini,cellini,_9862) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,bellini,cellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_9802) @ <dynamic>:0
+                    call: cellini==bellini @ <dynamic>:0
+                    fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_9802) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==bellini @ <dynamic>:0
+                    exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,cellini),cellini,bellini,bellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,cellini,_10340) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,cellini,_10400) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,cellini,_10400) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,cellini,_10340) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),cellini,bellini,bellini,cellini,_10474) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),cellini,bellini,bellini,cellini,_10534) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),cellini,bellini,bellini,cellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==bellini,_10474) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,bellini),cellini,bellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(a,bellini),cellini,bellini,bellini,cellini,_10946) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(a,bellini),cellini,bellini,bellini,cellini,_11006) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(a,bellini),cellini,bellini,bellini,cellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:25
+                    call: evaluate_bool(bellini==cellini,_10946) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_10946) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(a,bellini),cellini,bellini,bellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((true,false),_10340) @ <dynamic>:0
+                    call: evaluate_bool(true,true) @ <dynamic>:0
+                    exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                    call: evaluate_bool(false,true) @ <dynamic>:0
+                    fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true,false),_10340) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                redo(19): evaluate_bool((true,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((true,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((false;false),_9668) @ <dynamic>:0
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(19): evaluate_bool((false;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false;false),_9668) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(false,false) @ <dynamic>:0
+                exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                call: evaluate_bool(false,false) @ <dynamic>:0
+                exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false;false),false) @ /tmp/tmpu_qrcaqx.pl:37
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: false==true @ <dynamic>:0
+                fail: false==true @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_10474) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_10474) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,bellini),cellini,bellini,bellini,cellini,_10474) @ <dynamic>:0
+                fail: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,cellini,_10340) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,bellini,cellini,_9668) @ <dynamic>:0
+            fail: check_cofre(b,bellini,a,cellini,bellini,bellini,cellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8166,_8168,_8170,_8172) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,cellini,d,cellini,bellini,bellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8428) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),cellini,bellini,bellini,cellini,_8550) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),cellini,bellini,bellini,cellini,_8610) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),cellini,bellini,bellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==cellini,_8550) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(d,cellini),cellini,bellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8550) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8550) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(d,cellini),cellini,bellini,bellini,cellini,_8550) @ <dynamic>:0
+            fail: check_cofre(a,cellini,d,cellini,bellini,bellini,cellini) @ <dynamic>:0
+            redo(0): es_maker(_4654) @ /tmp/tmpu_qrcaqx.pl:23
+            exit: es_maker(cellini) @ /tmp/tmpu_qrcaqx.pl:23
+            call: es_maker(_4656) @ <dynamic>:0
+            exit: es_maker(bellini) @ /tmp/tmpu_qrcaqx.pl:22
+            call: pairing(_4658,_8166,_8168,_8170,_8172) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,cellini,b,cellini,bellini,cellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8356) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),cellini,bellini,cellini,bellini,_8478) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,cellini,bellini,_8538) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,cellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_8478) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8478) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(b,cellini),cellini,bellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,false) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: false==false @ <dynamic>:0
+                exit: false==false @ <dynamic>:0
+            exit: regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,cellini,b,cellini,bellini,cellini,bellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,bellini,a,cellini,bellini,cellini,bellini) @ <dynamic>:0
+            call: inscripcion(b,a,_9522) @ <dynamic>:0
+            exit: inscripcion(b,a,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,bellini,_9668) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,bellini,_9728) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,bellini,_9728) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,bellini,_9668) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),cellini,bellini,cellini,bellini,_9802) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,cellini,bellini,_9862) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,cellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_9802) @ <dynamic>:0
+                    call: cellini==bellini @ <dynamic>:0
+                    fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_9802) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==bellini @ <dynamic>:0
+                    exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,cellini),cellini,bellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,bellini,_10340) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,bellini,_10400) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,bellini,_10400) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,bellini,_10340) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),cellini,bellini,cellini,bellini,_10474) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),cellini,bellini,cellini,bellini,_10534) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),cellini,bellini,cellini,bellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==bellini,_10474) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,bellini),cellini,bellini,cellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(a,bellini),cellini,bellini,cellini,bellini,_10946) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(a,bellini),cellini,bellini,cellini,bellini,_11006) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(a,bellini),cellini,bellini,cellini,bellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:25
+                    call: evaluate_bool(bellini==cellini,_10946) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_10946) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(a,bellini),cellini,bellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((true,false),_10340) @ <dynamic>:0
+                    call: evaluate_bool(true,true) @ <dynamic>:0
+                    exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                    call: evaluate_bool(false,true) @ <dynamic>:0
+                    fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true,false),_10340) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                redo(19): evaluate_bool((true,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((true,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((false;false),_9668) @ <dynamic>:0
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(19): evaluate_bool((false;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false;false),_9668) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(false,false) @ <dynamic>:0
+                exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                call: evaluate_bool(false,false) @ <dynamic>:0
+                exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false;false),false) @ /tmp/tmpu_qrcaqx.pl:37
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: false==true @ <dynamic>:0
+                fail: false==true @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_10474) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_10474) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,bellini),cellini,bellini,cellini,bellini,_10474) @ <dynamic>:0
+                fail: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,bellini,_10340) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,bellini,_9668) @ <dynamic>:0
+            fail: check_cofre(b,bellini,a,cellini,bellini,cellini,bellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8166,_8168,_8170,_8172) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,cellini,d,cellini,bellini,cellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8428) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),cellini,bellini,cellini,bellini,_8550) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),cellini,bellini,cellini,bellini,_8610) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),cellini,bellini,cellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==bellini,_8550) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8550) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(d,cellini),cellini,bellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,false) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: false==false @ <dynamic>:0
+                exit: false==false @ <dynamic>:0
+            exit: regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,cellini,d,cellini,bellini,cellini,bellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,bellini,c,cellini,bellini,cellini,bellini) @ <dynamic>:0
+            call: inscripcion(b,c,_9594) @ <dynamic>:0
+            exit: inscripcion(b,c,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,cellini,bellini,_9740) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,cellini,bellini,_9800) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,cellini,bellini,_9800) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,cellini,bellini,_9740) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),cellini,bellini,cellini,bellini,_9874) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,cellini,bellini,_9934) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,cellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_9874) @ <dynamic>:0
+                    call: cellini==bellini @ <dynamic>:0
+                    fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_9874) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==bellini @ <dynamic>:0
+                    exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,cellini),cellini,bellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,cellini,bellini,_10412) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,cellini,bellini,_10472) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,cellini,bellini,_10472) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,cellini,bellini,_10412) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),cellini,bellini,cellini,bellini,_10546) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),cellini,bellini,cellini,bellini,_10606) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),cellini,bellini,cellini,bellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==bellini,_10546) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,bellini),cellini,bellini,cellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(c,bellini),cellini,bellini,cellini,bellini,_11018) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(c,bellini),cellini,bellini,cellini,bellini,_11078) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(c,bellini),cellini,bellini,cellini,bellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:27
+                    call: evaluate_bool(bellini==cellini,_11018) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_11018) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(c,bellini),cellini,bellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((true,false),_10412) @ <dynamic>:0
+                    call: evaluate_bool(true,true) @ <dynamic>:0
+                    exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                    call: evaluate_bool(false,true) @ <dynamic>:0
+                    fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true,false),_10412) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                redo(19): evaluate_bool((true,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((true,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((false;false),_9740) @ <dynamic>:0
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(19): evaluate_bool((false;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false;false),_9740) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(false,false) @ <dynamic>:0
+                exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                call: evaluate_bool(false,false) @ <dynamic>:0
+                exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false;false),false) @ /tmp/tmpu_qrcaqx.pl:37
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: false==true @ <dynamic>:0
+                fail: false==true @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_10546) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_10546) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,bellini),cellini,bellini,cellini,bellini,_10546) @ <dynamic>:0
+                fail: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,cellini,bellini,_10412) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,bellini,cellini,bellini,_9740) @ <dynamic>:0
+            fail: check_cofre(b,bellini,c,cellini,bellini,cellini,bellini) @ <dynamic>:0
+            redo(0): es_maker(_4656) @ /tmp/tmpu_qrcaqx.pl:23
+            exit: es_maker(cellini) @ /tmp/tmpu_qrcaqx.pl:23
+            call: pairing(_4658,_8230,_8232,_8234,_8236) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,cellini,b,cellini,bellini,cellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8420) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),cellini,bellini,cellini,cellini,_8542) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,cellini,cellini,_8602) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,cellini,cellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_8542) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8542) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(b,cellini),cellini,bellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,false) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: false==false @ <dynamic>:0
+                exit: false==false @ <dynamic>:0
+            exit: regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,cellini,b,cellini,bellini,cellini,cellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,bellini,a,cellini,bellini,cellini,cellini) @ <dynamic>:0
+            call: inscripcion(b,a,_9586) @ <dynamic>:0
+            exit: inscripcion(b,a,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,cellini,_9732) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,cellini,_9792) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,cellini,_9792) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,cellini,_9732) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),cellini,bellini,cellini,cellini,_9866) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,cellini,cellini,_9926) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,bellini,cellini,cellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==bellini,_9866) @ <dynamic>:0
+                    call: cellini==bellini @ <dynamic>:0
+                    fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_9866) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==bellini @ <dynamic>:0
+                    exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,cellini),cellini,bellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,cellini,_10404) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,cellini,_10464) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,cellini,_10464) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,cellini,_10404) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),cellini,bellini,cellini,cellini,_10538) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),cellini,bellini,cellini,cellini,_10598) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),cellini,bellini,cellini,cellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==bellini,_10538) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,bellini),cellini,bellini,cellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(a,bellini),cellini,bellini,cellini,cellini,_11010) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(a,bellini),cellini,bellini,cellini,cellini,_11070) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(a,bellini),cellini,bellini,cellini,cellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:25
+                    call: evaluate_bool(bellini==cellini,_11010) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_11010) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(a,bellini),cellini,bellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((true,false),_10404) @ <dynamic>:0
+                    call: evaluate_bool(true,true) @ <dynamic>:0
+                    exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                    call: evaluate_bool(false,true) @ <dynamic>:0
+                    fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true,false),_10404) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                redo(19): evaluate_bool((true,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((true,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((false;false),_9732) @ <dynamic>:0
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(19): evaluate_bool((false;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false;false),_9732) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(false,false) @ <dynamic>:0
+                exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                call: evaluate_bool(false,false) @ <dynamic>:0
+                exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false;false),false) @ /tmp/tmpu_qrcaqx.pl:37
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,cellini,false) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                call: bellini==bellini @ <dynamic>:0
+                exit: bellini==bellini @ <dynamic>:0
+                call: false==true @ <dynamic>:0
+                fail: false==true @ <dynamic>:0
+            redo(11): regla_maker_cumplida(bellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: bellini==cellini @ <dynamic>:0
+                fail: bellini==cellini @ <dynamic>:0
+            fail: regla_maker_cumplida(bellini,false) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_10538) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_10538) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,bellini),cellini,bellini,cellini,cellini,_10538) @ <dynamic>:0
+                fail: get_term_truth((es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,cellini,_10404) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(a,bellini)),cellini,bellini,cellini,cellini,_9732) @ <dynamic>:0
+            fail: check_cofre(b,bellini,a,cellini,bellini,cellini,cellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8230,_8232,_8234,_8236) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,cellini,d,cellini,bellini,cellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8492) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),cellini,bellini,cellini,cellini,_8614) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),cellini,bellini,cellini,cellini,_8674) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),cellini,bellini,cellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==cellini,_8614) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(d,cellini),cellini,bellini,cellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8614) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8614) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(d,cellini),cellini,bellini,cellini,cellini,_8614) @ <dynamic>:0
+            fail: check_cofre(a,cellini,d,cellini,bellini,cellini,cellini) @ <dynamic>:0
+            redo(0): es_maker(_4652) @ /tmp/tmpu_qrcaqx.pl:23
+            exit: es_maker(cellini) @ /tmp/tmpu_qrcaqx.pl:23
+            call: es_maker(_4654) @ <dynamic>:0
+            exit: es_maker(bellini) @ /tmp/tmpu_qrcaqx.pl:22
+            call: es_maker(_4656) @ <dynamic>:0
+            exit: es_maker(bellini) @ /tmp/tmpu_qrcaqx.pl:22
+            call: pairing(_4658,_8166,_8168,_8170,_8172) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,cellini,b,cellini,cellini,bellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8356) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),cellini,cellini,bellini,bellini,_8478) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,cellini,bellini,bellini,_8538) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,cellini,bellini,bellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_8478) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(b,cellini),cellini,cellini,bellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8478) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8478) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(b,cellini),cellini,cellini,bellini,bellini,_8478) @ <dynamic>:0
+            fail: check_cofre(a,cellini,b,cellini,cellini,bellini,bellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8166,_8168,_8170,_8172) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,cellini,d,cellini,cellini,bellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8428) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),cellini,cellini,bellini,bellini,_8550) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),cellini,cellini,bellini,bellini,_8610) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),cellini,cellini,bellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==bellini,_8550) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8550) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(d,cellini),cellini,cellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,false) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: false==false @ <dynamic>:0
+                exit: false==false @ <dynamic>:0
+            exit: regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,cellini,d,cellini,cellini,bellini,bellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,cellini,c,cellini,cellini,bellini,bellini) @ <dynamic>:0
+            call: inscripcion(b,c,_9594) @ <dynamic>:0
+            exit: inscripcion(b,c,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,bellini,bellini,_9740) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,bellini,bellini,_9800) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,bellini,bellini,_9800) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,bellini,bellini,_9740) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),cellini,cellini,bellini,bellini,_9874) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,cellini,bellini,bellini,_9934) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,cellini,bellini,bellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_9874) @ <dynamic>:0
+                    call: cellini==cellini @ <dynamic>:0
+                    exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,cellini),cellini,cellini,bellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,bellini,bellini,_10346) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,bellini,bellini,_10406) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,bellini,bellini,_10406) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,bellini,bellini,_10346) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),cellini,cellini,bellini,bellini,_10480) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),cellini,cellini,bellini,bellini,_10540) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),cellini,cellini,bellini,bellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==cellini,_10480) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_10480) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,bellini),cellini,cellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(c,bellini),cellini,cellini,bellini,bellini,_11018) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(c,bellini),cellini,cellini,bellini,bellini,_11078) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(c,bellini),cellini,cellini,bellini,bellini,bellini==bellini) @ /tmp/tmpu_qrcaqx.pl:27
+                    call: evaluate_bool(bellini==bellini,_11018) @ <dynamic>:0
+                    call: bellini==bellini @ <dynamic>:0
+                    exit: bellini==bellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==bellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(c,bellini),cellini,cellini,bellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((false,true),_10346) @ <dynamic>:0
+                    call: evaluate_bool(false,true) @ <dynamic>:0
+                    fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false,true),_10346) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false,true),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,bellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((true;false),_9740) @ <dynamic>:0
+                call: evaluate_bool(true,true) @ <dynamic>:0
+                exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                exit: evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,bellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(19): evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true;false),_9740) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((true;false),_9740) @ <dynamic>:0
+                redo(19): evaluate_bool((false,true),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(true,false) @ <dynamic>:0
+                    fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((false,true),_10346) @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==bellini,_11018) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==bellini @ <dynamic>:0
+                    fail: bellini\==bellini @ <dynamic>:0
+                    fail: evaluate_bool(bellini==bellini,_11018) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(c,bellini),cellini,cellini,bellini,bellini,_11018) @ <dynamic>:0
+                fail: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,bellini,bellini,_10346) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_9874) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==cellini @ <dynamic>:0
+                    fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_9874) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,cellini),cellini,cellini,bellini,bellini,_9874) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,bellini,bellini,_9740) @ <dynamic>:0
+            fail: check_cofre(b,cellini,c,cellini,cellini,bellini,bellini) @ <dynamic>:0
+            redo(0): es_maker(_4656) @ /tmp/tmpu_qrcaqx.pl:23
+            exit: es_maker(cellini) @ /tmp/tmpu_qrcaqx.pl:23
+            call: pairing(_4658,_8230,_8232,_8234,_8236) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,cellini,b,cellini,cellini,bellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8420) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),cellini,cellini,bellini,cellini,_8542) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,cellini,bellini,cellini,_8602) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,cellini,bellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_8542) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(b,cellini),cellini,cellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8542) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8542) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(b,cellini),cellini,cellini,bellini,cellini,_8542) @ <dynamic>:0
+            fail: check_cofre(a,cellini,b,cellini,cellini,bellini,cellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8230,_8232,_8234,_8236) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,cellini,d,cellini,cellini,bellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8492) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),cellini,cellini,bellini,cellini,_8614) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),cellini,cellini,bellini,cellini,_8674) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),cellini,cellini,bellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==cellini,_8614) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(d,cellini),cellini,cellini,bellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8614) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8614) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(d,cellini),cellini,cellini,bellini,cellini,_8614) @ <dynamic>:0
+            fail: check_cofre(a,cellini,d,cellini,cellini,bellini,cellini) @ <dynamic>:0
+            redo(0): es_maker(_4654) @ /tmp/tmpu_qrcaqx.pl:23
+            exit: es_maker(cellini) @ /tmp/tmpu_qrcaqx.pl:23
+            call: es_maker(_4656) @ <dynamic>:0
+            exit: es_maker(bellini) @ /tmp/tmpu_qrcaqx.pl:22
+            call: pairing(_4658,_8230,_8232,_8234,_8236) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,cellini,b,cellini,cellini,cellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8420) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),cellini,cellini,cellini,bellini,_8542) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,cellini,cellini,bellini,_8602) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,cellini,cellini,bellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_8542) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(b,cellini),cellini,cellini,cellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8542) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8542) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(b,cellini),cellini,cellini,cellini,bellini,_8542) @ <dynamic>:0
+            fail: check_cofre(a,cellini,b,cellini,cellini,cellini,bellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8230,_8232,_8234,_8236) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,cellini,d,cellini,cellini,cellini,bellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8492) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),cellini,cellini,cellini,bellini,_8614) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),cellini,cellini,cellini,bellini,_8674) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),cellini,cellini,cellini,bellini,cellini==bellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==bellini,_8614) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==bellini,_8614) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==bellini @ <dynamic>:0
+                exit: cellini\==bellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==bellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+            exit: get_term_truth(es_obra_term(d,cellini),cellini,cellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,false) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: false==false @ <dynamic>:0
+                exit: false==false @ <dynamic>:0
+            exit: regla_maker_cumplida(cellini,false) @ /tmp/tmpu_qrcaqx.pl:24
+            exit: check_cofre(a,cellini,d,cellini,cellini,cellini,bellini) @ /tmp/tmpu_qrcaqx.pl:44
+            call: check_cofre(b,cellini,c,cellini,cellini,cellini,bellini) @ <dynamic>:0
+            call: inscripcion(b,c,_9658) @ <dynamic>:0
+            exit: inscripcion(b,c,(es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini))) @ /tmp/tmpu_qrcaqx.pl:41
+            call: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,cellini,bellini,_9804) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,cellini,bellini,_9864) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,cellini,bellini,_9864) @ <dynamic>:0
+            redo(0): get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,cellini,bellini,_9804) @ /tmp/tmpu_qrcaqx.pl:30
+                call: get_term_truth(es_obra_term(b,cellini),cellini,cellini,cellini,bellini,_9938) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,cellini,cellini,bellini,_9998) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,cellini,cellini,bellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_9938) @ <dynamic>:0
+                    call: cellini==cellini @ <dynamic>:0
+                    exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+                exit: get_term_truth(es_obra_term(b,cellini),cellini,cellini,cellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,cellini,bellini,_10410) @ <dynamic>:0
+                call: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,cellini,bellini,_10470) @ <dynamic>:0
+                fail: get_literal_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,cellini,bellini,_10470) @ <dynamic>:0
+                redo(0): get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,cellini,bellini,_10410) @ /tmp/tmpu_qrcaqx.pl:31
+                call: get_term_truth(es_obra_term(b,bellini),cellini,cellini,cellini,bellini,_10544) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(b,bellini),cellini,cellini,cellini,bellini,_10604) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(b,bellini),cellini,cellini,cellini,bellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                    call: evaluate_bool(bellini==cellini,_10544) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_10544) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(b,bellini),cellini,cellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: get_term_truth(es_obra_term(c,bellini),cellini,cellini,cellini,bellini,_11082) @ <dynamic>:0
+                    call: get_literal_truth(es_obra_term(c,bellini),cellini,cellini,cellini,bellini,_11142) @ <dynamic>:0
+                    exit: get_literal_truth(es_obra_term(c,bellini),cellini,cellini,cellini,bellini,bellini==cellini) @ /tmp/tmpu_qrcaqx.pl:27
+                    call: evaluate_bool(bellini==cellini,_11082) @ <dynamic>:0
+                    call: bellini==cellini @ <dynamic>:0
+                    fail: bellini==cellini @ <dynamic>:0
+                    redo(0): evaluate_bool(bellini==cellini,_11082) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: bellini\==cellini @ <dynamic>:0
+                    exit: bellini\==cellini @ <dynamic>:0
+                    exit: evaluate_bool(bellini==cellini,false) @ /tmp/tmpu_qrcaqx.pl:35
+                exit: get_term_truth(es_obra_term(c,bellini),cellini,cellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:29
+                call: evaluate_bool((false,false),_10410) @ <dynamic>:0
+                    call: evaluate_bool(false,true) @ <dynamic>:0
+                    fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((false,false),_10410) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((true;false),_9804) @ <dynamic>:0
+                call: evaluate_bool(true,true) @ <dynamic>:0
+                exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                exit: evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,cellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(19): evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true;false),_9804) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((true;false),_9804) @ <dynamic>:0
+                redo(19): evaluate_bool((false,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                    call: evaluate_bool(false,false) @ <dynamic>:0
+                    exit: evaluate_bool(false,false) @ /tmp/tmpu_qrcaqx.pl:33
+                exit: evaluate_bool((false,false),false) @ /tmp/tmpu_qrcaqx.pl:39
+                exit: get_term_truth((es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,cellini,bellini,false) @ /tmp/tmpu_qrcaqx.pl:31
+                call: evaluate_bool((true;false),_9804) @ <dynamic>:0
+                call: evaluate_bool(true,true) @ <dynamic>:0
+                exit: evaluate_bool(true,true) @ /tmp/tmpu_qrcaqx.pl:32
+                exit: evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+            exit: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,cellini,bellini,true) @ /tmp/tmpu_qrcaqx.pl:30
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(19): evaluate_bool((true;false),true) @ /tmp/tmpu_qrcaqx.pl:36
+                call: evaluate_bool(false,true) @ <dynamic>:0
+                fail: evaluate_bool(false,true) @ <dynamic>:0
+                redo(0): evaluate_bool((true;false),_9804) @ /tmp/tmpu_qrcaqx.pl:37
+                call: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool(true,false) @ <dynamic>:0
+                fail: evaluate_bool((true;false),_9804) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_9938) @ /tmp/tmpu_qrcaqx.pl:35
+                    call: cellini\==cellini @ <dynamic>:0
+                    fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_9938) @ <dynamic>:0
+                fail: get_term_truth(es_obra_term(b,cellini),cellini,cellini,cellini,bellini,_9938) @ <dynamic>:0
+            fail: get_term_truth((es_obra_term(b,cellini);es_obra_term(b,bellini),es_obra_term(c,bellini)),cellini,cellini,cellini,bellini,_9804) @ <dynamic>:0
+            fail: check_cofre(b,cellini,c,cellini,cellini,cellini,bellini) @ <dynamic>:0
+            redo(0): es_maker(_4656) @ /tmp/tmpu_qrcaqx.pl:23
+            exit: es_maker(cellini) @ /tmp/tmpu_qrcaqx.pl:23
+            call: pairing(_4658,_8294,_8296,_8298,_8300) @ <dynamic>:0
+            exit: pairing(pairing1_ab_cd,b,a,d,c) @ /tmp/tmpu_qrcaqx.pl:45
+            call: check_cofre(a,cellini,b,cellini,cellini,cellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,b,_8484) @ <dynamic>:0
+            exit: inscripcion(a,b,es_obra_term(b,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(b,cellini),cellini,cellini,cellini,cellini,_8606) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(b,cellini),cellini,cellini,cellini,cellini,_8666) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(b,cellini),cellini,cellini,cellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:26
+                call: evaluate_bool(cellini==cellini,_8606) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(b,cellini),cellini,cellini,cellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8606) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8606) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(b,cellini),cellini,cellini,cellini,cellini,_8606) @ <dynamic>:0
+            fail: check_cofre(a,cellini,b,cellini,cellini,cellini,cellini) @ <dynamic>:0
+            redo(0): pairing(_4658,_8294,_8296,_8298,_8300) @ /tmp/tmpu_qrcaqx.pl:46
+            exit: pairing(pairing2_ad_cb,d,c,b,a) @ /tmp/tmpu_qrcaqx.pl:46
+            call: check_cofre(a,cellini,d,cellini,cellini,cellini,cellini) @ <dynamic>:0
+            call: inscripcion(a,d,_8556) @ <dynamic>:0
+            exit: inscripcion(a,d,es_obra_term(d,cellini)) @ /tmp/tmpu_qrcaqx.pl:40
+            call: get_term_truth(es_obra_term(d,cellini),cellini,cellini,cellini,cellini,_8678) @ <dynamic>:0
+                call: get_literal_truth(es_obra_term(d,cellini),cellini,cellini,cellini,cellini,_8738) @ <dynamic>:0
+                exit: get_literal_truth(es_obra_term(d,cellini),cellini,cellini,cellini,cellini,cellini==cellini) @ /tmp/tmpu_qrcaqx.pl:28
+                call: evaluate_bool(cellini==cellini,_8678) @ <dynamic>:0
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                exit: evaluate_bool(cellini==cellini,true) @ /tmp/tmpu_qrcaqx.pl:34
+            exit: get_term_truth(es_obra_term(d,cellini),cellini,cellini,cellini,cellini,true) @ /tmp/tmpu_qrcaqx.pl:29
+            call: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                call: cellini==bellini @ <dynamic>:0
+                fail: cellini==bellini @ <dynamic>:0
+            redo(11): regla_maker_cumplida(cellini,true) @ /tmp/tmpu_qrcaqx.pl:24
+                call: cellini==cellini @ <dynamic>:0
+                exit: cellini==cellini @ <dynamic>:0
+                call: true==false @ <dynamic>:0
+                fail: true==false @ <dynamic>:0
+            fail: regla_maker_cumplida(cellini,true) @ <dynamic>:0
+                redo(0): evaluate_bool(cellini==cellini,_8678) @ /tmp/tmpu_qrcaqx.pl:35
+                call: cellini\==cellini @ <dynamic>:0
+                fail: cellini\==cellini @ <dynamic>:0
+                fail: evaluate_bool(cellini==cellini,_8678) @ <dynamic>:0
+            fail: get_term_truth(es_obra_term(d,cellini),cellini,cellini,cellini,cellini,_8678) @ <dynamic>:0
+            fail: check_cofre(a,cellini,d,cellini,cellini,cellini,cellini) @ <dynamic>:0
+        fail: solucion(_4650,_4652,_4654,_4656,_4658) @ <dynamic>:0
+    """)
 
-        # Render the graph to a file (e.g., PNG)
-        # The .render() method saves the file and returns its path
-        output_file = dot.render(f'cadena_pensamientos{i}', view=False, cleanup=True)
-        print(f"Gráfico generado en: {output_file}")
+    clauses = procesar_traza(sample_trace)
+
+    # solutions_dir = Path("solutions/pruebas")
+
+    # for i, arbol_pensamiento in enumerate(clauses):
+    #     # Convertir el árbol a diccionario
+    #     arbol_dict = arbol_pensamiento.to_dict()
+        
+    #     # Determinar la carpeta basada en la veracidad del primer nodo
+    #     target_dir = solutions_dir
+        
+    #     # Generar y guardar el gráfico
+    #     dot = _create_thought_graph(arbol_dict)
+    #     dot.render(str(target_dir / f'arbol_pensamiento_{i}'), view=False, cleanup=True)

@@ -1,0 +1,413 @@
+
+======================================================================
+PROCESANDO PROBLEMA 5: "
+El Inspector Leslie Craig de Scotland Yard ha consentido amablemente en dar a
+c..."
+======================================================================
+
+--- Ejecutando MFSA ---
+
+--- Iniciando Formalización Semántica y Axiomatización (MFSA) ---
+Descripción del Problema (NL): 
+El Inspector Leslie Craig de Scotland Yard ha consentido amablemente en dar a
+conocer algunas historias de sus casos para beneficio de aquellos que estén
+interesados en la aplicación de la lógica a la solución de casos criminales.
+Tenemos cuatro acusados, A, B, C, D. Se establecieron los siguientes
+hechos:
+(1) Si A es culpable, entonces B era cómplice.
+(2) Si B es culpable entonces o bien C era cómplice o bien A es inocente.
+(3) Si D es inocente entonces A es culpable y C inocente.
+(4) Si D es culpable, también lo es A.
+¿Quiénes son inocentes y quiénes culpables?
+
+            
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (initial_analysis_
+el_inspector_leslie) ---
+Prompt: 
+        Hola, necesito tu ayuda para analizar y resolver un problema de lógica de manera sistemática. Por favor, sigue los siguientes pasos:
+
+        1. Entendimiento del Problema: 
+        - Identifica los elementos clave (personas, objetos, lugares, eventos, etc.) involucrados en el problema.
+        - Extrae todas las declaraciones lógicas o pistas proporcionadas, y anótalas claramente. Distingue entre hechos directos e inferencias posibles.
+
+        2. Análisis e Inferencia Preliminar:
+        - Basándote en la información organizada, realiza inferencias lógicas paso a paso. Elimina posibilidades o deduce nuevos hechos. Si es aplicable, actualiza tu representación de la información con cada nueva inferencia hasta que se clarifiquen las relaciones.
+        
+        3. Hipótesis de Solución:
+        - A partir de tu análisis e inferencias, propón una hipótesis clara sobre cuál es la solución al problema de lógica.
+        
+        4. Comprobación Formal con Prolog:
+        - Vas a crear un programa en Prolog (hechos y reglas) basado en tu hipótesis de solución y las pistas originales. Este programa debe ser capaz de demostrar la validez de tu hipótesis a través de consultas.
+        - Para modelar implicaciones lógicas en Prolog de forma declarativa, usa la negación para expresar que no puede darse el caso de que el antecedente sea cierto y el consecuente falso.
+        - Esto es sumamente importante: La corrección semántica y sintáctica del programa Prolog es crucial, ya que la verdad de tu hipótesis se deduce de la capacidad del programa para probarla. Asegúrate de que el código esté bien escrito y refleje lógicamente el problema y tu solución propuesta.
+        - Comenta el resultado esperado del programa pero nunca hables como si ya se hubiera ejecutado.
+
+        A continuación, te presento el problema de lógica:
+        
+El Inspector Leslie Craig de Scotland Yard ha consentido amablemente en dar a
+conocer algunas historias de sus casos para beneficio de aquellos que estén
+interesados en la aplicación de la lógica a la solución de casos criminales.
+Tenemos cuatro acusados, A, B, C, D. Se establecieron los siguientes
+hechos:
+(1) Si A es culpable, entonces B era cómplice.
+(2) Si B es culpable entonces o bien C era cómplice o bien A es inocente.
+(3) Si D es inocente entonces A es culpable y C inocente.
+(4) Si D es culpable, también lo es A.
+¿Quiénes son inocentes y quiénes culpables?
+
+            
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: ¡Excelente! Procedamos a analizar y resolver este interesante caso del Inspector Craig siguiendo tus pasos indicados.
+
+**1. Entendimiento del Problema:**
+
+*   **Elementos Clave:**
+    *   Personas Acusadas: A, B, C, D.
+    *   Posibles Estados de cada persona: Culpable o Inocente. (Son mutuamente excluyentes y exhaustivos).
+    *   Relación mencionada: Cómplice. Se asume que ser cómplice implica ser culpable.
+
+*   **Declaraciones Lógicas (Pistas):**
+    *   (1) Si A es culpable, entonces B era cómplice (culpable).
+        *   Representación: `Culpable(A) -> Culpable(B)`
+    *   (2) Si B es culpable, entonces o bien C era cómplice (culpable) o bien A es inocente.
+        *   Representación: `Culpable(B) -> (Culpable(C) v Inocente(A))`
+    *   (3) Si D es inocente, entonces A es culpable y C inocente.
+        *   Representación: `Inocente(D) -> (Culpable(A) ^ Inocente(C))`
+    *   (4) Si D es culpable, también lo es A.
+        *   Representación: `Culpable(D) -> Culpable(A)`
+
+*   **Hechos Directos vs. Inferencia:** No hay hechos directos iniciales sobre la culpabilidad o inocencia de ninguno de los acusados. Todas las declaraciones son condicionales (implicaciones lógicas), lo que requiere un proceso de inferencia para determinar la verdad.
+
+**2. Análisis e Inferencia Preliminar:**
+
+Nuestro objetivo es determinar el estado (Culpable o Inocente) de cada persona (A, B, C, D) de manera que todas las pistas sean ciertas simultáneamente. Para cada persona X, sabemos que `Inocente(X)` es lógicamente equivalente a `¬Culpable(X)`.
+
+Analicemos las posibilidades basándonos en alguna de las pistas. Las pistas (3) y (4) se refieren a D, que solo puede ser Culpable o Inocente. Analicemos ambos casos para D.
+
+*   **Caso 1: Asumimos que D es Inocente (`Inocente(D)`)**
+    *   Por la pista (3): `Inocente(D) -> (Culpable(A) ^ Inocente(C))`. Como el antecedente (`Inocente(D)`) es verdadero en este caso, el consecuente debe ser verdadero.
+    *   Esto implica que `Culpable(A)` es verdadero Y `Inocente(C)` es verdadero.
+    *   Ahora sabemos: `Inocente(D)`, `Culpable(A)`, `Inocente(C)`.
+    *   Por la pista (1): `Culpable(A) -> Culpable(B)`. Como `Culpable(A)` es verdadero, `Culpable(B)` debe ser verdadero.
+    *   Ahora sabemos: `Inocente(D)`, `Culpable(A)`, `Inocente(C)`, `Culpable(B)`.
+    *   Por la pista (2): `Culpable(B) -> (Culpable(C) v Inocente(A))`. Como `Culpable(B)` es verdadero, el consecuente (`Culpable(C) v Inocente(A)`) debe ser verdadero.
+    *   Sin embargo, en este caso, dedujimos `Inocente(C)` (que es `¬Culpable(C)`) y `Culpable(A)` (que es `¬Inocente(A)`).
+    *   Por lo tanto, el consecuente `(Culpable(C) v Inocente(A))` se convierte en `(Falso v Falso)`, que es Falso.
+    *   Tenemos que si D es Inocente, entonces (por pista 2) algo verdadero (`Culpable(B)`) implica algo falso (`(Culpable(C) v Inocente(A))`). Esto es una contradicción lógica.
+    *   Conclusión del Caso 1: La suposición de que D es Inocente lleva a una contradicción. Por lo tanto, D no puede ser Inocente.
+
+*   **Caso 2: Como D no puede ser Inocente (del Caso 1), D debe ser Culpable (`Culpable(D)`)**
+    *   Por la pista (4): `Culpable(D) -> Culpable(A)`. Como el antecedente (`Culpable(D)`) es verdadero en este caso, el consecuente (`Culpable(A)`) debe ser verdadero.
+    *   Ahora sabemos: `Culpable(D)`, `Culpable(A)`.
+    *   Por la pista (1): `Culpable(A) -> Culpable(B)`. Como `Culpable(A)` es verdadero, `Culpable(B)` debe ser verdadero.
+    *   Ahora sabemos: `Culpable(D)`, `Culpable(A)`, `Culpable(B)`.
+    *   Por la pista (2): `Culpable(B) -> (Culpable(C) v Inocente(A))`. Como `Culpable(B)` es verdadero, el consecuente (`Culpable(C) v Inocente(A)`) debe ser verdadero.
+    *   En este caso, sabemos que `Culpable(A)` es verdadero, lo que significa que `Inocente(A)` es falso (`¬Inocente(A)`).
+    *   Para que la disyunción `(Culpable(C) v Inocente(A))` sea verdadera cuando `Inocente(A)` es falso, `Culpable(C)` debe ser verdadero.
+    *   Ahora sabemos: `Culpable(D)`, `Culpable(A)`, `Culpable(B)`, `Culpable(C)`.
+    *   Hemos asignado un estado a cada persona. Verifiquemos si esta asignación satisface todas las pistas:
+        *   Pista (1): `Culpable(A) -> Culpable(B)`. (Verdadero -> Verdadero) = Verdadero. Satisfecha.
+        *   Pista (2): `Culpable(B) -> (Culpable(C) v Inocente(A))`. (Verdadero -> (Verdadero v Falso)) = (Verdadero -> Verdadero) = Verdadero. Satisfecha.
+        *   Pista (3): `Inocente(D) -> (Culpable(A) ^ Inocente(C))`. Como `Culpable(D)` es verdadero, `Inocente(D)` es falso. Un antecedente falso hace que la implicación sea verdadera, independientemente del consecuente. Satisfecha.
+        *   Pista (4): `Culpable(D) -> Culpable(A)`. (Verdadero -> Verdadero) = Verdadero. Satisfecha.
+
+    *   Todas las pistas son ciertas bajo la asignación donde A, B, C y D son Culpables. Este caso no lleva a contradicción.
+
+Basado en este análisis, la única asignación de culpabilidad/inocencia que satisface todas las condiciones es aquella en la que todos son culpables.
+
+**3. Hipótesis de Solución:**
+
+La hipótesis de solución es que todos los acusados - A, B, C y D - son culpables. Por lo tanto, nadie es inocente.
+
+**4. Comprobación Formal con Prolog:**
+
+Vamos a crear un programa en Prolog para verificar si la hipótesis de que A, B, C y D son culpables es consistente con las reglas del problema.
+
+*   Representaremos el estado "Culpable" con el hecho `culpable(Persona).`
+*   Representaremos el estado "Inocente" como la negación de "Culpable", es decir, `\+ culpable(Persona).`. Definimos un predicado auxiliar `inocente(X) :- \+ culpable(X).`.
+*   Representaremos una implicación `A -> B` usando la negación: `\+ (A, \+ B)`. Esto se lee como "no es el caso que A sea verdad y B sea falso".
+*   Representaremos una disyunción `A v B` como `;` en Prolog: `(A ; B)`.
+*   Representaremos una conjunción `A ^ B` como `,` en Prolog: `(A, B)`.
+
+Primero, declaramos los hechos basados en nuestra hipótesis de solución (todos son culpables):
+
+```prolog
+% Hipotesis: Todos son culpables
+culpable(a).
+culpable(b).
+culpable(c).
+culpable(d).
+
+% Definicion de inocente como la negacion de culpable
+inocente(X) :- \+ culpable(X).
+
+% Regla 1: Si A es culpable, entonces B es culpable
+% culpable(a) -> culpable(b)
+% \+ (culpable(a), \+ culpable(b))
+regla1_valida :- \+ (culpable(a), \+ culpable(b)).
+
+% Regla 2: Si B es culpable, entonces C es culpable o A es inocente
+% culpable(b) -> (culpable(c) v inocente(a))
+% \+ (culpable(b), \+ (culpable(c) ; inocente(a)))
+regla2_valida :- \+ (culpable(b), \+ (culpable(c) ; inocente(a))).
+
+% Regla 3: Si D es inocente, entonces A es culpable y C inocente
+% inocente(d) -> (culpable(a) ^ inocente(c))
+% \+ (inocente(d), \+ (culpable(a), inocente(c)))
+regla3_valida :- \+ (inocente(d), \+ (culpable(a), inocente(c))).
+
+% Regla 4: Si D es culpable, tambien lo es A
+% culpable(d) -> culpable(a)
+% \+ (culpable(d), \+ culpable(a))
+regla4_valida :- \+ (culpable(d), \+ culpable(a)).
+
+% Predicado para verificar si todas las reglas son validas
+solucion_valida :-
+    regla1_valida,
+    regla2_valida,
+    regla3_valida,
+    regla4_valida.
+```
+
+Para comprobar formalmente la hipótesis con este programa Prolog, realizaríamos la siguiente consulta:
+
+```prolog
+?- solucion_valida.
+```
+
+El resultado esperado de esta consulta es `true`. Esto se debe a que, con los hechos `culpable(a).`, `culpable(b).`, `culpable(c).`, `culpable(d).` cargados (que representan la hipótesis de que todos son culpables), cada uno de los predicados `reglaN_valida` evaluará a verdadero, haciendo que el predicado `solucion_valida` también sea verdadero. Por ejemplo, para `regla1_valida`, la consulta `\+ (culpable(a), \+ culpable(b))` se evaluaría. `culpable(a)` es verdadero. `\+ culpable(b)` es falso porque `culpable(b)` es verdadero. Entonces, `(culpable(a), \+ culpable(b))` es `(true, false)`, que es falso. La negación de falso (`\+ false`) es verdadero, por lo que `regla1_valida` es verdadero. Este proceso se repite para todas las reglas.
+
+La capacidad del programa para demostrar que `solucion_valida` es verdadero, dadas las premisas de la hipótesis (todos culpables) y las reglas traducidas a Prolog, apoya fuertemente la conclusión de que esta es la solución correcta y consistente con las pistas.
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini JSON (general) ---
+Prompt: 
+        Hola, basándote en tu respuesta anterior sobre el problema de lógica, necesito que extraigas y estructures la información de la siguiente manera en un formato JSON:
+
+        El JSON debe tener tres claves principales en el nivel raíz:
+
+        "facts": Un array de strings, donde cada string es un hecho Prolog completo tal como lo definiste.
+        "rules": Un array de strings, donde cada string es una regla Prolog completa tal como la definiste.
+        "objective": Un string que represente la consulta principal de Prolog que se usaría para obtener la solución (por ejemplo, solucion(Tweedledum, Tweedledee).).
+
+        Consejos importantes para asegurar la compatibilidad con Prolog al generar los strings de hechos y reglas:
+            Átomos: Los nombres de predicados y las constantes (átomos) en Prolog deben comenzar con una letra minúscula. Si un átomo necesita contener espacios, caracteres especiales, o comenzar con una letra mayúscula, debe ir entre comillas simples (ej: 'Yo soy Fidel', 'Luna').
+            Variables: Las variables en Prolog siempre comienzan con una letra mayúscula o un guion bajo (ej: Dia, Hermano, _Ignorado).
+            Sintaxis de Hechos: Asegúrate de que cada hecho termine con un punto (.). Ejemplo: miente_leon(lunes).
+            Sintaxis de Reglas: Las reglas deben seguir el formato cabeza :- cuerpo., donde cabeza es la conclusión, :- significa "si", y cuerpo puede ser una o más metas separadas por comas (,) que representan una conjunción lógica. Cada regla debe terminar con un punto (.). Ejemplo: dice_verdad(leon, Dia) :- + miente_leon(Dia).
+            Strings dentro de Prolog: Las frases como "Yo soy Fidel" deben ser tratadas como átomos en Prolog, es decir, encerradas en comillas simples si contienen espacios o mayúsculas no iniciales (ej: 'Yo soy Fidel').
+            Escapado en JSON: Dado que los hechos y reglas de Prolog serán strings dentro de un JSON, si alguna vez usaras comillas dobles dentro de tu código Prolog (lo cual es menos común para átomos que las comillas simples), necesitarían ser escapadas (") dentro del string JSON. Usar comillas simples para los átomos Prolog evita este problema. Las barras invertidas () en Prolog (como en + para negación) son caracteres válidos y no necesitan doble escapado a menos que el propio string JSON lo requiera para el carácter .
+            Los símbolos correctos de prolog son: \+ para negación, :- para implicación, ; para disyunción, . para final de cláusula, = para unificación, \= para desigualdad.
+            Evita usar el \ innecesariamente puesto a que por si solo es un error de sintaxis
+
+        Problema original:
+            
+El Inspector Leslie Craig de Scotland Yard ha consentido amablemente en dar a
+conocer algunas historias de sus casos para beneficio de aquellos que estén
+interesados en la aplicación de la lógica a la solución de casos criminales.
+Tenemos cuatro acusados, A, B, C, D. Se establecieron los siguientes
+hechos:
+(1) Si A es culpable, entonces B era cómplice.
+(2) Si B es culpable entonces o bien C era cómplice o bien A es inocente.
+(3) Si D es inocente entonces A es culpable y C inocente.
+(4) Si D es culpable, también lo es A.
+¿Quiénes son inocentes y quiénes culpables?
+
+            
+
+        Por favor, procesa la siguiente respuesta tuya y genera el JSON:
+        Tu respuesta: 
+            ¡Excelente! Procedamos a analizar y resolver este interesante caso del Inspector Craig siguiendo tus pasos indicados.
+
+**1. Entendimiento del Problema:**
+
+*   **Elementos Clave:**
+    *   Personas Acusadas: A, B, C, D.
+    *   Posibles Estados de cada persona: Culpable o Inocente. (Son mutuamente excluyentes y exhaustivos).
+    *   Relación mencionada: Cómplice. Se asume que ser cómplice implica ser culpable.
+
+*   **Declaraciones Lógicas (Pistas):**
+    *   (1) Si A es culpable, entonces B era cómplice (culpable).
+        *   Representación: `Culpable(A) -> Culpable(B)`
+    *   (2) Si B es culpable, entonces o bien C era cómplice (culpable) o bien A es inocente.
+        *   Representación: `Culpable(B) -> (Culpable(C) v Inocente(A))`
+    *   (3) Si D es inocente, entonces A es culpable y C inocente.
+        *   Representación: `Inocente(D) -> (Culpable(A) ^ Inocente(C))`
+    *   (4) Si D es culpable, también lo es A.
+        *   Representación: `Culpable(D) -> Culpable(A)`
+
+*   **Hechos Directos vs. Inferencia:** No hay hechos directos iniciales sobre la culpabilidad o inocencia de ninguno de los acusados. Todas las declaraciones son condicionales (implicaciones lógicas), lo que requiere un proceso de inferencia para determinar la verdad.
+
+**2. Análisis e Inferencia Preliminar:**
+
+Nuestro objetivo es determinar el estado (Culpable o Inocente) de cada persona (A, B, C, D) de manera que todas las pistas sean ciertas simultáneamente. Para cada persona X, sabemos que `Inocente(X)` es lógicamente equivalente a `¬Culpable(X)`.
+
+Analicemos las posibilidades basándonos en alguna de las pistas. Las pistas (3) y (4) se refieren a D, que solo puede ser Culpable o Inocente. Analicemos ambos casos para D.
+
+*   **Caso 1: Asumimos que D es Inocente (`Inocente(D)`)**
+    *   Por la pista (3): `Inocente(D) -> (Culpable(A) ^ Inocente(C))`. Como el antecedente (`Inocente(D)`) es verdadero en este caso, el consecuente debe ser verdadero.
+    *   Esto implica que `Culpable(A)` es verdadero Y `Inocente(C)` es verdadero.
+    *   Ahora sabemos: `Inocente(D)`, `Culpable(A)`, `Inocente(C)`.
+    *   Por la pista (1): `Culpable(A) -> Culpable(B)`. Como `Culpable(A)` es verdadero, `Culpable(B)` debe ser verdadero.
+    *   Ahora sabemos: `Inocente(D)`, `Culpable(A)`, `Inocente(C)`, `Culpable(B)`.
+    *   Por la pista (2): `Culpable(B) -> (Culpable(C) v Inocente(A))`. Como `Culpable(B)` es verdadero, el consecuente (`Culpable(C) v Inocente(A)`) debe ser verdadero.
+    *   Sin embargo, en este caso, dedujimos `Inocente(C)` (que es `¬Culpable(C)`) y `Culpable(A)` (que es `¬Inocente(A)`).
+    *   Por lo tanto, el consecuente `(Culpable(C) v Inocente(A))` se convierte en `(Falso v Falso)`, que es Falso.
+    *   Tenemos que si D es Inocente, entonces (por pista 2) algo verdadero (`Culpable(B)`) implica algo falso (`(Culpable(C) v Inocente(A))`). Esto es una contradicción lógica.
+    *   Conclusión del Caso 1: La suposición de que D es Inocente lleva a una contradicción. Por lo tanto, D no puede ser Inocente.
+
+*   **Caso 2: Como D no puede ser Inocente (del Caso 1), D debe ser Culpable (`Culpable(D)`)**
+    *   Por la pista (4): `Culpable(D) -> Culpable(A)`. Como el antecedente (`Culpable(D)`) es verdadero en este caso, el consecuente (`Culpable(A)`) debe ser verdadero.
+    *   Ahora sabemos: `Culpable(D)`, `Culpable(A)`.
+    *   Por la pista (1): `Culpable(A) -> Culpable(B)`. Como `Culpable(A)` es verdadero, `Culpable(B)` debe ser verdadero.
+    *   Ahora sabemos: `Culpable(D)`, `Culpable(A)`, `Culpable(B)`.
+    *   Por la pista (2): `Culpable(B) -> (Culpable(C) v Inocente(A))`. Como `Culpable(B)` es verdadero, el consecuente (`Culpable(C) v Inocente(A)`) debe ser verdadero.
+    *   En este caso, sabemos que `Culpable(A)` es verdadero, lo que significa que `Inocente(A)` es falso (`¬Inocente(A)`).
+    *   Para que la disyunción `(Culpable(C) v Inocente(A))` sea verdadera cuando `Inocente(A)` es falso, `Culpable(C)` debe ser verdadero.
+    *   Ahora sabemos: `Culpable(D)`, `Culpable(A)`, `Culpable(B)`, `Culpable(C)`.
+    *   Hemos asignado un estado a cada persona. Verifiquemos si esta asignación satisface todas las pistas:
+        *   Pista (1): `Culpable(A) -> Culpable(B)`. (Verdadero -> Verdadero) = Verdadero. Satisfecha.
+        *   Pista (2): `Culpable(B) -> (Culpable(C) v Inocente(A))`. (Verdadero -> (Verdadero v Falso)) = (Verdadero -> Verdadero) = Verdadero. Satisfecha.
+        *   Pista (3): `Inocente(D) -> (Culpable(A) ^ Inocente(C))`. Como `Culpable(D)` es verdadero, `Inocente(D)` es falso. Un antecedente falso hace que la implicación sea verdadera, independientemente del consecuente. Satisfecha.
+        *   Pista (4): `Culpable(D) -> Culpable(A)`. (Verdadero -> Verdadero) = Verdadero. Satisfecha.
+
+    *   Todas las pistas son ciertas bajo la asignación donde A, B, C y D son Culpables. Este caso no lleva a contradicción.
+
+Basado en este análisis, la única asignación de culpabilidad/inocencia que satisface todas las condiciones es aquella en la que todos son culpables.
+
+**3. Hipótesis de Solución:**
+
+La hipótesis de solución es que todos los acusados - A, B, C y D - son culpables. Por lo tanto, nadie es inocente.
+
+**4. Comprobación Formal con Prolog:**
+
+Vamos a crear un programa en Prolog para verificar si la hipótesis de que A, B, C y D son culpables es consistente con las reglas del problema.
+
+*   Representaremos el estado "Culpable" con el hecho `culpable(Persona).`
+*   Representaremos el estado "Inocente" como la negación de "Culpable", es decir, `\+ culpable(Persona).`. Definimos un predicado auxiliar `inocente(X) :- \+ culpable(X).`.
+*   Representaremos una implicación `A -> B` usando la negación: `\+ (A, \+ B)`. Esto se lee como "no es el caso que A sea verdad y B sea falso".
+*   Representaremos una disyunción `A v B` como `;` en Prolog: `(A ; B)`.
+*   Representaremos una conjunción `A ^ B` como `,` en Prolog: `(A, B)`.
+
+Primero, declaramos los hechos basados en nuestra hipótesis de solución (todos son culpables):
+
+```prolog
+% Hipotesis: Todos son culpables
+culpable(a).
+culpable(b).
+culpable(c).
+culpable(d).
+
+% Definicion de inocente como la negacion de culpable
+inocente(X) :- \+ culpable(X).
+
+% Regla 1: Si A es culpable, entonces B es culpable
+% culpable(a) -> culpable(b)
+% \+ (culpable(a), \+ culpable(b))
+regla1_valida :- \+ (culpable(a), \+ culpable(b)).
+
+% Regla 2: Si B es culpable, entonces C es culpable o A es inocente
+% culpable(b) -> (culpable(c) v inocente(a))
+% \+ (culpable(b), \+ (culpable(c) ; inocente(a)))
+regla2_valida :- \+ (culpable(b), \+ (culpable(c) ; inocente(a))).
+
+% Regla 3: Si D es inocente, entonces A es culpable y C inocente
+% inocente(d) -> (culpable(a) ^ inocente(c))
+% \+ (inocente(d), \+ (culpable(a), inocente(c)))
+regla3_valida :- \+ (inocente(d), \+ (culpable(a), inocente(c))).
+
+% Regla 4: Si D es culpable, tambien lo es A
+% culpable(d) -> culpable(a)
+% \+ (culpable(d), \+ culpable(a))
+regla4_valida :- \+ (culpable(d), \+ culpable(a)).
+
+% Predicado para verificar si todas las reglas son validas
+solucion_valida :-
+    regla1_valida,
+    regla2_valida,
+    regla3_valida,
+    regla4_valida.
+```
+
+Para comprobar formalmente la hipótesis con este programa Prolog, realizaríamos la siguiente consulta:
+
+```prolog
+?- solucion_valida.
+```
+
+El resultado esperado de esta consulta es `true`. Esto se debe a que, con los hechos `culpable(a).`, `culpable(b).`, `culpable(c).`, `culpable(d).` cargados (que representan la hipótesis de que todos son culpables), cada uno de los predicados `reglaN_valida` evaluará a verdadero, haciendo que el predicado `solucion_valida` también sea verdadero. Por ejemplo, para `regla1_valida`, la consulta `\+ (culpable(a), \+ culpable(b))` se evaluaría. `culpable(a)` es verdadero. `\+ culpable(b)` es falso porque `culpable(b)` es verdadero. Entonces, `(culpable(a), \+ culpable(b))` es `(true, false)`, que es falso. La negación de falso (`\+ false`) es verdadero, por lo que `regla1_valida` es verdadero. Este proceso se repite para todas las reglas.
+
+La capacidad del programa para demostrar que `solucion_valida` es verdadero, dadas las premisas de la hipótesis (todos culpables) y las reglas traducidas a Prolog, apoya fuertemente la conclusión de que esta es la solución correcta y consistente con las pistas.
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta JSON de Gemini: {
+  "facts": [
+    "culpable(a).",
+    "culpable(b).",
+    "culpable(c).",
+    "culpable(d)."
+  ],
+  "rules": [
+    "inocente(X) :- \\+ culpable(X).",
+    "regla1_valida :- \\+ (culpable(a), \\+ culpable(b)).",
+    "regla2_valida :- \\+ (culpable(b), \\+ (culpable(c) ; inocente(a))).",
+    "regla3_valida :- \\+ (inocente(d), \\+ (culpable(a), inocente(c))).",
+    "regla4_valida :- \\+ (culpable(d), \\+ culpable(a)).",
+    "solucion_valida :- regla1_valida, regla2_valida, regla3_valida, regla4_valida."
+  ],
+  "objetive": [
+    "solucion_valida"
+  ]
+}
+
+-------------------------------------------------------------------
+
+
+MFSA: Cláusulas del Problema Extraídas: 10
+
+--- Cláusulas Extraídas ---
+
+Cláusulas Objetivo:
+- solucion_valida
+
+Cláusulas del Problema:
+- culpable(a).
+- culpable(b).
+- culpable(c).
+- culpable(d).
+- inocente(X) :- \+ culpable(X).
+- regla1_valida :- \+ (culpable(a), \+ culpable(b)).
+- regla2_valida :- \+ (culpable(b), \+ (culpable(c) ; inocente(a))).
+- regla3_valida :- \+ (inocente(d), \+ (culpable(a), inocente(c))).
+- regla4_valida :- \+ (culpable(d), \+ culpable(a)).
+- solucion_valida :- regla1_valida, regla2_valida, regla3_valida, regla4_valida.
+
+Axiomas Base:
+--- Formalización Completada ---
+KR-Store:
+  Axiomas Base: 0
+  Cláusulas del Problema: 10
+  Cláusulas Objetivo: 1
+
+======================================================================
+FIN DEL PROCESAMIENTO PARA PROBLEMA 5
+======================================================================
+
+TODOS LOS PROBLEMAS CONFIGURADOS PROCESADOS.

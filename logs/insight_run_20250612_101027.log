@@ -1,0 +1,624 @@
+
+======================================================================
+PROCESANDO PROBLEMA 5: "
+Tweedledum y Tweedledee visitaban frecuentemente el bosque.
+Ahora bien, uno de ..."
+======================================================================
+
+--- Ejecutando MFSA ---
+
+--- Iniciando Formalización Semántica y Axiomatización (MFSA) ---
+Descripción del Problema (NL): 
+Tweedledum y Tweedledee visitaban frecuentemente el bosque.
+Ahora bien, uno de los dos es como el León: miente los lunes, martes y miércoles y
+dice la verdad los restantes días de la semana. El otro es como el Unicornio: miente
+los jueves, viernes y sábados y dice la verdad los restantes días de la semana. Alicia
+no sabía que uno era como el León y que otro era como el Unicornio. Para terminar
+de arreglarlo, los hermanos se parecían tanto que Alicia no podía ni siquiera
+distinguirlos (excepto cuando llevaban sus cuellos bordados, cosa que raramente
+hacían). Así pues, la pobre Alicia se encontró realmente en una situación muy
+confusa. He aquí ahora alguna de las aventuras de Alicia con Tweedledum y
+Tweedledee.
+51.
+Un día Alicia se encontró a los hermanos juntos que le hablaron así:
+El primero de ellos dijo: Yo soy Tweedledum.
+El segundo dijo: Yo soy Tweedledee.
+¿Cuál de ellos era realmente Tweedledum y cuál de ellos Tweedledee?
+
+
+
+            
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (initial_analysis_
+tweedledum_y_tweedl) ---
+Prompt: 
+        Hola, necesito tu ayuda para analizar y resolver un problema de lógica de manera sistemática. Por favor, sigue los siguientes pasos:
+
+        1. Entendimiento del Problema: 
+        - Identifica los elementos clave (personas, objetos, lugares, eventos, etc.) involucrados en el problema.
+        - Extrae todas las declaraciones lógicas o pistas proporcionadas, y anótalas claramente. Distingue entre hechos directos e inferencias posibles.
+
+        2. Análisis e Inferencia Preliminar:
+        - Basándote en la información organizada, realiza inferencias lógicas paso a paso. Elimina posibilidades o deduce nuevos hechos. Si es aplicable, actualiza tu representación de la información con cada nueva inferencia hasta que se clarifiquen las relaciones.
+        
+        3. Hipótesis de Solución:
+        - A partir de tu análisis e inferencias, propón una hipótesis clara sobre cuál es la solución al problema de lógica.
+        
+        4. Comprobación Formal con Prolog:
+        - Vas a crear un programa en Prolog (hechos y reglas) basado en tu hipótesis de solución y las pistas originales. Este programa debe ser capaz de demostrar la validez de tu hipótesis a través de consultas.
+        - Esto es sumamente importante: La corrección semántica y sintáctica del programa Prolog es crucial, ya que la verdad de tu hipótesis se deduce de la capacidad del programa para probarla. Asegúrate de que el código esté bien escrito y refleje lógicamente el problema y tu solución propuesta.
+
+        A continuación, te presento el problema de lógica:
+        
+Tweedledum y Tweedledee visitaban frecuentemente el bosque.
+Ahora bien, uno de los dos es como el León: miente los lunes, martes y miércoles y
+dice la verdad los restantes días de la semana. El otro es como el Unicornio: miente
+los jueves, viernes y sábados y dice la verdad los restantes días de la semana. Alicia
+no sabía que uno era como el León y que otro era como el Unicornio. Para terminar
+de arreglarlo, los hermanos se parecían tanto que Alicia no podía ni siquiera
+distinguirlos (excepto cuando llevaban sus cuellos bordados, cosa que raramente
+hacían). Así pues, la pobre Alicia se encontró realmente en una situación muy
+confusa. He aquí ahora alguna de las aventuras de Alicia con Tweedledum y
+Tweedledee.
+51.
+Un día Alicia se encontró a los hermanos juntos que le hablaron así:
+El primero de ellos dijo: Yo soy Tweedledum.
+El segundo dijo: Yo soy Tweedledee.
+¿Cuál de ellos era realmente Tweedledum y cuál de ellos Tweedledee?
+
+
+
+            
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: Okay, procedamos a analizar y resolver este problema de lógica de manera sistemática.
+
+**1. Entendimiento del Problema:**
+
+*   **Elementos Clave:**
+    *   Dos hermanos: Tweedledum y Tweedledee.
+    *   Regla del León: Miente los lunes, martes, miércoles; dice la verdad los jueves, viernes, sábado, domingo.
+    *   Regla del Unicornio: Miente los jueves, viernes, sábado; dice la verdad los lunes, martes, miércoles, domingo.
+    *   Uno de los hermanos sigue la regla del León, el otro sigue la regla del Unicornio. No se sabe quién es quién (qué identidad tiene qué regla).
+    *   Alicia no puede distinguirlos visualmente (sin sus cuellos).
+    *   Un día específico, Alicia se encuentra a los dos hermanos (llamémoslos H1 y H2 por el orden en que hablaron).
+    *   H1 dijo: "Yo soy Tweedledum."
+    *   H2 dijo: "Yo soy Tweedledee."
+
+*   **Declaraciones Lógicas / Pistas:**
+    *   `hermanos(tweedledum, tweedledee)`.
+    *   `regla(X)` es `leon` o `unicornio`.
+    *   `regla(tweedledum) \= regla(tweedledee)`.
+    *   Para un día `D`:
+        *   Si `regla(X)` es `leon`: `dice_verdad(X, D)` si `D` está en {jueves, viernes, sábado, domingo}. `miente(X, D)` si `D` está en {lunes, martes, miércoles}.
+        *   Si `regla(X)` es `unicornio`: `dice_verdad(X, D)` si `D` está en {lunes, martes, miércoles, domingo}. `miente(X, D)` si `D` está en {jueves, viernes, sábado}.
+    *   Alicia se encuentra a H1 y H2. `{identidad(H1), identidad(H2)} = {tweedledum, tweedledee}`.
+    *   `H1` dijo la declaración `D1`: "Yo soy Tweedledum."
+    *   `H2` dijo la declaración `D2`: "Yo soy Tweedledee."
+    *   Una declaración es verdadera si corresponde a la identidad real del hablante, y falsa si no.
+    *   Si un hablante dice una declaración verdadera, debe estar diciendo la verdad ese día (`dice_verdad`).
+    *   Si un hablante dice una declaración falsa, debe estar mintiendo ese día (`miente`).
+
+**2. Análisis e Inferencia Preliminar:**
+
+Tenemos dos individuos, H1 y H2, y dos identidades, Tweedledum (TD) y Tweedledee (TDee). Hay dos posibles asignaciones de identidad:
+    a) H1 es Tweedledum y H2 es Tweedledee.
+    b) H1 es Tweedledee y H2 es Tweedledum.
+
+También tenemos dos posibles asignaciones de reglas a identidades:
+    x) Tweedledum sigue la regla del León y Tweedledee la del Unicornio.
+    y) Tweedledum sigue la regla del Unicornio y Tweedledee la del León.
+
+Consideremos las declaraciones y las reglas de verdad/mentira para cada asignación de identidad, independientemente por ahora de la asignación de reglas (x o y), ya que esta asignación de reglas se aplica a las *identidades*, no a H1 y H2 directamente.
+
+*   **Declaraciones:**
+    *   H1: "Yo soy Tweedledum."
+    *   H2: "Yo soy Tweedledee."
+
+*   **Análisis de la asignación (a): H1 es Tweedledum, H2 es Tweedledee.**
+    *   La declaración de H1 ("Yo soy Tweedledum") es **verdadera** (porque H1 *es* Tweedledum). Por lo tanto, H1 debe haber estado diciendo la verdad ese día.
+    *   La declaración de H2 ("Yo soy Tweedledee") es **verdadera** (porque H2 *es* Tweedledee). Por lo tanto, H2 debe haber estado diciendo la verdad ese día.
+    *   Si esta asignación de identidad es correcta, *ambos* hermanos (el que es Tweedledum y el que es Tweedledee) debieron decir la verdad ese día.
+    *   Analicemos cuándo un León y un Unicornio dicen la verdad *simultáneamente*:
+        *   León dice verdad: jueves, viernes, sábado, domingo.
+        *   Unicornio dice verdad: lunes, martes, miércoles, domingo.
+        *   El único día en que *ambos* tipos dicen la verdad es el **domingo**.
+    *   Conclusión para la asignación (a): Esta asignación de identidad (H1=TD, H2=TDee) es consistente con las declaraciones *únicamente* si el día en que Alicia los encontró era domingo.
+
+*   **Análisis de la asignación (b): H1 es Tweedledee, H2 es Tweedledum.**
+    *   La declaración de H1 ("Yo soy Tweedledum") es **falsa** (porque H1 *es* Tweedledee). Por lo tanto, H1 debe haber estado mintiendo ese día.
+    *   La declaración de H2 ("Yo soy Tweedledee") es **falsa** (porque H2 *es* Tweedledum). Por lo tanto, H2 debe haber estado mintiendo ese día.
+    *   Si esta asignación de identidad es correcta, *ambos* hermanos (el que es Tweedledee y el que es Tweedledum) debieron mentir ese día.
+    *   Analicemos cuándo un León y un Unicornio mienten *simultáneamente*:
+        *   León miente: lunes, martes, miércoles.
+        *   Unicornio miente: jueves, viernes, sábado.
+        *   No hay ningún día en que *ambos* tipos mientan. Sus días de mentira son mutuamente excluyentes.
+    *   Conclusión para la asignación (b): Esta asignación de identidad (H1=TDee, H2=TD) lleva a una contradicción lógica irresoluble, *independientemente* del día de la semana y de cuál identidad tenga qué regla. Un León y un Unicornio no pueden mentir al mismo tiempo.
+
+*   **Inferencia Final:** La asignación de identidad (b) es lógicamente imposible. Por lo tanto, la única asignación de identidad posible es (a). Aunque la asignación (a) solo es consistente si el día es domingo, el hecho de que el encuentro *ocurrió* implica que debe haber una asignación de identidad que sea *al menos posible* en algún contexto (día/regla). Dado que la alternativa es universalmente imposible, concluimos que la única asignación de identidad que *podría* haber sido verdadera es la primera.
+
+**3. Hipótesis de Solución:**
+
+La única asignación de identidad consistente con las reglas de los hermanos y sus declaraciones, bajo la premisa de que la situación descrita es lógicamente posible, es que el primer hermano que habló (H1) era Tweedledum, y el segundo hermano que habló (H2) era Tweedledee.
+
+**4. Comprobación Formal con Prolog:**
+
+Vamos a modelar el problema en Prolog para verificar si la asignación H1=Tweedledum, H2=Tweedledee es la única que permite un escenario consistente.
+
+```prolog
+% Hechos: Días de la semana
+dia(lunes).
+dia(martes).
+dia(miercoles).
+dia(jueves).
+dia(viernes).
+dia(sabado).
+dia(domingo).
+
+% Hechos: Tipos de reglas
+tipo_regla(leon).
+tipo_regla(unicornio).
+
+% Hechos: Días en que miente cada tipo
+miente(leon, lunes).
+miente(leon, martes).
+miente(leon, miercoles).
+
+miente(unicornio, jueves).
+miente(unicornio, viernes).
+miente(unicornio, sabado).
+
+% Regla: Un tipo dice la verdad en un día si no miente ese día
+dice_verdad(Tipo, Dia) :-
+    tipo_regla(Tipo),
+    dia(Dia),
+    \+ miente(Tipo, Dia). % Niega que mienta ese día
+
+% Hechos: Las declaraciones de los hermanos
+dijo(h1, 'Yo soy Tweedledum').
+dijo(h2, 'Yo soy Tweedledee').
+
+% Regla: Determinar si una declaración es verdadera para una identidad
+es_verdad('Yo soy Tweedledum', tweedledum).
+es_verdad('Yo soy Tweedledee', tweedledee).
+
+% Regla: Determinar si una declaración es falsa para una identidad
+es_falso(Declaracion, Identidad) :-
+    % Una declaración es falsa si no es verdadera para esa identidad
+    % y si la declaración es una de las que se hicieron
+    (Declaracion = 'Yo soy Tweedledum' ; Declaracion = 'Yo soy Tweedledee'), % Las posibles declaraciones
+    (Identidad = tweedledum ; Identidad = tweedledee), % Las posibles identidades
+    \+ es_verdad(Declaracion, Identidad).
+
+% Regla: Verifica la consistencia de una declaración de una persona en un día
+% consistente(Persona, Declaracion, IdentidadRealPersona, TipoPersona, Dia)
+consistente(Persona, Declaracion, IdentidadRealPersona, TipoPersona, Dia) :-
+    % Si la declaración es verdadera para su identidad real, la persona debe decir la verdad ese día
+    ( es_verdad(Declaracion, IdentidadRealPersona) -> dice_verdad(TipoPersona, Dia) )
+    % Si la declaración es falsa para su identidad real, la persona debe mentir ese día
+    ; ( es_falso(Declaracion, IdentidadRealPersona) -> miente(TipoPersona, Dia) ).
+
+% Regla principal: Define un escenario posible que sea lógicamente consistente
+% Un escenario incluye el día, las identidades de H1 y H2, y el tipo de Tweedledum y Tweedledee.
+% Las identidades de H1/H2 deben ser Tweedledum y Tweedledee (una cada uno).
+% Los tipos de Tweedledum/Tweedledee deben ser León y Unicornio (uno cada uno).
+% Las declaraciones deben ser consistentes con las identidades, tipos y el día.
+escenario_posible(Dia, IdentidadH1, IdentidadH2, TipoTweedledum, TipoTweedledee) :-
+    % 1. Seleccionar un día
+    dia(Dia),
+    % 2. Asignar identidades a H1 y H2 (mutuamente excluyentes)
+    (   (IdentidadH1 = tweedledum, IdentidadH2 = tweedledee)
+    ;   (IdentidadH1 = tweedledee, IdentidadH2 = tweedledum)
+    ),
+    IdentidadH1 \= IdentidadH2, % Asegurar que son diferentes
+
+    % 3. Asignar tipos a las identidades (mutuamente excluyentes)
+    (   (TipoTweedledum = leon, TipoTweedledee = unicornio)
+    ;   (TipoTweedledum = unicornio, TipoTweedledee = leon)
+    ),
+    TipoTweedledum \= TipoTweedledee, % Asegurar que son diferentes
+
+    % 4. Determinar el tipo de H1 y H2 basado en su identidad
+    ( IdentidadH1 = tweedledum -> TipoH1 = TipoTweedledum ; TipoH1 = TipoTweedledee ),
+    ( IdentidadH2 = tweedledee -> TipoH2 = TipoTweedledee ; TipoH2 = TipoTweedledum ),
+
+    % 5. Obtener las declaraciones
+    dijo(h1, DeclH1),
+    dijo(h2, DeclH2),
+
+    % 6. Verificar la consistencia de la declaración de H1
+    consistente(h1, DeclH1, IdentidadH1, TipoH1, Dia),
+
+    % 7. Verificar la consistencia de la declaración de H2
+    consistente(h2, DeclH2, IdentidadH2, TipoH2, Dia).
+
+% --- Consultas para verificar la hipótesis ---
+
+% Consulta 1: ¿Es posible un escenario donde H1 es Tweedledum y H2 es Tweedledee?
+% Si esta consulta encuentra soluciones, significa que esta asignación de identidad es posible.
+% Si solo encuentra soluciones para ciertos días, lo indicará.
+% ?- escenario_posible(Dia, tweedledum, tweedledee, TipoTD, TipoTDee).
+% Expected output: Finds solutions where Dia = domingo.
+
+% Consulta 2: ¿Es posible un escenario donde H1 es Tweedledee y H2 es Tweedledum?
+% Si esta consulta NO encuentra soluciones (false), significa que esta asignación de identidad es imposible.
+% Expected output: false.
+
+% Consulta 3: ¿Cuáles son todas las asignaciones de identidad posibles (H1, H2) para las que existe AL MENOS UN escenario consistente?
+% Esto nos dirá qué asignaciones de identidad son lógicamente viables.
+% ?- once(escenario_posible(_, IdentidadH1, IdentidadH2, _, _)).
+% Expected output: IdentidadH1 = tweedledum, IdentidadH2 = tweedledee.
+
+% Consulta 4: Verifica la imposibilidad del caso alternativo mostrando que no hay *ningún* escenario posible
+% ?- escenario_posible(_, tweedledee, tweedledum, _, _).
+% Expected output: false.
+
+```
+
+**Explicación del Código y Verificación:**
+
+1.  Definimos los días, los tipos de reglas y las condiciones de verdad/mentira para cada tipo en cada día.
+2.  Registramos las declaraciones exactas que hizo cada hermano (H1 y H2).
+3.  Las reglas `es_verdad/2` y `es_falso/2` codifican la veracidad de las declaraciones en función de la *identidad real* del hablante.
+4.  La regla `consistente/5` es el corazón de la lógica: establece que si un hablante dice algo que es verdadero sobre sí mismo, debe ser un día de verdad para su tipo; si dice algo falso, debe ser un día de mentira para su tipo.
+5.  La regla `escenario_posible/5` enumera todas las combinaciones posibles de día, asignación de identidad (H1/H2) y asignación de tipo (Tweedledum/Tweedledee), y luego aplica las restricciones:
+    *   Las identidades de H1 y H2 deben ser TD y TDee (una cada uno).
+    *   Los tipos de TD y TDee deben ser León y Unicornio (uno cada uno).
+    *   Se determina el tipo de H1 y H2 basándose en quién resultó ser quién y qué tipo tiene esa identidad.
+    *   Se verifica que las declaraciones de H1 y H2 sean consistentes con sus identidades, sus tipos y el día del encuentro, usando la regla `consistente/5`.
+
+Al ejecutar las consultas:
+
+*   `?- escenario_posible(Dia, tweedledum, tweedledee, TipoTD, TipoTDee).` encontrará soluciones. Todas las soluciones mostrarán `Dia = domingo`. Esto confirma que la asignación H1=TD, H2=TDee es consistente, pero solo en domingo.
+*   `?- escenario_posible(Dia, tweedledee, tweedledum, TipoTD, TipoTDee).` fallará (`false`). Esto confirma que la asignación H1=TDee, H2=TD es *nunca* consistente, independientemente del día o de la asignación de tipos.
+
+Como la única asignación de identidad que permite un escenario consistente (aunque solo sea en domingo) es aquella en la que H1 es Tweedledum y H2 es Tweedledee, mientras que la alternativa es imposible en cualquier caso, la conclusión es que **el primer hermano era Tweedledum y el segundo hermano era Tweedledee.** El hecho de que esto sólo funcione en domingo nos dice que el encuentro descrito, con esas declaraciones exactas, debió haber ocurrido en domingo. Pero la identidad de los hermanos se deduce de la imposibilidad de la alternativa.
+
+Este programa Prolog verifica formalmente que la hipótesis de solución (H1=Tweedledum, H2=Tweedledee) es la única que sobrevive al análisis lógico.
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini JSON (general) ---
+Prompt: 
+        Hola, basándote en tu respuesta anterior sobre el problema de lógica, necesito que extraigas y estructures la información de la siguiente manera en un formato JSON:
+
+        El JSON debe tener tres claves principales en el nivel raíz:
+
+        "facts": Un array de strings, donde cada string es un hecho Prolog completo tal como lo definiste.
+        "rules": Un array de strings, donde cada string es una regla Prolog completa tal como la definiste.
+        "objective": Un string que represente la consulta principal de Prolog que se usaría para obtener la solución (por ejemplo, solucion(Tweedledum, Tweedledee).).
+
+        Consejos importantes para asegurar la compatibilidad con Prolog al generar los strings de hechos y reglas:
+            Átomos: Los nombres de predicados y las constantes (átomos) en Prolog deben comenzar con una letra minúscula. Si un átomo necesita contener espacios, caracteres especiales, o comenzar con una letra mayúscula, debe ir entre comillas simples (ej: 'Yo soy Fidel', 'Luna').
+            Variables: Las variables en Prolog siempre comienzan con una letra mayúscula o un guion bajo (ej: Dia, Hermano, _Ignorado).
+            Sintaxis de Hechos: Asegúrate de que cada hecho termine con un punto (.). Ejemplo: miente_leon(lunes).
+            Sintaxis de Reglas: Las reglas deben seguir el formato cabeza :- cuerpo., donde cabeza es la conclusión, :- significa "si", y cuerpo puede ser una o más metas separadas por comas (,) que representan una conjunción lógica. Cada regla debe terminar con un punto (.). Ejemplo: dice_verdad(leon, Dia) :- + miente_leon(Dia).
+            Strings dentro de Prolog: Las frases como "Yo soy Fidel" deben ser tratadas como átomos en Prolog, es decir, encerradas en comillas simples si contienen espacios o mayúsculas no iniciales (ej: 'Yo soy Fidel').
+            Escapado en JSON: Dado que los hechos y reglas de Prolog serán strings dentro de un JSON, si alguna vez usaras comillas dobles dentro de tu código Prolog (lo cual es menos común para átomos que las comillas simples), necesitarían ser escapadas (") dentro del string JSON. Usar comillas simples para los átomos Prolog evita este problema. Las barras invertidas () en Prolog (como en + para negación) son caracteres válidos y no necesitan doble escapado a menos que el propio string JSON lo requiera para el carácter .
+            Los símbolos correctos de prolog son: \+ para negación, :- para implicación, ; para disyunción, . para final de cláusula, = para unificación, \= para desigualdad.
+            Evita usar el \ innecesariamente puesto a que por si solo es un error de sintaxis
+
+        Problema original:
+            
+Tweedledum y Tweedledee visitaban frecuentemente el bosque.
+Ahora bien, uno de los dos es como el León: miente los lunes, martes y miércoles y
+dice la verdad los restantes días de la semana. El otro es como el Unicornio: miente
+los jueves, viernes y sábados y dice la verdad los restantes días de la semana. Alicia
+no sabía que uno era como el León y que otro era como el Unicornio. Para terminar
+de arreglarlo, los hermanos se parecían tanto que Alicia no podía ni siquiera
+distinguirlos (excepto cuando llevaban sus cuellos bordados, cosa que raramente
+hacían). Así pues, la pobre Alicia se encontró realmente en una situación muy
+confusa. He aquí ahora alguna de las aventuras de Alicia con Tweedledum y
+Tweedledee.
+51.
+Un día Alicia se encontró a los hermanos juntos que le hablaron así:
+El primero de ellos dijo: Yo soy Tweedledum.
+El segundo dijo: Yo soy Tweedledee.
+¿Cuál de ellos era realmente Tweedledum y cuál de ellos Tweedledee?
+
+
+
+            
+
+        Por favor, procesa la siguiente respuesta tuya y genera el JSON:
+        Tu respuesta: 
+            Okay, procedamos a analizar y resolver este problema de lógica de manera sistemática.
+
+**1. Entendimiento del Problema:**
+
+*   **Elementos Clave:**
+    *   Dos hermanos: Tweedledum y Tweedledee.
+    *   Regla del León: Miente los lunes, martes, miércoles; dice la verdad los jueves, viernes, sábado, domingo.
+    *   Regla del Unicornio: Miente los jueves, viernes, sábado; dice la verdad los lunes, martes, miércoles, domingo.
+    *   Uno de los hermanos sigue la regla del León, el otro sigue la regla del Unicornio. No se sabe quién es quién (qué identidad tiene qué regla).
+    *   Alicia no puede distinguirlos visualmente (sin sus cuellos).
+    *   Un día específico, Alicia se encuentra a los dos hermanos (llamémoslos H1 y H2 por el orden en que hablaron).
+    *   H1 dijo: "Yo soy Tweedledum."
+    *   H2 dijo: "Yo soy Tweedledee."
+
+*   **Declaraciones Lógicas / Pistas:**
+    *   `hermanos(tweedledum, tweedledee)`.
+    *   `regla(X)` es `leon` o `unicornio`.
+    *   `regla(tweedledum) \= regla(tweedledee)`.
+    *   Para un día `D`:
+        *   Si `regla(X)` es `leon`: `dice_verdad(X, D)` si `D` está en {jueves, viernes, sábado, domingo}. `miente(X, D)` si `D` está en {lunes, martes, miércoles}.
+        *   Si `regla(X)` es `unicornio`: `dice_verdad(X, D)` si `D` está en {lunes, martes, miércoles, domingo}. `miente(X, D)` si `D` está en {jueves, viernes, sábado}.
+    *   Alicia se encuentra a H1 y H2. `{identidad(H1), identidad(H2)} = {tweedledum, tweedledee}`.
+    *   `H1` dijo la declaración `D1`: "Yo soy Tweedledum."
+    *   `H2` dijo la declaración `D2`: "Yo soy Tweedledee."
+    *   Una declaración es verdadera si corresponde a la identidad real del hablante, y falsa si no.
+    *   Si un hablante dice una declaración verdadera, debe estar diciendo la verdad ese día (`dice_verdad`).
+    *   Si un hablante dice una declaración falsa, debe estar mintiendo ese día (`miente`).
+
+**2. Análisis e Inferencia Preliminar:**
+
+Tenemos dos individuos, H1 y H2, y dos identidades, Tweedledum (TD) y Tweedledee (TDee). Hay dos posibles asignaciones de identidad:
+    a) H1 es Tweedledum y H2 es Tweedledee.
+    b) H1 es Tweedledee y H2 es Tweedledum.
+
+También tenemos dos posibles asignaciones de reglas a identidades:
+    x) Tweedledum sigue la regla del León y Tweedledee la del Unicornio.
+    y) Tweedledum sigue la regla del Unicornio y Tweedledee la del León.
+
+Consideremos las declaraciones y las reglas de verdad/mentira para cada asignación de identidad, independientemente por ahora de la asignación de reglas (x o y), ya que esta asignación de reglas se aplica a las *identidades*, no a H1 y H2 directamente.
+
+*   **Declaraciones:**
+    *   H1: "Yo soy Tweedledum."
+    *   H2: "Yo soy Tweedledee."
+
+*   **Análisis de la asignación (a): H1 es Tweedledum, H2 es Tweedledee.**
+    *   La declaración de H1 ("Yo soy Tweedledum") es **verdadera** (porque H1 *es* Tweedledum). Por lo tanto, H1 debe haber estado diciendo la verdad ese día.
+    *   La declaración de H2 ("Yo soy Tweedledee") es **verdadera** (porque H2 *es* Tweedledee). Por lo tanto, H2 debe haber estado diciendo la verdad ese día.
+    *   Si esta asignación de identidad es correcta, *ambos* hermanos (el que es Tweedledum y el que es Tweedledee) debieron decir la verdad ese día.
+    *   Analicemos cuándo un León y un Unicornio dicen la verdad *simultáneamente*:
+        *   León dice verdad: jueves, viernes, sábado, domingo.
+        *   Unicornio dice verdad: lunes, martes, miércoles, domingo.
+        *   El único día en que *ambos* tipos dicen la verdad es el **domingo**.
+    *   Conclusión para la asignación (a): Esta asignación de identidad (H1=TD, H2=TDee) es consistente con las declaraciones *únicamente* si el día en que Alicia los encontró era domingo.
+
+*   **Análisis de la asignación (b): H1 es Tweedledee, H2 es Tweedledum.**
+    *   La declaración de H1 ("Yo soy Tweedledum") es **falsa** (porque H1 *es* Tweedledee). Por lo tanto, H1 debe haber estado mintiendo ese día.
+    *   La declaración de H2 ("Yo soy Tweedledee") es **falsa** (porque H2 *es* Tweedledum). Por lo tanto, H2 debe haber estado mintiendo ese día.
+    *   Si esta asignación de identidad es correcta, *ambos* hermanos (el que es Tweedledee y el que es Tweedledum) debieron mentir ese día.
+    *   Analicemos cuándo un León y un Unicornio mienten *simultáneamente*:
+        *   León miente: lunes, martes, miércoles.
+        *   Unicornio miente: jueves, viernes, sábado.
+        *   No hay ningún día en que *ambos* tipos mientan. Sus días de mentira son mutuamente excluyentes.
+    *   Conclusión para la asignación (b): Esta asignación de identidad (H1=TDee, H2=TD) lleva a una contradicción lógica irresoluble, *independientemente* del día de la semana y de cuál identidad tenga qué regla. Un León y un Unicornio no pueden mentir al mismo tiempo.
+
+*   **Inferencia Final:** La asignación de identidad (b) es lógicamente imposible. Por lo tanto, la única asignación de identidad posible es (a). Aunque la asignación (a) solo es consistente si el día es domingo, el hecho de que el encuentro *ocurrió* implica que debe haber una asignación de identidad que sea *al menos posible* en algún contexto (día/regla). Dado que la alternativa es universalmente imposible, concluimos que la única asignación de identidad que *podría* haber sido verdadera es la primera.
+
+**3. Hipótesis de Solución:**
+
+La única asignación de identidad consistente con las reglas de los hermanos y sus declaraciones, bajo la premisa de que la situación descrita es lógicamente posible, es que el primer hermano que habló (H1) era Tweedledum, y el segundo hermano que habló (H2) era Tweedledee.
+
+**4. Comprobación Formal con Prolog:**
+
+Vamos a modelar el problema en Prolog para verificar si la asignación H1=Tweedledum, H2=Tweedledee es la única que permite un escenario consistente.
+
+```prolog
+% Hechos: Días de la semana
+dia(lunes).
+dia(martes).
+dia(miercoles).
+dia(jueves).
+dia(viernes).
+dia(sabado).
+dia(domingo).
+
+% Hechos: Tipos de reglas
+tipo_regla(leon).
+tipo_regla(unicornio).
+
+% Hechos: Días en que miente cada tipo
+miente(leon, lunes).
+miente(leon, martes).
+miente(leon, miercoles).
+
+miente(unicornio, jueves).
+miente(unicornio, viernes).
+miente(unicornio, sabado).
+
+% Regla: Un tipo dice la verdad en un día si no miente ese día
+dice_verdad(Tipo, Dia) :-
+    tipo_regla(Tipo),
+    dia(Dia),
+    \+ miente(Tipo, Dia). % Niega que mienta ese día
+
+% Hechos: Las declaraciones de los hermanos
+dijo(h1, 'Yo soy Tweedledum').
+dijo(h2, 'Yo soy Tweedledee').
+
+% Regla: Determinar si una declaración es verdadera para una identidad
+es_verdad('Yo soy Tweedledum', tweedledum).
+es_verdad('Yo soy Tweedledee', tweedledee).
+
+% Regla: Determinar si una declaración es falsa para una identidad
+es_falso(Declaracion, Identidad) :-
+    % Una declaración es falsa si no es verdadera para esa identidad
+    % y si la declaración es una de las que se hicieron
+    (Declaracion = 'Yo soy Tweedledum' ; Declaracion = 'Yo soy Tweedledee'), % Las posibles declaraciones
+    (Identidad = tweedledum ; Identidad = tweedledee), % Las posibles identidades
+    \+ es_verdad(Declaracion, Identidad).
+
+% Regla: Verifica la consistencia de una declaración de una persona en un día
+% consistente(Persona, Declaracion, IdentidadRealPersona, TipoPersona, Dia)
+consistente(Persona, Declaracion, IdentidadRealPersona, TipoPersona, Dia) :-
+    % Si la declaración es verdadera para su identidad real, la persona debe decir la verdad ese día
+    ( es_verdad(Declaracion, IdentidadRealPersona) -> dice_verdad(TipoPersona, Dia) )
+    % Si la declaración es falsa para su identidad real, la persona debe mentir ese día
+    ; ( es_falso(Declaracion, IdentidadRealPersona) -> miente(TipoPersona, Dia) ).
+
+% Regla principal: Define un escenario posible que sea lógicamente consistente
+% Un escenario incluye el día, las identidades de H1 y H2, y el tipo de Tweedledum y Tweedledee.
+% Las identidades de H1/H2 deben ser Tweedledum y Tweedledee (una cada uno).
+% Los tipos de Tweedledum/Tweedledee deben ser León y Unicornio (uno cada uno).
+% Las declaraciones deben ser consistentes con las identidades, tipos y el día.
+escenario_posible(Dia, IdentidadH1, IdentidadH2, TipoTweedledum, TipoTweedledee) :-
+    % 1. Seleccionar un día
+    dia(Dia),
+    % 2. Asignar identidades a H1 y H2 (mutuamente excluyentes)
+    (   (IdentidadH1 = tweedledum, IdentidadH2 = tweedledee)
+    ;   (IdentidadH1 = tweedledee, IdentidadH2 = tweedledum)
+    ),
+    IdentidadH1 \= IdentidadH2, % Asegurar que son diferentes
+
+    % 3. Asignar tipos a las identidades (mutuamente excluyentes)
+    (   (TipoTweedledum = leon, TipoTweedledee = unicornio)
+    ;   (TipoTweedledum = unicornio, TipoTweedledee = leon)
+    ),
+    TipoTweedledum \= TipoTweedledee, % Asegurar que son diferentes
+
+    % 4. Determinar el tipo de H1 y H2 basado en su identidad
+    ( IdentidadH1 = tweedledum -> TipoH1 = TipoTweedledum ; TipoH1 = TipoTweedledee ),
+    ( IdentidadH2 = tweedledee -> TipoH2 = TipoTweedledee ; TipoH2 = TipoTweedledum ),
+
+    % 5. Obtener las declaraciones
+    dijo(h1, DeclH1),
+    dijo(h2, DeclH2),
+
+    % 6. Verificar la consistencia de la declaración de H1
+    consistente(h1, DeclH1, IdentidadH1, TipoH1, Dia),
+
+    % 7. Verificar la consistencia de la declaración de H2
+    consistente(h2, DeclH2, IdentidadH2, TipoH2, Dia).
+
+% --- Consultas para verificar la hipótesis ---
+
+% Consulta 1: ¿Es posible un escenario donde H1 es Tweedledum y H2 es Tweedledee?
+% Si esta consulta encuentra soluciones, significa que esta asignación de identidad es posible.
+% Si solo encuentra soluciones para ciertos días, lo indicará.
+% ?- escenario_posible(Dia, tweedledum, tweedledee, TipoTD, TipoTDee).
+% Expected output: Finds solutions where Dia = domingo.
+
+% Consulta 2: ¿Es posible un escenario donde H1 es Tweedledee y H2 es Tweedledum?
+% Si esta consulta NO encuentra soluciones (false), significa que esta asignación de identidad es imposible.
+% Expected output: false.
+
+% Consulta 3: ¿Cuáles son todas las asignaciones de identidad posibles (H1, H2) para las que existe AL MENOS UN escenario consistente?
+% Esto nos dirá qué asignaciones de identidad son lógicamente viables.
+% ?- once(escenario_posible(_, IdentidadH1, IdentidadH2, _, _)).
+% Expected output: IdentidadH1 = tweedledum, IdentidadH2 = tweedledee.
+
+% Consulta 4: Verifica la imposibilidad del caso alternativo mostrando que no hay *ningún* escenario posible
+% ?- escenario_posible(_, tweedledee, tweedledum, _, _).
+% Expected output: false.
+
+```
+
+**Explicación del Código y Verificación:**
+
+1.  Definimos los días, los tipos de reglas y las condiciones de verdad/mentira para cada tipo en cada día.
+2.  Registramos las declaraciones exactas que hizo cada hermano (H1 y H2).
+3.  Las reglas `es_verdad/2` y `es_falso/2` codifican la veracidad de las declaraciones en función de la *identidad real* del hablante.
+4.  La regla `consistente/5` es el corazón de la lógica: establece que si un hablante dice algo que es verdadero sobre sí mismo, debe ser un día de verdad para su tipo; si dice algo falso, debe ser un día de mentira para su tipo.
+5.  La regla `escenario_posible/5` enumera todas las combinaciones posibles de día, asignación de identidad (H1/H2) y asignación de tipo (Tweedledum/Tweedledee), y luego aplica las restricciones:
+    *   Las identidades de H1 y H2 deben ser TD y TDee (una cada uno).
+    *   Los tipos de TD y TDee deben ser León y Unicornio (uno cada uno).
+    *   Se determina el tipo de H1 y H2 basándose en quién resultó ser quién y qué tipo tiene esa identidad.
+    *   Se verifica que las declaraciones de H1 y H2 sean consistentes con sus identidades, sus tipos y el día del encuentro, usando la regla `consistente/5`.
+
+Al ejecutar las consultas:
+
+*   `?- escenario_posible(Dia, tweedledum, tweedledee, TipoTD, TipoTDee).` encontrará soluciones. Todas las soluciones mostrarán `Dia = domingo`. Esto confirma que la asignación H1=TD, H2=TDee es consistente, pero solo en domingo.
+*   `?- escenario_posible(Dia, tweedledee, tweedledum, TipoTD, TipoTDee).` fallará (`false`). Esto confirma que la asignación H1=TDee, H2=TD es *nunca* consistente, independientemente del día o de la asignación de tipos.
+
+Como la única asignación de identidad que permite un escenario consistente (aunque solo sea en domingo) es aquella en la que H1 es Tweedledum y H2 es Tweedledee, mientras que la alternativa es imposible en cualquier caso, la conclusión es que **el primer hermano era Tweedledum y el segundo hermano era Tweedledee.** El hecho de que esto sólo funcione en domingo nos dice que el encuentro descrito, con esas declaraciones exactas, debió haber ocurrido en domingo. Pero la identidad de los hermanos se deduce de la imposibilidad de la alternativa.
+
+Este programa Prolog verifica formalmente que la hipótesis de solución (H1=Tweedledum, H2=Tweedledee) es la única que sobrevive al análisis lógico.
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta JSON de Gemini: {
+  "facts": [
+    "dia(lunes).",
+    "dia(martes).",
+    "dia(miercoles).",
+    "dia(jueves).",
+    "dia(viernes).",
+    "dia(sabado).",
+    "dia(domingo).",
+    "tipo_regla(leon).",
+    "tipo_regla(unicornio).",
+    "miente(leon, lunes).",
+    "miente(leon, martes).",
+    "miente(leon, miercoles).",
+    "miente(unicornio, jueves).",
+    "miente(unicornio, viernes).",
+    "miente(unicornio, sabado).",
+    "dijo(h1, 'Yo soy Tweedledum').",
+    "dijo(h2, 'Yo soy Tweedledee').",
+    "es_verdad('Yo soy Tweedledum', tweedledum).",
+    "es_verdad('Yo soy Tweedledee', tweedledee)."
+  ],
+  "rules": [
+    "dice_verdad(Tipo, Dia) :- tipo_regla(Tipo), dia(Dia), \\+ miente(Tipo, Dia).",
+    "es_falso(Declaracion, Identidad) :- (Declaracion = 'Yo soy Tweedledum' ; Declaracion = 'Yo soy Tweedledee'), (Identidad = tweedledum ; Identidad = tweedledee), \\+ es_verdad(Declaracion, Identidad).",
+    "consistente(Persona, Declaracion, IdentidadRealPersona, TipoPersona, Dia) :- ( es_verdad(Declaracion, IdentidadRealPersona) -> dice_verdad(TipoPersona, Dia) ) ; ( es_falso(Declaracion, IdentidadRealPersona) -> miente(TipoPersona, Dia) ).",
+    "escenario_posible(Dia, IdentidadH1, IdentidadH2, TipoTweedledum, TipoTweedledee) :- dia(Dia), ( (IdentidadH1 = tweedledum, IdentidadH2 = tweedledee) ; (IdentidadH1 = tweedledee, IdentidadH2 = tweedledum) ), IdentidadH1 \\= IdentidadH2, ( (TipoTweedledum = leon, TipoTweedledee = unicornio) ; (TipoTweedledum = unicornio, TipoTweedledee = leon) ), TipoTweedledum \\= TipoTweedledee, ( IdentidadH1 = tweedledum -> TipoH1 = TipoTweedledum ; TipoH1 = TipoTweedledee ), ( IdentidadH2 = tweedledee -> TipoH2 = TipoTweedledee ; TipoH2 = TipoTweedledum ), dijo(h1, DeclH1), dijo(h2, DeclH2), consistente(h1, DeclH1, IdentidadH1, TipoH1, Dia), consistente(h2, DeclH2, IdentidadH2, TipoH2, Dia)."
+  ],
+  "objetive": [
+    "escenario_posible(_, IdentidadH1, IdentidadH2, _, _)."
+  ]
+}
+
+-------------------------------------------------------------------
+
+
+MFSA: Cláusulas del Problema Extraídas: 23
+
+--- Cláusulas Extraídas ---
+
+Cláusulas Objetivo:
+- escenario_posible(_, IdentidadH1, IdentidadH2, _, _).
+
+Cláusulas del Problema:
+- dia(lunes).
+- dia(martes).
+- dia(miercoles).
+- dia(jueves).
+- dia(viernes).
+- dia(sabado).
+- dia(domingo).
+- tipo_regla(leon).
+- tipo_regla(unicornio).
+- miente(leon, lunes).
+- miente(leon, martes).
+- miente(leon, miercoles).
+- miente(unicornio, jueves).
+- miente(unicornio, viernes).
+- miente(unicornio, sabado).
+- dijo(h1, 'Yo soy Tweedledum').
+- dijo(h2, 'Yo soy Tweedledee').
+- es_verdad('Yo soy Tweedledum', tweedledum).
+- es_verdad('Yo soy Tweedledee', tweedledee).
+- dice_verdad(Tipo, Dia) :- tipo_regla(Tipo), dia(Dia), \+ miente(Tipo, Dia).
+- es_falso(Declaracion, Identidad) :- (Declaracion = 'Yo soy Tweedledum' ; Declaracion = 'Yo soy Tweedledee'), (Identidad = tweedledum ; Identidad = tweedledee), \+ es_verdad(Declaracion, Identidad).
+- consistente(Persona, Declaracion, IdentidadRealPersona, TipoPersona, Dia) :- ( es_verdad(Declaracion, IdentidadRealPersona) -> dice_verdad(TipoPersona, Dia) ) ; ( es_falso(Declaracion, IdentidadRealPersona) -> miente(TipoPersona, Dia) ).
+- escenario_posible(Dia, IdentidadH1, IdentidadH2, TipoTweedledum, TipoTweedledee) :- dia(Dia), ( (IdentidadH1 = tweedledum, IdentidadH2 = tweedledee) ; (IdentidadH1 = tweedledee, IdentidadH2 = tweedledum) ), IdentidadH1 \= IdentidadH2, ( (TipoTweedledum = leon, TipoTweedledee = unicornio) ; (TipoTweedledum = unicornio, TipoTweedledee = leon) ), TipoTweedledum \= TipoTweedledee, ( IdentidadH1 = tweedledum -> TipoH1 = TipoTweedledum ; TipoH1 = TipoTweedledee ), ( IdentidadH2 = tweedledee -> TipoH2 = TipoTweedledee ; TipoH2 = TipoTweedledum ), dijo(h1, DeclH1), dijo(h2, DeclH2), consistente(h1, DeclH1, IdentidadH1, TipoH1, Dia), consistente(h2, DeclH2, IdentidadH2, TipoH2, Dia).
+
+Axiomas Base:
+--- Formalización Completada ---
+KR-Store:
+  Axiomas Base: 0
+  Cláusulas del Problema: 23
+  Cláusulas Objetivo: 1
+
+======================================================================
+FIN DEL PROCESAMIENTO PARA PROBLEMA 5
+======================================================================
+
+TODOS LOS PROBLEMAS CONFIGURADOS PROCESADOS.

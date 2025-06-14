@@ -1,0 +1,465 @@
+
+======================================================================
+PROCESANDO PROBLEMA 5: "
+En El mercader de Venecia, de Shakespeare, Porcia tenía tres cofres —uno de
+oro..."
+======================================================================
+
+--- Ejecutando MFSA ---
+
+--- Iniciando Formalización Semántica y Axiomatización (MFSA) ---
+Descripción del Problema (NL): 
+En El mercader de Venecia, de Shakespeare, Porcia tenía tres cofres —uno de
+oro, otro de plata y otro de plomo—, dentro de uno de los cuales estaba el retrato de
+Porcia. El pretendiente tenía que elegir uno de los cofres y si tenía suerte (o
+inteligencia) elegiría el que tenía el retrato, pudiendo así pedir a Porcia por esposa.
+En la tapa de cada cofre había una inscripción para ayudar al pretendiente a elegir
+sabiamente.
+Pero supongamos que Porcia quisiera elegir marido, no por su bondad, sino por
+su inteligencia. Tendría las siguientes inscripciones en los cofres:
+Oro
+EL RETRATO ESTÁ EN ESTE COFRE
+Plata
+EL RETRATO NO ESTÁ AQUÍ
+Plomo
+EL RETRATO NO ESTÁ EN EL COFRE DE ORO
+Porcia explicó al pretendiente que de los tres enunciados, a lo sumo uno era
+verdad. ¿Cuál cofre debe de elegir el pretendiente?
+
+            
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (initial_analysis_
+en_el_mercader_de_v) ---
+Prompt: 
+        Hola, necesito tu ayuda para analizar y resolver un problema de lógica de manera sistemática. Por favor, sigue los siguientes pasos:
+
+        1. Entendimiento del Problema: 
+        - Identifica los elementos clave (personas, objetos, lugares, eventos, etc.) involucrados en el problema.
+        - Extrae todas las declaraciones lógicas o pistas proporcionadas, y anótalas claramente. Distingue entre hechos directos e inferencias posibles.
+
+        2. Análisis e Inferencia Preliminar:
+        - Basándote en la información organizada, realiza inferencias lógicas paso a paso. Elimina posibilidades o deduce nuevos hechos. Si es aplicable, actualiza tu representación de la información con cada nueva inferencia hasta que se clarifiquen las relaciones.
+        
+        3. Hipótesis de Solución:
+        - A partir de tu análisis e inferencias, propón una hipótesis clara sobre cuál es la solución al problema de lógica.
+        
+        4. Comprobación Formal con Prolog:
+        - Vas a crear un programa en Prolog (hechos y reglas) basado en tu hipótesis de solución y las pistas originales. Este programa debe ser capaz de demostrar la validez de tu hipótesis a través de consultas.
+        - Esto es sumamente importante: La corrección semántica y sintáctica del programa Prolog es crucial, ya que la verdad de tu hipótesis se deduce de la capacidad del programa para probarla. Asegúrate de que el código esté bien escrito y refleje lógicamente el problema y tu solución propuesta.
+
+        A continuación, te presento el problema de lógica:
+        
+En El mercader de Venecia, de Shakespeare, Porcia tenía tres cofres —uno de
+oro, otro de plata y otro de plomo—, dentro de uno de los cuales estaba el retrato de
+Porcia. El pretendiente tenía que elegir uno de los cofres y si tenía suerte (o
+inteligencia) elegiría el que tenía el retrato, pudiendo así pedir a Porcia por esposa.
+En la tapa de cada cofre había una inscripción para ayudar al pretendiente a elegir
+sabiamente.
+Pero supongamos que Porcia quisiera elegir marido, no por su bondad, sino por
+su inteligencia. Tendría las siguientes inscripciones en los cofres:
+Oro
+EL RETRATO ESTÁ EN ESTE COFRE
+Plata
+EL RETRATO NO ESTÁ AQUÍ
+Plomo
+EL RETRATO NO ESTÁ EN EL COFRE DE ORO
+Porcia explicó al pretendiente que de los tres enunciados, a lo sumo uno era
+verdad. ¿Cuál cofre debe de elegir el pretendiente?
+
+            
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: ¡Excelente! Abordemos este interesante problema de lógica de manera sistemática, siguiendo los pasos que has especificado.
+
+**1. Entendimiento del Problema:**
+
+*   **Elementos Clave:**
+    *   Tres cofres: Oro, Plata, Plomo.
+    *   Un retrato de Porcia, que está escondido en *exactamente uno* de los cofres.
+    *   Tres inscripciones, una en cada cofre.
+    *   Una regla fundamental: A lo sumo uno de los tres enunciados (las inscripciones) es verdadero.
+
+*   **Declaraciones Lógicas o Pistas:**
+    *   Inscripción en el cofre de Oro (S_Oro): "EL RETRATO ESTÁ EN ESTE COFRE"
+    *   Inscripción en el cofre de Plata (S_Plata): "EL RETRATO NO ESTÁ AQUÍ"
+    *   Inscripción en el cofre de Plomo (S_Plomo): "EL RETRATO NO ESTÁ EN EL COFRE DE ORO"
+    *   Regla: El número de enunciados verdaderos es 0 o 1. No pueden ser 2 ni 3.
+
+*   **Hechos Directos:**
+    *   Hay 3 cofres distintos (Oro, Plata, Plomo).
+    *   El retrato está en 1 y solo 1 de los cofres.
+    *   Las inscripciones son las dadas.
+    *   La regla sobre la veracidad de las inscripciones es la dada (a lo sumo uno es verdad).
+
+*   **Inferencias Posibles (Preliminares):**
+    *   La verdad o falsedad de cada inscripción depende de la ubicación real del retrato.
+    *   Debemos encontrar la única ubicación posible del retrato que satisfaga la regla "a lo sumo uno es verdad".
+
+**2. Análisis e Inferencia Preliminar:**
+
+Vamos a analizar sistemáticamente cada posible ubicación del retrato y ver si es compatible con la regla de que, como máximo, una inscripción es verdadera.
+
+Representemos la ubicación del retrato como `Retrato_en(Cofre)`, donde `Cofre` puede ser `Oro`, `Plata` o `Plomo`.
+
+Las condiciones de verdad para cada enunciado son:
+*   S_Oro es verdad SI Y SOLO SI `Retrato_en(Oro)`.
+*   S_Plata es verdad SI Y SOLO SI `NO Retrato_en(Plata)`.
+*   S_Plomo es verdad SI Y SOLO SI `NO Retrato_en(Oro)`.
+
+La regla es: `(S_Oro es verdad) + (S_Plata es verdad) + (S_Plomo es verdad) <= 1`.
+
+Procedamos por casos, asumiendo dónde está el retrato:
+
+*   **Caso 1: Supongamos que el retrato está en el cofre de Oro (`Retrato_en(Oro)` es verdad).**
+    *   S_Oro: "EL RETRATO ESTÁ EN ESTE COFRE" (Oro). Dado `Retrato_en(Oro)`, S_Oro es **VERDADERO**.
+    *   S_Plata: "EL RETRATO NO ESTÁ AQUÍ" (Plata). Dado `Retrato_en(Oro)` (y por tanto `NO Retrato_en(Plata)`), S_Plata es **VERDADERO**.
+    *   S_Plomo: "EL RETRATO NO ESTÁ EN EL COFRE DE ORO". Dado `Retrato_en(Oro)`, S_Plomo es **FALSO**.
+    *   Resultado: Tenemos 2 enunciados verdaderos (S_Oro y S_Plata). Esto viola la regla (a lo sumo uno es verdad).
+    *   **Conclusión:** El retrato **no puede** estar en el cofre de Oro.
+
+*   **Caso 2: Supongamos que el retrato está en el cofre de Plata (`Retrato_en(Plata)` es verdad).**
+    *   S_Oro: "EL RETRATO ESTÁ EN ESTE COFRE" (Oro). Dado `Retrato_en(Plata)` (y por tanto `NO Retrato_en(Oro)`), S_Oro es **FALSO**.
+    *   S_Plata: "EL RETRATO NO ESTÁ AQUÍ" (Plata). Dado `Retrato_en(Plata)`, S_Plata es **FALSO**.
+    *   S_Plomo: "EL RETRATO NO ESTÁ EN EL COFRE DE ORO". Dado `Retrato_en(Plata)` (y por tanto `NO Retrato_en(Oro)`), S_Plomo es **VERDADERO**.
+    *   Resultado: Tenemos 1 enunciado verdadero (S_Plomo). Esto es consistente con la regla (a lo sumo uno es verdad).
+    *   **Conclusión:** El retrato **puede** estar en el cofre de Plata. Este es un escenario posible.
+
+*   **Caso 3: Supongamos que el retrato está en el cofre de Plomo (`Retrato_en(Plomo)` es verdad).**
+    *   S_Oro: "EL RETRATO ESTÁ EN ESTE COFRE" (Oro). Dado `Retrato_en(Plomo)` (y por tanto `NO Retrato_en(Oro)`), S_Oro es **FALSO**.
+    *   S_Plata: "EL RETRATO NO ESTÁ AQUÍ" (Plata). Dado `Retrato_en(Plomo)` (y por tanto `NO Retrato_en(Plata)`), S_Plata es **VERDADERO**.
+    *   S_Plomo: "EL RETRATO NO ESTÁ EN EL COFRE DE ORO". Dado `Retrato_en(Plomo)` (y por tanto `NO Retrato_en(Oro)`), S_Plomo es **VERDADERO**.
+    *   Resultado: Tenemos 2 enunciados verdaderos (S_Plata y S_Plomo). Esto viola la regla (a lo sumo uno es verdad).
+    *   **Conclusión:** El retrato **no puede** estar en el cofre de Plomo.
+
+**3. Hipótesis de Solución:**
+
+Basado en el análisis sistemático, la única ubicación posible del retrato que satisface la regla "a lo sumo uno de los enunciados es verdad" es el cofre de Plata. Por lo tanto, el pretendiente debe elegir el cofre de Plata.
+
+**Hipótesis:** El retrato está en el cofre de Plata.
+
+**4. Comprobación Formal con Prolog:**
+
+Vamos a crear un programa en Prolog para modelar este problema y verificar nuestra hipótesis. Definiremos los cofres posibles, cómo la ubicación del retrato afecta la verdad de cada enunciado, y la regla fundamental. Luego, buscaremos una ubicación del retrato que satisfaga la regla.
+
+```prolog
+% --- Hechos y Reglas del Problema ---
+
+% Definimos los posibles cofres
+cofre(oro).
+cofre(plata).
+cofre(plomo).
+
+% Definimos cuando cada enunciado es verdadero, dependiendo de la ubicacion del retrato.
+% predicado: verdadera(Enunciado, UbicacionActualDelRetrato)
+verdadera(enunciado_oro, UbicacionRetrato) :-
+    UbicacionRetrato = oro.  % El enunciado del cofre de Oro es verdad si el retrato esta en Oro
+
+verdadera(enunciado_plata, UbicacionRetrato) :-
+    UbicacionRetrato \= plata. % El enunciado del cofre de Plata es verdad si el retrato NO esta en Plata
+
+verdadera(enunciado_plomo, UbicacionRetrato) :-
+    UbicacionRetrato \= oro.   % El enunciado del cofre de Plomo es verdad si el retrato NO esta en Oro
+
+% Definimos la regla fundamental: A lo sumo uno de los enunciados es verdadero.
+% Para una UbicacionRetrato dada, comprobamos que no haya mas de un enunciado verdadero.
+regla_a_lo_sumo_uno_verdadero(UbicacionRetrato) :-
+    % Encontramos todos los enunciados que son verdaderos para esta UbicacionRetrato
+    findall(Enunciado, verdadera(Enunciado, UbicacionRetrato), EnunciadosVerdaderos),
+    % Contamos cuantos enunciados son verdaderos
+    length(EnunciadosVerdaderos, NumeroVerdaderos),
+    % La regla se cumple si el numero de verdaderos es 0 o 1
+    NumeroVerdaderos =< 1.
+
+% --- Predicado para encontrar la solucion ---
+
+% La solucion es encontrar una ubicacion del retrato
+% que sea una de las ubicaciones posibles (oro, plata, plomo)
+% Y para la cual la regla "a lo sumo uno verdadero" se cumple.
+solucion(CofreDelRetrato) :-
+    cofre(CofreDelRetrato), % Intentamos con cada cofre posible (oro, plata, plomo)
+    regla_a_lo_sumo_uno_verdadero(CofreDelRetrato). % Verificamos si esa ubicacion cumple la regla
+
+% --- Consultas de Ejemplo (para hacer en el intérprete de Prolog) ---
+
+% ?- solucion(Cofre).
+%    Busca el valor de Cofre que satisface el predicado solucion/1.
+%    Debería devolver Cofre = plata.
+
+% --- Comprobaciones Internas (Opcional, para entender por qué funciona) ---
+
+% ?- findall(E, verdadera(E, oro), L).
+%    L = [enunciado_oro, enunciado_plata]. (2 verdaderos) -> No cumple la regla
+% ?- findall(E, verdadera(E, plata), L).
+%    L = [enunciado_plomo]. (1 verdadero) -> Cumple la regla
+% ?- findall(E, verdadera(E, plomo), L).
+%    L = [enunciado_plata, enunciado_plomo]. (2 verdaderos) -> No cumple la regla
+```
+
+**Explicación del Código Prolog:**
+
+1.  `cofre(oro). cofre(plata). cofre(plomo).`: Declara los tres átomos que representan los cofres.
+2.  `verdadera(Enunciado, UbicacionRetrato)`: Este predicado define la verdad de cada enunciado (`enunciado_oro`, `enunciado_plata`, `enunciado_plomo`) *basándose en la supuesta ubicación actual del retrato* (`UbicacionRetrato`). Por ejemplo, `verdadera(enunciado_oro, UbicacionRetrato) :- UbicacionRetrato = oro.` significa "El enunciado del cofre de oro es verdadero si la ubicación del retrato es oro".
+3.  `regla_a_lo_sumo_uno_verdadero(UbicacionRetrato)`: Este predicado implementa la regla principal. Para una `UbicacionRetrato` dada:
+    *   `findall(Enunciado, verdadera(Enunciado, UbicacionRetrato), EnunciadosVerdaderos)`: Encuentra todos los `Enunciado`s para los cuales `verdadera(Enunciado, UbicacionRetrato)` es verdad y los recoge en la lista `EnunciadosVerdaderos`.
+    *   `length(EnunciadosVerdaderos, NumeroVerdaderos)`: Calcula el número de elementos en esa lista.
+    *   `NumeroVerdaderos =< 1`: Comprueba si el número de enunciados verdaderos es menor o igual a 1 (es decir, 0 o 1). Si es así, el predicado tiene éxito para esa `UbicacionRetrato`.
+4.  `solucion(CofreDelRetrato)`: Este es el predicado principal que buscamos consultar.
+    *   `cofre(CofreDelRetrato)`: Prolog intentará unificar `CofreDelRetrato` sucesivamente con `oro`, `plata`, y `plomo` (gracias al *backtracking*).
+    *   `regla_a_lo_sumo_uno_verdadero(CofreDelRetrato)`: Para cada `CofreDelRetrato` intentado, comprueba si esa ubicación satisface la regla.
+
+Cuando consultas `?- solucion(Cofre).`, Prolog probará `Cofre = oro`, verá que `regla_a_lo_sumo_uno_verdadero(oro)` falla, retrocederá; luego probará `Cofre = plata`, verá que `regla_a_lo_sumo_uno_verdadero(plata)` tiene éxito, y reportará `Cofre = plata`. Si pides más soluciones (`;`), probará `Cofre = plomo`, verá que falla, y reportará `false` (no más soluciones).
+
+Este programa Prolog valida formalmente que la única ubicación del retrato que respeta todas las condiciones del problema es el cofre de Plata.
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini JSON (general) ---
+Prompt: 
+        Hola, basándote en tu respuesta anterior sobre el problema de lógica, necesito que extraigas y estructures la información de la siguiente manera en un formato JSON:
+
+        El JSON debe tener tres claves principales en el nivel raíz:
+
+        "facts": Un array de strings, donde cada string es un hecho Prolog completo tal como lo definiste.
+        "rules": Un array de strings, donde cada string es una regla Prolog completa tal como la definiste.
+        "objective": Un string que represente la consulta principal de Prolog que se usaría para obtener la solución (por ejemplo, solucion(Tweedledum, Tweedledee).).
+
+        Consejos importantes para asegurar la compatibilidad con Prolog al generar los strings de hechos y reglas:
+            Átomos: Los nombres de predicados y las constantes (átomos) en Prolog deben comenzar con una letra minúscula. Si un átomo necesita contener espacios, caracteres especiales, o comenzar con una letra mayúscula, debe ir entre comillas simples (ej: 'Yo soy Fidel', 'Luna').
+            Variables: Las variables en Prolog siempre comienzan con una letra mayúscula o un guion bajo (ej: Dia, Hermano, _Ignorado).
+            Sintaxis de Hechos: Asegúrate de que cada hecho termine con un punto (.). Ejemplo: miente_leon(lunes).
+            Sintaxis de Reglas: Las reglas deben seguir el formato cabeza :- cuerpo., donde cabeza es la conclusión, :- significa "si", y cuerpo puede ser una o más metas separadas por comas (,) que representan una conjunción lógica. Cada regla debe terminar con un punto (.). Ejemplo: dice_verdad(leon, Dia) :- + miente_leon(Dia).
+            Strings dentro de Prolog: Las frases como "Yo soy Fidel" deben ser tratadas como átomos en Prolog, es decir, encerradas en comillas simples si contienen espacios o mayúsculas no iniciales (ej: 'Yo soy Fidel').
+            Escapado en JSON: Dado que los hechos y reglas de Prolog serán strings dentro de un JSON, si alguna vez usaras comillas dobles dentro de tu código Prolog (lo cual es menos común para átomos que las comillas simples), necesitarían ser escapadas (") dentro del string JSON. Usar comillas simples para los átomos Prolog evita este problema. Las barras invertidas () en Prolog (como en + para negación) son caracteres válidos y no necesitan doble escapado a menos que el propio string JSON lo requiera para el carácter .
+            Los símbolos correctos de prolog son: \+ para negación, :- para implicación, ; para disyunción, . para final de cláusula, = para unificación, \= para desigualdad.
+            Evita usar el \ innecesariamente puesto a que por si solo es un error de sintaxis
+
+        Problema original:
+            
+En El mercader de Venecia, de Shakespeare, Porcia tenía tres cofres —uno de
+oro, otro de plata y otro de plomo—, dentro de uno de los cuales estaba el retrato de
+Porcia. El pretendiente tenía que elegir uno de los cofres y si tenía suerte (o
+inteligencia) elegiría el que tenía el retrato, pudiendo así pedir a Porcia por esposa.
+En la tapa de cada cofre había una inscripción para ayudar al pretendiente a elegir
+sabiamente.
+Pero supongamos que Porcia quisiera elegir marido, no por su bondad, sino por
+su inteligencia. Tendría las siguientes inscripciones en los cofres:
+Oro
+EL RETRATO ESTÁ EN ESTE COFRE
+Plata
+EL RETRATO NO ESTÁ AQUÍ
+Plomo
+EL RETRATO NO ESTÁ EN EL COFRE DE ORO
+Porcia explicó al pretendiente que de los tres enunciados, a lo sumo uno era
+verdad. ¿Cuál cofre debe de elegir el pretendiente?
+
+            
+
+        Por favor, procesa la siguiente respuesta tuya y genera el JSON:
+        Tu respuesta: 
+            ¡Excelente! Abordemos este interesante problema de lógica de manera sistemática, siguiendo los pasos que has especificado.
+
+**1. Entendimiento del Problema:**
+
+*   **Elementos Clave:**
+    *   Tres cofres: Oro, Plata, Plomo.
+    *   Un retrato de Porcia, que está escondido en *exactamente uno* de los cofres.
+    *   Tres inscripciones, una en cada cofre.
+    *   Una regla fundamental: A lo sumo uno de los tres enunciados (las inscripciones) es verdadero.
+
+*   **Declaraciones Lógicas o Pistas:**
+    *   Inscripción en el cofre de Oro (S_Oro): "EL RETRATO ESTÁ EN ESTE COFRE"
+    *   Inscripción en el cofre de Plata (S_Plata): "EL RETRATO NO ESTÁ AQUÍ"
+    *   Inscripción en el cofre de Plomo (S_Plomo): "EL RETRATO NO ESTÁ EN EL COFRE DE ORO"
+    *   Regla: El número de enunciados verdaderos es 0 o 1. No pueden ser 2 ni 3.
+
+*   **Hechos Directos:**
+    *   Hay 3 cofres distintos (Oro, Plata, Plomo).
+    *   El retrato está en 1 y solo 1 de los cofres.
+    *   Las inscripciones son las dadas.
+    *   La regla sobre la veracidad de las inscripciones es la dada (a lo sumo uno es verdad).
+
+*   **Inferencias Posibles (Preliminares):**
+    *   La verdad o falsedad de cada inscripción depende de la ubicación real del retrato.
+    *   Debemos encontrar la única ubicación posible del retrato que satisfaga la regla "a lo sumo uno es verdad".
+
+**2. Análisis e Inferencia Preliminar:**
+
+Vamos a analizar sistemáticamente cada posible ubicación del retrato y ver si es compatible con la regla de que, como máximo, una inscripción es verdadera.
+
+Representemos la ubicación del retrato como `Retrato_en(Cofre)`, donde `Cofre` puede ser `Oro`, `Plata` o `Plomo`.
+
+Las condiciones de verdad para cada enunciado son:
+*   S_Oro es verdad SI Y SOLO SI `Retrato_en(Oro)`.
+*   S_Plata es verdad SI Y SOLO SI `NO Retrato_en(Plata)`.
+*   S_Plomo es verdad SI Y SOLO SI `NO Retrato_en(Oro)`.
+
+La regla es: `(S_Oro es verdad) + (S_Plata es verdad) + (S_Plomo es verdad) <= 1`.
+
+Procedamos por casos, asumiendo dónde está el retrato:
+
+*   **Caso 1: Supongamos que el retrato está en el cofre de Oro (`Retrato_en(Oro)` es verdad).**
+    *   S_Oro: "EL RETRATO ESTÁ EN ESTE COFRE" (Oro). Dado `Retrato_en(Oro)`, S_Oro es **VERDADERO**.
+    *   S_Plata: "EL RETRATO NO ESTÁ AQUÍ" (Plata). Dado `Retrato_en(Oro)` (y por tanto `NO Retrato_en(Plata)`), S_Plata es **VERDADERO**.
+    *   S_Plomo: "EL RETRATO NO ESTÁ EN EL COFRE DE ORO". Dado `Retrato_en(Oro)`, S_Plomo es **FALSO**.
+    *   Resultado: Tenemos 2 enunciados verdaderos (S_Oro y S_Plata). Esto viola la regla (a lo sumo uno es verdad).
+    *   **Conclusión:** El retrato **no puede** estar en el cofre de Oro.
+
+*   **Caso 2: Supongamos que el retrato está en el cofre de Plata (`Retrato_en(Plata)` es verdad).**
+    *   S_Oro: "EL RETRATO ESTÁ EN ESTE COFRE" (Oro). Dado `Retrato_en(Plata)` (y por tanto `NO Retrato_en(Oro)`), S_Oro es **FALSO**.
+    *   S_Plata: "EL RETRATO NO ESTÁ AQUÍ" (Plata). Dado `Retrato_en(Plata)`, S_Plata es **FALSO**.
+    *   S_Plomo: "EL RETRATO NO ESTÁ EN EL COFRE DE ORO". Dado `Retrato_en(Plata)` (y por tanto `NO Retrato_en(Oro)`), S_Plomo es **VERDADERO**.
+    *   Resultado: Tenemos 1 enunciado verdadero (S_Plomo). Esto es consistente con la regla (a lo sumo uno es verdad).
+    *   **Conclusión:** El retrato **puede** estar en el cofre de Plata. Este es un escenario posible.
+
+*   **Caso 3: Supongamos que el retrato está en el cofre de Plomo (`Retrato_en(Plomo)` es verdad).**
+    *   S_Oro: "EL RETRATO ESTÁ EN ESTE COFRE" (Oro). Dado `Retrato_en(Plomo)` (y por tanto `NO Retrato_en(Oro)`), S_Oro es **FALSO**.
+    *   S_Plata: "EL RETRATO NO ESTÁ AQUÍ" (Plata). Dado `Retrato_en(Plomo)` (y por tanto `NO Retrato_en(Plata)`), S_Plata es **VERDADERO**.
+    *   S_Plomo: "EL RETRATO NO ESTÁ EN EL COFRE DE ORO". Dado `Retrato_en(Plomo)` (y por tanto `NO Retrato_en(Oro)`), S_Plomo es **VERDADERO**.
+    *   Resultado: Tenemos 2 enunciados verdaderos (S_Plata y S_Plomo). Esto viola la regla (a lo sumo uno es verdad).
+    *   **Conclusión:** El retrato **no puede** estar en el cofre de Plomo.
+
+**3. Hipótesis de Solución:**
+
+Basado en el análisis sistemático, la única ubicación posible del retrato que satisface la regla "a lo sumo uno de los enunciados es verdad" es el cofre de Plata. Por lo tanto, el pretendiente debe elegir el cofre de Plata.
+
+**Hipótesis:** El retrato está en el cofre de Plata.
+
+**4. Comprobación Formal con Prolog:**
+
+Vamos a crear un programa en Prolog para modelar este problema y verificar nuestra hipótesis. Definiremos los cofres posibles, cómo la ubicación del retrato afecta la verdad de cada enunciado, y la regla fundamental. Luego, buscaremos una ubicación del retrato que satisfaga la regla.
+
+```prolog
+% --- Hechos y Reglas del Problema ---
+
+% Definimos los posibles cofres
+cofre(oro).
+cofre(plata).
+cofre(plomo).
+
+% Definimos cuando cada enunciado es verdadero, dependiendo de la ubicacion del retrato.
+% predicado: verdadera(Enunciado, UbicacionActualDelRetrato)
+verdadera(enunciado_oro, UbicacionRetrato) :-
+    UbicacionRetrato = oro.  % El enunciado del cofre de Oro es verdad si el retrato esta en Oro
+
+verdadera(enunciado_plata, UbicacionRetrato) :-
+    UbicacionRetrato \= plata. % El enunciado del cofre de Plata es verdad si el retrato NO esta en Plata
+
+verdadera(enunciado_plomo, UbicacionRetrato) :-
+    UbicacionRetrato \= oro.   % El enunciado del cofre de Plomo es verdad si el retrato NO esta en Oro
+
+% Definimos la regla fundamental: A lo sumo uno de los enunciados es verdadero.
+% Para una UbicacionRetrato dada, comprobamos que no haya mas de un enunciado verdadero.
+regla_a_lo_sumo_uno_verdadero(UbicacionRetrato) :-
+    % Encontramos todos los enunciados que son verdaderos para esta UbicacionRetrato
+    findall(Enunciado, verdadera(Enunciado, UbicacionRetrato), EnunciadosVerdaderos),
+    % Contamos cuantos enunciados son verdaderos
+    length(EnunciadosVerdaderos, NumeroVerdaderos),
+    % La regla se cumple si el numero de verdaderos es 0 o 1
+    NumeroVerdaderos =< 1.
+
+% --- Predicado para encontrar la solucion ---
+
+% La solucion es encontrar una ubicacion del retrato
+% que sea una de las ubicaciones posibles (oro, plata, plomo)
+% Y para la cual la regla "a lo sumo uno verdadero" se cumple.
+solucion(CofreDelRetrato) :-
+    cofre(CofreDelRetrato), % Intentamos con cada cofre posible (oro, plata, plomo)
+    regla_a_lo_sumo_uno_verdadero(CofreDelRetrato). % Verificamos si esa ubicacion cumple la regla
+
+% --- Consultas de Ejemplo (para hacer en el intérprete de Prolog) ---
+
+% ?- solucion(Cofre).
+%    Busca el valor de Cofre que satisface el predicado solucion/1.
+%    Debería devolver Cofre = plata.
+
+% --- Comprobaciones Internas (Opcional, para entender por qué funciona) ---
+
+% ?- findall(E, verdadera(E, oro), L).
+%    L = [enunciado_oro, enunciado_plata]. (2 verdaderos) -> No cumple la regla
+% ?- findall(E, verdadera(E, plata), L).
+%    L = [enunciado_plomo]. (1 verdadero) -> Cumple la regla
+% ?- findall(E, verdadera(E, plomo), L).
+%    L = [enunciado_plata, enunciado_plomo]. (2 verdaderos) -> No cumple la regla
+```
+
+**Explicación del Código Prolog:**
+
+1.  `cofre(oro). cofre(plata). cofre(plomo).`: Declara los tres átomos que representan los cofres.
+2.  `verdadera(Enunciado, UbicacionRetrato)`: Este predicado define la verdad de cada enunciado (`enunciado_oro`, `enunciado_plata`, `enunciado_plomo`) *basándose en la supuesta ubicación actual del retrato* (`UbicacionRetrato`). Por ejemplo, `verdadera(enunciado_oro, UbicacionRetrato) :- UbicacionRetrato = oro.` significa "El enunciado del cofre de oro es verdadero si la ubicación del retrato es oro".
+3.  `regla_a_lo_sumo_uno_verdadero(UbicacionRetrato)`: Este predicado implementa la regla principal. Para una `UbicacionRetrato` dada:
+    *   `findall(Enunciado, verdadera(Enunciado, UbicacionRetrato), EnunciadosVerdaderos)`: Encuentra todos los `Enunciado`s para los cuales `verdadera(Enunciado, UbicacionRetrato)` es verdad y los recoge en la lista `EnunciadosVerdaderos`.
+    *   `length(EnunciadosVerdaderos, NumeroVerdaderos)`: Calcula el número de elementos en esa lista.
+    *   `NumeroVerdaderos =< 1`: Comprueba si el número de enunciados verdaderos es menor o igual a 1 (es decir, 0 o 1). Si es así, el predicado tiene éxito para esa `UbicacionRetrato`.
+4.  `solucion(CofreDelRetrato)`: Este es el predicado principal que buscamos consultar.
+    *   `cofre(CofreDelRetrato)`: Prolog intentará unificar `CofreDelRetrato` sucesivamente con `oro`, `plata`, y `plomo` (gracias al *backtracking*).
+    *   `regla_a_lo_sumo_uno_verdadero(CofreDelRetrato)`: Para cada `CofreDelRetrato` intentado, comprueba si esa ubicación satisface la regla.
+
+Cuando consultas `?- solucion(Cofre).`, Prolog probará `Cofre = oro`, verá que `regla_a_lo_sumo_uno_verdadero(oro)` falla, retrocederá; luego probará `Cofre = plata`, verá que `regla_a_lo_sumo_uno_verdadero(plata)` tiene éxito, y reportará `Cofre = plata`. Si pides más soluciones (`;`), probará `Cofre = plomo`, verá que falla, y reportará `false` (no más soluciones).
+
+Este programa Prolog valida formalmente que la única ubicación del retrato que respeta todas las condiciones del problema es el cofre de Plata.
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta JSON de Gemini: {
+  "facts": [
+    "cofre(oro).",
+    "cofre(plata).",
+    "cofre(plomo)."
+  ],
+  "rules": [
+    "verdadera(enunciado_oro, UbicacionRetrato) :- UbicacionRetrato = oro.",
+    "verdadera(enunciado_plata, UbicacionRetrato) :- UbicacionRetrato \\= plata.",
+    "verdadera(enunciado_plomo, UbicacionRetrato) :- UbicacionRetrato \\= oro.",
+    "regla_a_lo_sumo_uno_verdadero(UbicacionRetrato) :- findall(Enunciado, verdadera(Enunciado, UbicacionRetrato), EnunciadosVerdaderos), length(EnunciadosVerdaderos, NumeroVerdaderos), NumeroVerdaderos =< 1.",
+    "solucion(CofreDelRetrato) :- cofre(CofreDelRetrato), regla_a_lo_sumo_uno_verdadero(CofreDelRetrato)."
+  ],
+  "objetive": [
+    "solucion(Cofre)."
+  ]
+}
+
+-------------------------------------------------------------------
+
+
+MFSA: Cláusulas del Problema Extraídas: 8
+
+--- Cláusulas Extraídas ---
+
+Cláusulas Objetivo:
+- solucion(Cofre).
+
+Cláusulas del Problema:
+- cofre(oro).
+- cofre(plata).
+- cofre(plomo).
+- verdadera(enunciado_oro, UbicacionRetrato) :- UbicacionRetrato = oro.
+- verdadera(enunciado_plata, UbicacionRetrato) :- UbicacionRetrato \= plata.
+- verdadera(enunciado_plomo, UbicacionRetrato) :- UbicacionRetrato \= oro.
+- regla_a_lo_sumo_uno_verdadero(UbicacionRetrato) :- findall(Enunciado, verdadera(Enunciado, UbicacionRetrato), EnunciadosVerdaderos), length(EnunciadosVerdaderos, NumeroVerdaderos), NumeroVerdaderos =< 1.
+- solucion(CofreDelRetrato) :- cofre(CofreDelRetrato), regla_a_lo_sumo_uno_verdadero(CofreDelRetrato).
+
+Axiomas Base:
+--- Formalización Completada ---
+KR-Store:
+  Axiomas Base: 0
+  Cláusulas del Problema: 8
+  Cláusulas Objetivo: 1
+
+======================================================================
+FIN DEL PROCESAMIENTO PARA PROBLEMA 5
+======================================================================
+
+TODOS LOS PROBLEMAS CONFIGURADOS PROCESADOS.

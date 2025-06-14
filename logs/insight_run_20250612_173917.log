@@ -1,0 +1,541 @@
+
+======================================================================
+PROCESANDO PROBLEMA: "
+    Recordamos que Bellini siempre ponía a sus cofres inscripciones verdaderas,..."
+======================================================================
+
+--- Ejecutando MFSA ---
+
+--- Iniciando Formalización Semántica y Axiomatización (MFSA) ---
+Descripción del Problema (NL): 
+    Recordamos que Bellini siempre ponía a sus cofres inscripciones verdaderas, mientras que Cellini siempre les ponía inscripciones falsas.En algunos museos podemos ver parejas de cofres —uno de oro y otro de plata— que en un principio se hicieron y se vendieron como juego. La verdad es que la familia Bellini y la Cellini eran íntimas y que a veces colaboraban en algunas de estas parejas; aunque cada cofre lo hiciera siempre una sola persona, dentro de la pareja un cofre podía hacerlo uno y el otro otro diferente. Ambas familias se divertían muchísimo haciendo estas parejas de manera que la inteligente posteridad pudiera adivinar —o adivinar parcialmente— quiénes habían sido los autores.  Habían aparecido cuatro cofres, dos de oro y dos de plata; se sabía que constituían dos juegos, pero se habían mezclado y ahora no se sabía qué cofre de oro y qué cofre de plata formaban pareja. Me los enseñaron y pronto pude resolver el problema por lo que recibí unos excelentes honorarios. Pero además pude establecer también quién había hecho cada cofre, por lo que recibí un extra (que consistía, entre otras cosas, en una excelente caja de botellas de Chianti) y un beso de una de las florentinas más maravillosas que haya existido nunca He aquí los cuatro cofres:
+    Cofre A (Oro)
+    EL COFRE DE PLATA ES OBRA DE UN CELLINI
+    Cofre B (Plata)
+    EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON
+    DE BELLINI
+    Cofre C (Oro)
+    EL COFRE DE ORO ES OBRA DE UN BELLINI
+    Cofre D (Plata)
+    EL COFRE DE ORO ES OBRA DE UN BELLINI Y POR LO MENOS UNO DE
+    ESTOS COFRES ES OBRA DE UN HIJO O DE BELLINI O CELLINI
+
+    Tenemos ahora un problema:
+    ¿Quién hizo cada uno de los cofres?
+    
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (initial_analysis_
+____recordamos_que_) ---
+Prompt: 
+        Hola, necesito tu ayuda para analizar y resolver un problema de lógica de manera sistemática. Por favor, sigue los siguientes pasos:
+
+        1. Entendimiento del Problema: 
+        - Extrae todas las declaraciones lógicas o pistas proporcionadas, y anótalas claramente. Debes escribir cada premisa expresada en el problema, impícita o explícitamente. Ejemplo:
+            - Premisa 1
+            - Premisa 2
+            ...
+        - Transforma cada premisa en una o más sentencias de prolog, de forma que cada una esté asociada con alguna sentencia.
+        - Intenta que las sentencias de prolog sean lo más parecida a la premisa que modela.
+
+        2. Análisis e Inferencia Preliminar:
+        - Basándote en la información organizada, realiza inferencias lógicas paso a paso. Elimina posibilidades o deduce nuevos hechos. Si es aplicable, actualiza tu representación de la información con cada nueva inferencia hasta que se clarifiquen las relaciones.
+        
+        3. Hipótesis de Solución:
+        - A partir de tu análisis e inferencias, propón una hipótesis clara sobre cuál es la solución al problema de lógica.
+        
+        4. Comprobación Formal con Prolog:
+        - Vas a crear un programa en Prolog (hechos y reglas) basado en tu hipótesis de solución y las pistas originales. Este programa debe ser capaz de demostrar la validez de tu hipótesis a través de consultas.
+        - Identifica y codifica primero las reglas globales que rigen el comportamiento de todos los agentes del sistema, pues estas definen el marco en el que se deben evaluar sus acciones individuales.
+        - Modela cada pieza de evidencia o declaración de forma atómica y fiel a su descripción original, evitando crear relaciones o dependencias artificiales entre componentes que el problema no vincula explícitamente.
+        - Garantiza una correspondencia precisa entre las entidades del problema y las variables de tu código, validando que el contexto de cada regla solo afecte a las variables que le conciernen directamente.
+        - Esto es sumamente importante: La corrección semántica y sintáctica del programa Prolog es crucial, ya que la verdad de tu hipótesis se deduce de la capacidad del programa para probarla. Asegúrate de que el código esté bien escrito y refleje lógicamente el problema y tu solución propuesta.
+        - Para modelar implicaciones lógicas en Prolog de forma declarativa, usa la negación para expresar que no puede darse el caso de que el antecedente sea cierto y el consecuente falso.
+        - Comenta el resultado esperado del programa pero nunca hables como si ya se hubiera ejecutado.
+
+        A continuación, te presento el problema de lógica:
+        
+    Recordamos que Bellini siempre ponía a sus cofres inscripciones verdaderas, mientras que Cellini siempre les ponía inscripciones falsas.En algunos museos podemos ver parejas de cofres —uno de oro y otro de plata— que en un principio se hicieron y se vendieron como juego. La verdad es que la familia Bellini y la Cellini eran íntimas y que a veces colaboraban en algunas de estas parejas; aunque cada cofre lo hiciera siempre una sola persona, dentro de la pareja un cofre podía hacerlo uno y el otro otro diferente. Ambas familias se divertían muchísimo haciendo estas parejas de manera que la inteligente posteridad pudiera adivinar —o adivinar parcialmente— quiénes habían sido los autores.  Habían aparecido cuatro cofres, dos de oro y dos de plata; se sabía que constituían dos juegos, pero se habían mezclado y ahora no se sabía qué cofre de oro y qué cofre de plata formaban pareja. Me los enseñaron y pronto pude resolver el problema por lo que recibí unos excelentes honorarios. Pero además pude establecer también quién había hecho cada cofre, por lo que recibí un extra (que consistía, entre otras cosas, en una excelente caja de botellas de Chianti) y un beso de una de las florentinas más maravillosas que haya existido nunca He aquí los cuatro cofres:
+    Cofre A (Oro)
+    EL COFRE DE PLATA ES OBRA DE UN CELLINI
+    Cofre B (Plata)
+    EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON
+    DE BELLINI
+    Cofre C (Oro)
+    EL COFRE DE ORO ES OBRA DE UN BELLINI
+    Cofre D (Plata)
+    EL COFRE DE ORO ES OBRA DE UN BELLINI Y POR LO MENOS UNO DE
+    ESTOS COFRES ES OBRA DE UN HIJO O DE BELLINI O CELLINI
+
+    Tenemos ahora un problema:
+    ¿Quién hizo cada uno de los cofres?
+    
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: Ok, vamos a abordar este fascinante problema de lógica paso a paso, tal como solicitaste.
+
+**1. Entendimiento del Problema:**
+
+Extraemos las declaraciones lógicas y pistas clave:
+
+*   **Premisa 1:** Bellini siempre pone inscripciones verdaderas.
+*   **Premisa 2:** Cellini siempre pone inscripciones falsas.
+*   **Premisa 3:** Hay 4 cofres: A (Oro), B (Plata), C (Oro), D (Plata).
+*   **Premisa 4:** Los 4 cofres forman dos parejas, cada una con un cofre de oro y uno de plata. La composición de las parejas originales (antes de mezclarse) se desconoce.
+*   **Premisa 5:** Cada cofre fue hecho por una sola persona (Bellini o Cellini).
+*   **Premisa 6:** Los cofres de una pareja podían ser hechos por el mismo autor o por autores diferentes.
+*   **Premisa 7 (Inscripción A):** En el Cofre A (Oro): "EL COFRE DE PLATA ES OBRA DE UN CELLINI".
+*   **Premisa 8 (Inscripción B):** En el Cofre B (Plata): "EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON DE BELLINI".
+*   **Premisa 9 (Inscripción C):** En el Cofre C (Oro): "EL COFRE DE ORO ES OBRA DE UN BELLINI".
+*   **Premisa 10 (Inscripción D):** En el Cofre D (Plata): "EL COFRE DE ORO ES OBRA DE UN BELLINI Y POR LO MENOS UNO DE ESTOS COFRES ES OBRA DE UN HIJO O DE BELLINI O CELLINI". (La parte "y por lo menos uno de estos cofres es obra de un hijo o de bellini o cellini" parece ser siempre verdadera dado que todos los cofres son hechos por Bellini o Cellini. La simplificaremos a "EL COFRE DE ORO ES OBRA DE UN BELLINI").
+
+Transformación a sentencias lógicas/Prolog preliminares:
+
+*   `autor_si_verdadera(bellini).`
+*   `autor_si_falsa(cellini).`
+*   `cofre(a, oro).`
+*   `cofre(b, plata).`
+*   `cofre(c, oro).`
+*   `cofre(d, plata).`
+*   `hecho_por(Cofre, Autor)` donde Autor es `bellini` o `cellini`.
+*   `inscripcion_verdadera(Cofre)` o `inscripcion_falsa(Cofre)`.
+*   Relación autor-verdad: `hecho_por(C, bellini) <=> inscripcion_verdadera(C)`. `hecho_por(C, cellini) <=> inscripcion_falsa(C)`.
+*   Inscripción A: `verdad_inscripcion(a) <=> (hecho_por(b, cellini) OR hecho_por(d, cellini))`. (Interpretación: "el cofre de plata" se refiere a cualquiera de los cofres de plata B o D, dada la mezcla).
+*   Inscripción B: `verdad_inscripcion(b) <=> (hecho_por(b, cellini) OR (hecho_por(b, bellini) AND hecho_por(CofreOroParejaB, bellini)))`. ("el cofre de plata" se refiere a B, "los dos cofres" a B y su pareja de oro).
+*   Inscripción C: `verdad_inscripcion(c) <=> (hecho_por(a, bellini) OR hecho_por(c, bellini))`. ("el cofre de oro" se refiere a cualquiera de los cofres de oro A o C).
+*   Inscripción D: `verdad_inscripcion(d) <=> (hecho_por(a, bellini) OR hecho_por(c, bellini))`. (Simplificada y refiriéndose a A o C).
+*   Posibles parejas: `parejas(par(a,b), par(c,d))` o `parejas(par(a,d), par(c,b))`.
+
+**2. Análisis e Inferencia Preliminar:**
+
+Basándonos en la relación `Autor <=> VerdadInscripción`:
+
+*   **Cofre B:** La inscripción B es "EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON DE BELLINI".
+    *   La frase "EL COFRE DE PLATA" se refiere naturalmente a sí mismo (Cofre B).
+    *   La frase "LOS DOS COFRES" se refiere al Cofre B y a su pareja de oro.
+    *   La verdad de la inscripción B es: `(B es Cellini) OR (B es Bellini AND su pareja de oro es Bellini)`.
+    *   Aplicamos la regla `Autor <=> VerdadInscripción` al Cofre B:
+        *   Si B es Cellini: Su inscripción es Falsa. `NOT ((B es Cellini) OR (B es Bellini AND pareja_oro_B es Bellini))` debe ser Verdadero. `NOT (true OR (false AND ...))` es `NOT true`, que es Falso. Esto contradice que la inscripción sea Falsa. Por lo tanto, B no puede ser Cellini.
+        *   Si B es Bellini: Su inscripción es Verdadera. `(B es Cellini) OR (B es Bellini AND pareja_oro_B es Bellini)` debe ser Verdadero. `(false) OR (true AND pareja_oro_B es Bellini)` debe ser Verdadero. Esto implica que `pareja_oro_B es Bellini` debe ser Verdadero.
+    *   **Inferencia Clave 1:** El Cofre B fue hecho por Bellini (`hecho_por(b, bellini)`).
+    *   **Inferencia Clave 2:** El cofre de oro emparejado con B también fue hecho por Bellini (`hecho_por(CofreOroParejaB, bellini)`).
+
+*   Ahora consideramos las posibles parejas. El cofre de oro emparejado con B debe ser A o C.
+    *   Opción 1: B está emparejado con A (`par(b,a)`). Entonces `CofreOroParejaB` es A.
+        *   De la Inferencia Clave 2: `hecho_por(a, bellini)`.
+        *   Con esta pareja (A,B), la otra pareja es (C,D).
+        *   Makers: A=Bellini, B=Bellini.
+        *   Ahora verifiquemos la inscripción de A. A es Oro, pareja B. Inscripción A: "EL COFRE DE PLATA ES OBRA DE UN CELLINI". Según nuestra interpretación, se refiere a B o D. Verdad: `hecho_por(b, cellini) OR hecho_por(d, cellini)`.
+        *   A es Bellini, así que su inscripción debe ser Verdadera: `hecho_por(b, cellini) OR hecho_por(d, cellini)` es Verdadero.
+        *   Sabemos `hecho_por(b, bellini)`, por lo que `hecho_por(b, cellini)` es Falso.
+        *   La condición se reduce a `false OR hecho_por(d, cellini)` es Verdadero, lo que implica `hecho_por(d, cellini)`.
+        *   Entonces, en este escenario (A,B), (C,D) y A=Bellini, B=Bellini, A obliga a que D sea Cellini.
+        *   Consideremos ahora D. D es Plata, pareja C. Makers A=Bellini, B=Bellini, D=Cellini. Inscripción D: "EL COFRE DE ORO ES OBRA DE UN BELLINI". Se refiere a A o C. Verdad: `hecho_por(a, bellini) OR hecho_por(c, bellini)`.
+        *   D es Cellini, así que su inscripción debe ser Falsa: `NOT (hecho_por(a, bellini) OR hecho_por(c, bellini))` es Verdadero. Esto es `NOT hecho_por(a, bellini) AND NOT hecho_por(c, bellini)`.
+        *   `NOT hecho_por(a, bellini)` es Verdadero (A es Bellini, lo cual contradice esto). ¡Contradicción! La Opción 1 (pareja A,B) es imposible.
+
+    *   Opción 2: B está emparejado con C (`par(b,c)`). Entonces `CofreOroParejaB` es C.
+        *   De la Inferencia Clave 2: `hecho_por(c, bellini)`.
+        *   Con esta pareja (B,C), la otra pareja es (A,D).
+        *   Makers hasta ahora: B=Bellini, C=Bellini.
+        *   Verifiquemos las inscripciones de B y C con esta pareja:
+            *   B (Plata, pareja C). B es Bellini -> Insc B Verdadera. Insc B verdad: `(B es Cellini) OR (B es Bellini AND C es Bellini)`. Con B=Bellini y C=Bellini: `(false) OR (true AND true)` = true. ¡Consistente!
+            *   C (Oro, pareja B). C es Bellini -> Insc C Verdadera. Insc C verdad: `hecho_por(a, bellini) OR hecho_por(c, bellini)`. Con C=Bellini: `hecho_por(a, bellini) OR true` = true. ¡Consistente (no nos dice el autor de A, pero no hay contradicción)!
+        *   Esta pareja (B,C) y (A,D) es consistente con las inferencias de B y C.
+
+*   Ahora centrémonos en la pareja (A,D) con A (Oro) y D (Plata), sabiendo B=Bellini y C=Bellini.
+    *   Consideremos A. A es Oro, pareja D. Maker `mA`. Inscripción A verdad: `hecho_por(b, cellini) OR hecho_por(d, cellini)`. Como B=Bellini, `hecho_por(b, cellini)` es Falso. La verdad de Inscripción A es `hecho_por(d, cellini)`.
+        *   Regla A: `mA = bellini <=> hecho_por(d, cellini)`. Esto significa que A y D deben tener autores diferentes. Si A es Bellini, D es Cellini. Si A es Cellini, D es Bellini.
+    *   Consideremos D. D es Plata, pareja A. Maker `mD`. Inscripción D verdad: `hecho_por(a, bellini) OR hecho_por(c, bellini)`. Como C=Bellini, `hecho_por(c, bellini)` es Verdadero. La verdad de Inscripción D es `hecho_por(a, bellini) OR true`, que es siempre Verdadero.
+        *   Regla D: `mD = bellini <=> true`. Esto significa que D *debe* ser Bellini (`hecho_por(d, bellini)`).
+
+*   Combinando las inferencias para (A,D):
+    *   De A: A y D deben tener autores diferentes.
+    *   De D: D debe ser Bellini.
+    *   Si D es Bellini, y A y D deben ser diferentes, entonces A debe ser Cellini.
+    *   Verifiquemos: Si D es Bellini y A es Cellini, ¿se cumple la condición de A? `mA = cellini`. Inscripción A verdad: `hecho_por(d, cellini)`. La regla es `mA = bellini <=> hecho_por(d, cellini)`. Con los valores propuestos: `cellini = bellini <=> hecho_por(d, cellini)`. `false <=> hecho_por(d, cellini)`. Esto implica que `hecho_por(d, cellini)` debe ser Falso, es decir, `hecho_por(d, bellini)` debe ser Verdadero. Esto coincide con nuestra deducción para D.
+
+*   Todas las piezas encajan con la pareja (B,C) y (A,D), y con los autores deducidos.
+
+**3. Hipótesis de Solución:**
+
+Basado en el análisis, la única asignación consistente de autores y parejas es:
+
+*   **Parejas:** (B, C) y (A, D)
+*   **Autores:**
+    *   Cofre A (Oro): Cellini
+    *   Cofre B (Plata): Bellini
+    *   Cofre C (Oro): Bellini
+    *   Cofre D (Plata): Bellini
+
+**4. Comprobación Formal con Prolog:**
+
+Crearemos un programa en Prolog para verificar esta hipótesis. El programa definirá las reglas generales (autor-verdad), las posibles configuraciones (autores y parejas) y la verdad de cada inscripción basada en la configuración. La consulta buscará una configuración que satisfaga todas las condiciones.
+
+Interpretación utilizada para las inscripciones:
+*   Inscripción B: Se refiere al Cofre B y a su pareja de oro específica.
+*   Inscripciones A, C, D: Se refieren a *cualquiera* de los cofres del tipo especificado (plata para A, oro para C y D) de entre los cuatro cofres, debido a que se mezclaron.
+
+```prolog
+% --- Reglas Globales ---
+
+% Relaciona el autor con la verdad/falsedad de la inscripción
+% Esto es un IFF (si y solo si)
+inscripcion_verdadera(Cofre, Autores, Parejas) :- hecho_por(Cofre, bellini, Autores), verdad_proposicion(Cofre, Autores, Parejas).
+inscripcion_verdadera(Cofre, Autores, Parejas) :- hecho_por(Cofre, cellini, Autores), \+ verdad_proposicion(Cofre, Autores, Parejas).
+% La negación también funciona:
+inscripcion_falsa(Cofre, Autores, Parejas) :- hecho_por(Cofre, cellini, Autores), verdad_proposicion(Cofre, Autores, Parejas).
+inscripcion_falsa(Cofre, Autores, Parejas) :- hecho_por(Cofre, bellini, Autores), \+ verdad_proposicion(Cofre, Autores, Parejas).
+
+% Ayudante para obtener el autor de un cofre de la lista de autores
+hecho_por(Cofre, Autor, Autores) :- member(hecho_por(Cofre, Autor), Autores).
+
+% Ayudante para saber con qué cofre está emparejado uno dado en una configuración de parejas
+esta_emparejado_con(Cofre1, Cofre2, [par(C1, C2), par(C3, C4)]) :-
+    ( (Cofre1 = C1, Cofre2 = C2) ; (Cofre1 = C2, Cofre2 = C1) ; (Cofre1 = C3, Cofre2 = C4) ; (Cofre1 = C4, Cofre2 = C3) ).
+
+% --- Verdad de cada Inscripción ---
+
+% Define la verdad lógica de la proposición en la inscripción de cada cofre,
+% basándose en los autores de todos los cofres y la configuración de parejas.
+
+% Inscripción A (Oro): "EL COFRE DE PLATA ES OBRA DE UN CELLINI"
+% Interpretación: Se refiere a cualquiera de los cofres de plata (B o D).
+verdad_proposicion(a, Autores, _Parejas) :-
+    hecho_por(b, cellini, Autores) ; hecho_por(d, cellini, Autores).
+
+% Inscripción B (Plata): "EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON DE BELLINI"
+% Interpretación: "EL COFRE DE PLATA" es B, "LOS DOS COFRES" son B y su pareja de oro.
+verdad_proposicion(b, Autores, Parejas) :-
+    esta_emparejado_con(b, CofreOroParejaB, Parejas),
+    ( hecho_por(b, cellini, Autores) ; (hecho_por(b, bellini, Autores), hecho_por(CofreOroParejaB, bellini, Autores)) ).
+
+% Inscripción C (Oro): "EL COFRE DE ORO ES OBRA DE UN BELLINI"
+% Interpretación: Se refiere a cualquiera de los cofres de oro (A o C).
+verdad_proposicion(c, Autores, _Parejas) :-
+    hecho_por(a, bellini, Autores) ; hecho_por(c, bellini, Autores).
+
+% Inscripción D (Plata): "EL COFRE DE ORO ES OBRA DE UN BELLINI ..."
+% Interpretación: Se refiere a cualquiera de los cofres de oro (A o C), simplificada.
+verdad_proposicion(d, Autores, _Parejas) :-
+    hecho_por(a, bellini, Autores) ; hecho_por(c, bellini, Autores).
+
+% --- Definición del Problema y Búsqueda de Solución ---
+
+% Predicado para encontrar la solución: Asignación de autores y parejas.
+% La solución a la pregunta es la asignación de autores.
+solucion(AutorA, AutorB, AutorC, AutorD) :-
+    % Posibles autores para cada cofre
+    PosiblesAutores = [bellini, cellini],
+    member(AutorA, PosiblesAutores),
+    member(AutorB, PosiblesAutores),
+    member(AutorC, PosiblesAutores),
+    member(AutorD, PosiblesAutores),
+
+    % Representación de la asignación de autores
+    Autores = [hecho_por(a, AutorA), hecho_por(b, AutorB), hecho_por(c, AutorC), hecho_por(d, AutorD)],
+
+    % Posibles configuraciones de parejas (Oro con Plata)
+    % Hay 2 cofres de oro (a, c) y 2 de plata (b, d).
+    % Las parejas posibles son (a,b) con (c,d) O (a,d) con (c,b).
+    (   Parejas = [par(a,b), par(c,d)]
+    ;   Parejas = [par(a,d), par(c,b)]
+    ),
+
+    % Comprobar las reglas de verdad para cada cofre en esta configuración
+    inscripcion_verdadera(a, Autores, Parejas),
+    inscripcion_verdadera(b, Autores, Parejas),
+    inscripcion_verdadera(c, Autores, Parejas),
+    inscripcion_verdadera(d, Autores, Parejas).
+
+% Nota: Como la regla autor-verdad es un IFF, basta con verificar la verdad de la
+% inscripción si el autor es Bellini, o la falsedad si es Cellini.
+% Mi implementación de inscripcion_verdadera/3 ya incorpora el IFF.
+% Una implementación alternativa usando chequeo explícito de Bellini/verdad y Cellini/falso sería:
+% check_cofre(Cofre, Autores, Parejas) :-
+%    hecho_por(Cofre, bellini, Autores) -> verdad_proposicion(Cofre, Autores, Parejas)
+%    ; % else (hecho_por(Cofre, cellini, Autores))
+%      \+ verdad_proposicion(Cofre, Autores, Parejas).
+% Y en solucion/4 usar:
+% check_cofre(a, Autores, Parejas),
+% check_cofre(b, Autores, Parejas),
+% check_cofre(c, Autores, Parejas),
+% check_cofre(d, Autores, Parejas).
+% Sin embargo, la primera forma implementada ya maneja el IFF correctamente.
+
+% --- Consulta ---
+% ¿Quién hizo cada uno de los cofres?
+% ?- solucion(AutorA, AutorB, AutorC, AutorD).
+```
+
+Resultado esperado de la consulta `?- solucion(AutorA, AutorB, AutorC, AutorD).`:
+
+Basado en nuestro análisis, esperamos que el programa encuentre una única solución donde:
+*   `AutorA` sea `cellini`
+*   `AutorB` sea `bellini`
+*   `AutorC` sea `bellini`
+*   `AutorD` sea `bellini`
+
+El programa Prolog buscará sistemáticamente todas las combinaciones de autores para los cuatro cofres y las dos posibles configuraciones de parejas. Para cada combinación, verificará si las reglas de verdad de Bellini y Cellini se cumplen para las inscripciones de cada cofre, según la interpretación de las proposiciones que hemos adoptado. Solo una combinación debería satisfacer todas las restricciones simultáneamente, que es nuestra hipótesis de solución.
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini JSON (general) ---
+Prompt: 
+        Hola, basándote en tu respuesta anterior sobre el problema de lógica, necesito que extraigas y estructures la información de la siguiente manera en un formato JSON:
+
+        El JSON debe tener tres claves principales en el nivel raíz:
+
+        "facts": Un array de strings, donde cada string es un hecho Prolog completo tal como lo definiste.
+        "rules": Un array de strings, donde cada string es una regla Prolog completa tal como la definiste.
+        "objective": Un string que represente la consulta principal de Prolog que se usaría para obtener la solución (por ejemplo, solucion(Tweedledum, Tweedledee).).
+
+        Consejos importantes para asegurar la compatibilidad con Prolog al generar los strings de hechos y reglas:
+            Átomos: Los nombres de predicados y las constantes (átomos) en Prolog deben comenzar con una letra minúscula. Si un átomo necesita contener espacios, caracteres especiales, o comenzar con una letra mayúscula, debe ir entre comillas simples (ej: 'Yo soy Fidel', 'Luna').
+            Variables: Las variables en Prolog siempre comienzan con una letra mayúscula o un guion bajo (ej: Dia, Hermano, _Ignorado).
+            Sintaxis de Hechos: Asegúrate de que cada hecho termine con un punto (.). Ejemplo: miente_leon(lunes).
+            Sintaxis de Reglas: Las reglas deben seguir el formato cabeza :- cuerpo., donde cabeza es la conclusión, :- significa "si", y cuerpo puede ser una o más metas separadas por comas (,) que representan una conjunción lógica. Cada regla debe terminar con un punto (.). Ejemplo: dice_verdad(leon, Dia) :- + miente_leon(Dia).
+            Strings dentro de Prolog: Las frases como "Yo soy Fidel" deben ser tratadas como átomos en Prolog, es decir, encerradas en comillas simples si contienen espacios o mayúsculas no iniciales (ej: 'Yo soy Fidel').
+            Escapado en JSON: Dado que los hechos y reglas de Prolog serán strings dentro de un JSON, si alguna vez usaras comillas dobles dentro de tu código Prolog (lo cual es menos común para átomos que las comillas simples), necesitarían ser escapadas (") dentro del string JSON. Usar comillas simples para los átomos Prolog evita este problema. Las barras invertidas () en Prolog (como en + para negación) son caracteres válidos y no necesitan doble escapado a menos que el propio string JSON lo requiera para el carácter .
+            Los símbolos correctos de prolog son: \+ para negación, :- para implicación, ; para disyunción, . para final de cláusula, = para unificación, \= para desigualdad.
+            Evita usar el \ innecesariamente puesto a que por si solo es un error de sintaxis
+
+        Problema original:
+            
+    Recordamos que Bellini siempre ponía a sus cofres inscripciones verdaderas, mientras que Cellini siempre les ponía inscripciones falsas.En algunos museos podemos ver parejas de cofres —uno de oro y otro de plata— que en un principio se hicieron y se vendieron como juego. La verdad es que la familia Bellini y la Cellini eran íntimas y que a veces colaboraban en algunas de estas parejas; aunque cada cofre lo hiciera siempre una sola persona, dentro de la pareja un cofre podía hacerlo uno y el otro otro diferente. Ambas familias se divertían muchísimo haciendo estas parejas de manera que la inteligente posteridad pudiera adivinar —o adivinar parcialmente— quiénes habían sido los autores.  Habían aparecido cuatro cofres, dos de oro y dos de plata; se sabía que constituían dos juegos, pero se habían mezclado y ahora no se sabía qué cofre de oro y qué cofre de plata formaban pareja. Me los enseñaron y pronto pude resolver el problema por lo que recibí unos excelentes honorarios. Pero además pude establecer también quién había hecho cada cofre, por lo que recibí un extra (que consistía, entre otras cosas, en una excelente caja de botellas de Chianti) y un beso de una de las florentinas más maravillosas que haya existido nunca He aquí los cuatro cofres:
+    Cofre A (Oro)
+    EL COFRE DE PLATA ES OBRA DE UN CELLINI
+    Cofre B (Plata)
+    EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON
+    DE BELLINI
+    Cofre C (Oro)
+    EL COFRE DE ORO ES OBRA DE UN BELLINI
+    Cofre D (Plata)
+    EL COFRE DE ORO ES OBRA DE UN BELLINI Y POR LO MENOS UNO DE
+    ESTOS COFRES ES OBRA DE UN HIJO O DE BELLINI O CELLINI
+
+    Tenemos ahora un problema:
+    ¿Quién hizo cada uno de los cofres?
+    
+
+        Por favor, procesa la siguiente respuesta tuya y genera el JSON:
+        Tu respuesta: 
+            Ok, vamos a abordar este fascinante problema de lógica paso a paso, tal como solicitaste.
+
+**1. Entendimiento del Problema:**
+
+Extraemos las declaraciones lógicas y pistas clave:
+
+*   **Premisa 1:** Bellini siempre pone inscripciones verdaderas.
+*   **Premisa 2:** Cellini siempre pone inscripciones falsas.
+*   **Premisa 3:** Hay 4 cofres: A (Oro), B (Plata), C (Oro), D (Plata).
+*   **Premisa 4:** Los 4 cofres forman dos parejas, cada una con un cofre de oro y uno de plata. La composición de las parejas originales (antes de mezclarse) se desconoce.
+*   **Premisa 5:** Cada cofre fue hecho por una sola persona (Bellini o Cellini).
+*   **Premisa 6:** Los cofres de una pareja podían ser hechos por el mismo autor o por autores diferentes.
+*   **Premisa 7 (Inscripción A):** En el Cofre A (Oro): "EL COFRE DE PLATA ES OBRA DE UN CELLINI".
+*   **Premisa 8 (Inscripción B):** En el Cofre B (Plata): "EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON DE BELLINI".
+*   **Premisa 9 (Inscripción C):** En el Cofre C (Oro): "EL COFRE DE ORO ES OBRA DE UN BELLINI".
+*   **Premisa 10 (Inscripción D):** En el Cofre D (Plata): "EL COFRE DE ORO ES OBRA DE UN BELLINI Y POR LO MENOS UNO DE ESTOS COFRES ES OBRA DE UN HIJO O DE BELLINI O CELLINI". (La parte "y por lo menos uno de estos cofres es obra de un hijo o de bellini o cellini" parece ser siempre verdadera dado que todos los cofres son hechos por Bellini o Cellini. La simplificaremos a "EL COFRE DE ORO ES OBRA DE UN BELLINI").
+
+Transformación a sentencias lógicas/Prolog preliminares:
+
+*   `autor_si_verdadera(bellini).`
+*   `autor_si_falsa(cellini).`
+*   `cofre(a, oro).`
+*   `cofre(b, plata).`
+*   `cofre(c, oro).`
+*   `cofre(d, plata).`
+*   `hecho_por(Cofre, Autor)` donde Autor es `bellini` o `cellini`.
+*   `inscripcion_verdadera(Cofre)` o `inscripcion_falsa(Cofre)`.
+*   Relación autor-verdad: `hecho_por(C, bellini) <=> inscripcion_verdadera(C)`. `hecho_por(C, cellini) <=> inscripcion_falsa(C)`.
+*   Inscripción A: `verdad_inscripcion(a) <=> (hecho_por(b, cellini) OR hecho_por(d, cellini))`. (Interpretación: "el cofre de plata" se refiere a cualquiera de los cofres de plata B o D, dada la mezcla).
+*   Inscripción B: `verdad_inscripcion(b) <=> (hecho_por(b, cellini) OR (hecho_por(b, bellini) AND hecho_por(CofreOroParejaB, bellini)))`. ("el cofre de plata" se refiere a B, "los dos cofres" a B y su pareja de oro).
+*   Inscripción C: `verdad_inscripcion(c) <=> (hecho_por(a, bellini) OR hecho_por(c, bellini))`. ("el cofre de oro" se refiere a cualquiera de los cofres de oro A o C).
+*   Inscripción D: `verdad_inscripcion(d) <=> (hecho_por(a, bellini) OR hecho_por(c, bellini))`. (Simplificada y refiriéndose a A o C).
+*   Posibles parejas: `parejas(par(a,b), par(c,d))` o `parejas(par(a,d), par(c,b))`.
+
+**2. Análisis e Inferencia Preliminar:**
+
+Basándonos en la relación `Autor <=> VerdadInscripción`:
+
+*   **Cofre B:** La inscripción B es "EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON DE BELLINI".
+    *   La frase "EL COFRE DE PLATA" se refiere naturalmente a sí mismo (Cofre B).
+    *   La frase "LOS DOS COFRES" se refiere al Cofre B y a su pareja de oro.
+    *   La verdad de la inscripción B es: `(B es Cellini) OR (B es Bellini AND su pareja de oro es Bellini)`.
+    *   Aplicamos la regla `Autor <=> VerdadInscripción` al Cofre B:
+        *   Si B es Cellini: Su inscripción es Falsa. `NOT ((B es Cellini) OR (B es Bellini AND pareja_oro_B es Bellini))` debe ser Verdadero. `NOT (true OR (false AND ...))` es `NOT true`, que es Falso. Esto contradice que la inscripción sea Falsa. Por lo tanto, B no puede ser Cellini.
+        *   Si B es Bellini: Su inscripción es Verdadera. `(B es Cellini) OR (B es Bellini AND pareja_oro_B es Bellini)` debe ser Verdadero. `(false) OR (true AND pareja_oro_B es Bellini)` debe ser Verdadero. Esto implica que `pareja_oro_B es Bellini` debe ser Verdadero.
+    *   **Inferencia Clave 1:** El Cofre B fue hecho por Bellini (`hecho_por(b, bellini)`).
+    *   **Inferencia Clave 2:** El cofre de oro emparejado con B también fue hecho por Bellini (`hecho_por(CofreOroParejaB, bellini)`).
+
+*   Ahora consideramos las posibles parejas. El cofre de oro emparejado con B debe ser A o C.
+    *   Opción 1: B está emparejado con A (`par(b,a)`). Entonces `CofreOroParejaB` es A.
+        *   De la Inferencia Clave 2: `hecho_por(a, bellini)`.
+        *   Con esta pareja (A,B), la otra pareja es (C,D).
+        *   Makers: A=Bellini, B=Bellini.
+        *   Ahora verifiquemos la inscripción de A. A es Oro, pareja B. Inscripción A: "EL COFRE DE PLATA ES OBRA DE UN CELLINI". Según nuestra interpretación, se refiere a B o D. Verdad: `hecho_por(b, cellini) OR hecho_por(d, cellini)`.
+        *   A es Bellini, así que su inscripción debe ser Verdadera: `hecho_por(b, cellini) OR hecho_por(d, cellini)` es Verdadero.
+        *   Sabemos `hecho_por(b, bellini)`, por lo que `hecho_por(b, cellini)` es Falso.
+        *   La condición se reduce a `false OR hecho_por(d, cellini)` es Verdadero, lo que implica `hecho_por(d, cellini)`.
+        *   Entonces, en este escenario (A,B), (C,D) y A=Bellini, B=Bellini, A obliga a que D sea Cellini.
+        *   Consideremos ahora D. D es Plata, pareja C. Makers A=Bellini, B=Bellini, D=Cellini. Inscripción D: "EL COFRE DE ORO ES OBRA DE UN BELLINI". Se refiere a A o C. Verdad: `hecho_por(a, bellini) OR hecho_por(c, bellini)`.
+        *   D es Cellini, así que su inscripción debe ser Falsa: `NOT (hecho_por(a, bellini) OR hecho_por(c, bellini))` es Verdadero. Esto es `NOT hecho_por(a, bellini) AND NOT hecho_por(c, bellini)`.
+        *   `NOT hecho_por(a, bellini)` es Verdadero (A es Bellini, lo cual contradice esto). ¡Contradicción! La Opción 1 (pareja A,B) es imposible.
+
+    *   Opción 2: B está emparejado con C (`par(b,c)`). Entonces `CofreOroParejaB` es C.
+        *   De la Inferencia Clave 2: `hecho_por(c, bellini)`.
+        *   Con esta pareja (B,C), la otra pareja es (A,D).
+        *   Makers hasta ahora: B=Bellini, C=Bellini.
+        *   Verifiquemos las inscripciones de B y C con esta pareja:
+            *   B (Plata, pareja C). B es Bellini -> Insc B Verdadera. Insc B verdad: `(B es Cellini) OR (B es Bellini AND C es Bellini)`. Con B=Bellini y C=Bellini: `(false) OR (true AND true)` = true. ¡Consistente!
+            *   C (Oro, pareja B). C es Bellini -> Insc C Verdadera. Insc C verdad: `hecho_por(a, bellini) OR hecho_por(c, bellini)`. Con C=Bellini: `hecho_por(a, bellini) OR true` = true. ¡Consistente (no nos dice el autor de A, pero no hay contradicción)!
+        *   Esta pareja (B,C) y (A,D) es consistente con las inferencias de B y C.
+
+*   Ahora centrémonos en la pareja (A,D) con A (Oro) y D (Plata), sabiendo B=Bellini y C=Bellini.
+    *   Consideremos A. A es Oro, pareja D. Maker `mA`. Inscripción A verdad: `hecho_por(b, cellini) OR hecho_por(d, cellini)`. Como B=Bellini, `hecho_por(b, cellini)` es Falso. La verdad de Inscripción A es `hecho_por(d, cellini)`.
+        *   Regla A: `mA = bellini <=> hecho_por(d, cellini)`. Esto significa que A y D deben tener autores diferentes. Si A es Bellini, D es Cellini. Si A es Cellini, D es Bellini.
+    *   Consideremos D. D es Plata, pareja A. Maker `mD`. Inscripción D verdad: `hecho_por(a, bellini) OR hecho_por(c, bellini)`. Como C=Bellini, `hecho_por(c, bellini)` es Verdadero. La verdad de Inscripción D es `hecho_por(a, bellini) OR true`, que es siempre Verdadero.
+        *   Regla D: `mD = bellini <=> true`. Esto significa que D *debe* ser Bellini (`hecho_por(d, bellini)`).
+
+*   Combinando las inferencias para (A,D):
+    *   De A: A y D deben tener autores diferentes.
+    *   De D: D debe ser Bellini.
+    *   Si D es Bellini, y A y D deben ser diferentes, entonces A debe ser Cellini.
+    *   Verifiquemos: Si D es Bellini y A es Cellini, ¿se cumple la condición de A? `mA = cellini`. Inscripción A verdad: `hecho_por(d, cellini)`. La regla es `mA = bellini <=> hecho_por(d, cellini)`. Con los valores propuestos: `cellini = bellini <=> hecho_por(d, cellini)`. `false <=> hecho_por(d, cellini)`. Esto implica que `hecho_por(d, cellini)` debe ser Falso, es decir, `hecho_por(d, bellini)` debe ser Verdadero. Esto coincide con nuestra deducción para D.
+
+*   Todas las piezas encajan con la pareja (B,C) y (A,D), y con los autores deducidos.
+
+**3. Hipótesis de Solución:**
+
+Basado en el análisis, la única asignación consistente de autores y parejas es:
+
+*   **Parejas:** (B, C) y (A, D)
+*   **Autores:**
+    *   Cofre A (Oro): Cellini
+    *   Cofre B (Plata): Bellini
+    *   Cofre C (Oro): Bellini
+    *   Cofre D (Plata): Bellini
+
+**4. Comprobación Formal con Prolog:**
+
+Crearemos un programa en Prolog para verificar esta hipótesis. El programa definirá las reglas generales (autor-verdad), las posibles configuraciones (autores y parejas) y la verdad de cada inscripción basada en la configuración. La consulta buscará una configuración que satisfaga todas las condiciones.
+
+Interpretación utilizada para las inscripciones:
+*   Inscripción B: Se refiere al Cofre B y a su pareja de oro específica.
+*   Inscripciones A, C, D: Se refieren a *cualquiera* de los cofres del tipo especificado (plata para A, oro para C y D) de entre los cuatro cofres, debido a que se mezclaron.
+
+```prolog
+% --- Reglas Globales ---
+
+% Relaciona el autor con la verdad/falsedad de la inscripción
+% Esto es un IFF (si y solo si)
+inscripcion_verdadera(Cofre, Autores, Parejas) :- hecho_por(Cofre, bellini, Autores), verdad_proposicion(Cofre, Autores, Parejas).
+inscripcion_verdadera(Cofre, Autores, Parejas) :- hecho_por(Cofre, cellini, Autores), \+ verdad_proposicion(Cofre, Autores, Parejas).
+% La negación también funciona:
+inscripcion_falsa(Cofre, Autores, Parejas) :- hecho_por(Cofre, cellini, Autores), verdad_proposicion(Cofre, Autores, Parejas).
+inscripcion_falsa(Cofre, Autores, Parejas) :- hecho_por(Cofre, bellini, Autores), \+ verdad_proposicion(Cofre, Autores, Parejas).
+
+% Ayudante para obtener el autor de un cofre de la lista de autores
+hecho_por(Cofre, Autor, Autores) :- member(hecho_por(Cofre, Autor), Autores).
+
+% Ayudante para saber con qué cofre está emparejado uno dado en una configuración de parejas
+esta_emparejado_con(Cofre1, Cofre2, [par(C1, C2), par(C3, C4)]) :-
+    ( (Cofre1 = C1, Cofre2 = C2) ; (Cofre1 = C2, Cofre2 = C1) ; (Cofre1 = C3, Cofre2 = C4) ; (Cofre1 = C4, Cofre2 = C3) ).
+
+% --- Verdad de cada Inscripción ---
+
+% Define la verdad lógica de la proposición en la inscripción de cada cofre,
+% basándose en los autores de todos los cofres y la configuración de parejas.
+
+% Inscripción A (Oro): "EL COFRE DE PLATA ES OBRA DE UN CELLINI"
+% Interpretación: Se refiere a cualquiera de los cofres de plata (B o D).
+verdad_proposicion(a, Autores, _Parejas) :-
+    hecho_por(b, cellini, Autores) ; hecho_por(d, cellini, Autores).
+
+% Inscripción B (Plata): "EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON DE BELLINI"
+% Interpretación: "EL COFRE DE PLATA" es B, "LOS DOS COFRES" son B y su pareja de oro.
+verdad_proposicion(b, Autores, Parejas) :-
+    esta_emparejado_con(b, CofreOroParejaB, Parejas),
+    ( hecho_por(b, cellini, Autores) ; (hecho_por(b, bellini, Autores), hecho_por(CofreOroParejaB, bellini, Autores)) ).
+
+% Inscripción C (Oro): "EL COFRE DE ORO ES OBRA DE UN BELLINI"
+% Interpretación: Se refiere a cualquiera de los cofres de oro (A o C).
+verdad_proposicion(c, Autores, _Parejas) :-
+    hecho_por(a, bellini, Autores) ; hecho_por(c, bellini, Autores).
+
+% Inscripción D (Plata): "EL COFRE DE ORO ES OBRA DE UN BELLINI ..."
+% Interpretación: Se refiere a cualquiera de los cofres de oro (A o C), simplificada.
+verdad_proposicion(d, Autores, _Parejas) :-
+    hecho_por(a, bellini, Autores) ; hecho_por(c, bellini, Autores).
+
+% --- Definición del Problema y Búsqueda de Solución ---
+
+% Predicado para encontrar la solución: Asignación de autores y parejas.
+% La solución a la pregunta es la asignación de autores.
+solucion(AutorA, AutorB, AutorC, AutorD) :-
+    % Posibles autores para cada cofre
+    PosiblesAutores = [bellini, cellini],
+    member(AutorA, PosiblesAutores),
+    member(AutorB, PosiblesAutores),
+    member(AutorC, PosiblesAutores),
+    member(AutorD, PosiblesAutores),
+
+    % Representación de la asignación de autores
+    Autores = [hecho_por(a, AutorA), hecho_por(b, AutorB), hecho_por(c, AutorC), hecho_por(d, AutorD)],
+
+    % Posibles configuraciones de parejas (Oro con Plata)
+    % Hay 2 cofres de oro (a, c) y 2 de plata (b, d).
+    % Las parejas posibles son (a,b) con (c,d) O (a,d) con (c,b).
+    (   Parejas = [par(a,b), par(c,d)]
+    ;   Parejas = [par(a,d), par(c,b)]
+    ),
+
+    % Comprobar las reglas de verdad para cada cofre en esta configuración
+    inscripcion_verdadera(a, Autores, Parejas),
+    inscripcion_verdadera(b, Autores, Parejas),
+    inscripcion_verdadera(c, Autores, Parejas),
+    inscripcion_verdadera(d, Autores, Parejas).
+
+% Nota: Como la regla autor-verdad es un IFF, basta con verificar la verdad de la
+% inscripción si el autor es Bellini, o la falsedad si es Cellini.
+% Mi implementación de inscripcion_verdadera/3 ya incorpora el IFF.
+% Una implementación alternativa usando chequeo explícito de Bellini/verdad y Cellini/falso sería:
+% check_cofre(Cofre, Autores, Parejas) :-
+%    hecho_por(Cofre, bellini, Autores) -> verdad_proposicion(Cofre, Autores, Parejas)
+%    ; % else (hecho_por(Cofre, cellini, Autores))
+%      \+ verdad_proposicion(Cofre, Autores, Parejas).
+% Y en solucion/4 usar:
+% check_cofre(a, Autores, Parejas),
+% check_cofre(b, Autores, Parejas),
+% check_cofre(c, Autores, Parejas),
+% check_cofre(d, Autores, Parejas).
+% Sin embargo, la primera forma implementada ya maneja el IFF correctamente.
+
+% --- Consulta ---
+% ¿Quién hizo cada uno de los cofres?
+% ?- solucion(AutorA, AutorB, AutorC, AutorD).
+```
+
+Resultado esperado de la consulta `?- solucion(AutorA, AutorB, AutorC, AutorD).`:
+
+Basado en nuestro análisis, esperamos que el programa encuentre una única solución donde:
+*   `AutorA` sea `cellini`
+*   `AutorB` sea `bellini`
+*   `AutorC` sea `bellini`
+*   `AutorD` sea `bellini`
+
+El programa Prolog buscará sistemáticamente todas las combinaciones de autores para los cuatro cofres y las dos posibles configuraciones de parejas. Para cada combinación, verificará si las reglas de verdad de Bellini y Cellini se cumplen para las inscripciones de cada cofre, según la interpretación de las proposiciones que hemos adoptado. Solo una combinación debería satisfacer todas las restricciones simultáneamente, que es nuestra hipótesis de solución.
+        
+
+-------------------------------------------------------------------
+Error al llamar a la API de Gemini: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Please try again later.', 'status': 'UNAVAILABLE'}}

@@ -1,0 +1,430 @@
+
+======================================================================
+PROCESANDO PROBLEMA 5: "
+In analyzing the current economic climate, we find ourselves considering two po..."
+======================================================================
+
+--- Ejecutando MFSA ---
+
+--- Iniciando Formalización Semántica y Axiomatización (MFSA) ---
+Descripción del Problema (NL): 
+In analyzing the current economic climate, we find ourselves considering two potential scenarios: either the stock market has crashed alongside rising interest rates, or there has been an increase in unemployment coupled with a decline in consumer confidence. To delve deeper, let's explore the first scenario—if both the stock market crashed and interest rates rose, we would be able to confirm that the stock market crashed and that interest rates indeed increased. If interest rates have risen, it follows that either they have increased or inflation has surged. However, this situation is complicated by the fact that if the stock market has crashed, it cannot be the case that either of the other two outcomes occurred—interest rates rising or inflation surging. This contradiction suggests that our initial assumption—that both the stock market crashed and interest rates increased—cannot hold true. Therefore, we must conclude that in this economic situation, it must be the case that unemployment has risen and consumer confidence has declined, leading us to affirm that consumer confidence has indeed declined.
+            
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (initial_analysis_
+in_analyzing_the_cu) ---
+Prompt: 
+        Hola, necesito tu ayuda para analizar y resolver un problema de lógica de manera sistemática. Por favor, sigue los siguientes pasos:
+
+        1. Entendimiento del Problema: 
+        - Identifica los elementos clave (personas, objetos, lugares, eventos, etc.) involucrados en el problema.
+        - Extrae todas las declaraciones lógicas o pistas proporcionadas, y anótalas claramente. Distingue entre hechos directos e inferencias posibles.
+
+        2. Análisis e Inferencia Preliminar:
+        - Basándote en la información organizada, realiza inferencias lógicas paso a paso. Elimina posibilidades o deduce nuevos hechos. Si es aplicable, actualiza tu representación de la información con cada nueva inferencia hasta que se clarifiquen las relaciones.
+        
+        3. Hipótesis de Solución:
+        - A partir de tu análisis e inferencias, propón una hipótesis clara sobre cuál es la solución al problema de lógica.
+        
+        4. Comprobación Formal con Prolog:
+        - Vas a crear un programa en Prolog (hechos y reglas) basado en tu hipótesis de solución y las pistas originales. Este programa debe ser capaz de demostrar la validez de tu hipótesis a través de consultas.
+        - Esto es sumamente importante: La corrección semántica y sintáctica del programa Prolog es crucial, ya que la verdad de tu hipótesis se deduce de la capacidad del programa para probarla. Asegúrate de que el código esté bien escrito y refleje lógicamente el problema y tu solución propuesta.
+
+        A continuación, te presento el problema de lógica:
+        
+In analyzing the current economic climate, we find ourselves considering two potential scenarios: either the stock market has crashed alongside rising interest rates, or there has been an increase in unemployment coupled with a decline in consumer confidence. To delve deeper, let's explore the first scenario—if both the stock market crashed and interest rates rose, we would be able to confirm that the stock market crashed and that interest rates indeed increased. If interest rates have risen, it follows that either they have increased or inflation has surged. However, this situation is complicated by the fact that if the stock market has crashed, it cannot be the case that either of the other two outcomes occurred—interest rates rising or inflation surging. This contradiction suggests that our initial assumption—that both the stock market crashed and interest rates increased—cannot hold true. Therefore, we must conclude that in this economic situation, it must be the case that unemployment has risen and consumer confidence has declined, leading us to affirm that consumer confidence has indeed declined.
+            
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta de Gemini: ¡Claro! Analicemos este problema de lógica económica paso a paso.
+
+**Problema:**
+
+"In analyzing the current economic climate, we find ourselves considering two potential scenarios: either the stock market has crashed alongside rising interest rates, or there has been an increase in unemployment coupled with a decline in consumer confidence. To delve deeper, let's explore the first scenario—if both the stock market crashed and interest rates rose, we would be able to confirm that the stock market crashed and that interest rates indeed increased. If interest rates have risen, it follows that either they have increased or inflation has surged. However, this situation is complicated by the fact that if the stock market has crashed, it cannot be the case that either of the other two outcomes occurred—interest rates rising or inflation surging. This contradiction suggests that our initial assumption—that both the stock market crashed and interest rates increased—cannot hold true. Therefore, we must conclude that in this economic situation, it must be the case that unemployment has risen and consumer confidence has declined, leading us to affirm that consumer confidence has indeed declined."
+
+---
+
+**1. Entendimiento del Problema:**
+
+*   **Elementos Clave:**
+    *   La bolsa ha caído (stock market crashed).
+    *   Las tasas de interés han subido (interest rates risen).
+    *   El desempleo ha aumentado (unemployment increased).
+    *   La confianza del consumidor ha disminuido (consumer confidence declined).
+    *   La inflación se ha disparado (inflation surged).
+
+*   **Declaraciones Lógicas (Pistas):**
+    1.  La situación actual es: (La bolsa ha caído Y las tasas han subido) O (El desempleo ha aumentado Y la confianza ha disminuido).
+        *   Sea M = "La bolsa ha caído"
+        *   Sea R = "Las tasas de interés han subido"
+        *   Sea U = "El desempleo ha aumentado"
+        *   Sea C = "La confianza del consumidor ha disminuido"
+        *   Sea I = "La inflación se ha disparado"
+        *   Pista 1: `(M /\ R) \/ (U /\ C)`
+
+    2.  Si las tasas de interés han subido, entonces (las tasas han subido O la inflación se ha disparado).
+        *   Pista 2: `R -> (R \/ I)` (Esta pista es lógicamente trivial si R es verdadero, pero es parte del argumento presentado).
+
+    3.  Si la bolsa ha caído, *no puede* ser que (las tasas de interés hayan subido O la inflación se haya disparado).
+        *   Pista 3: `M -> ~(R \/ I)`
+        *   Aplicando Leyes de De Morgan a `~(R \/ I)`, obtenemos `~R /\ ~I`.
+        *   Por lo tanto, Pista 3 equivalente: `M -> (~R /\ ~I)`
+
+    *   **Inferencia Clave en el Texto:** El texto afirma que explorar el primer escenario (`M /\ R`) lleva a una contradicción.
+
+---
+
+**2. Análisis e Inferencia Preliminar:**
+
+*   Tenemos la disyunción inicial: `(M /\ R) \/ (U /\ C)`. Esto significa que solo una de las dos conjunciones (`M /\ R` o `U /\ C`) es verdadera (o ambas, pero el contexto sugiere escenarios mutuamente excluyentes en la realidad económica descrita). El texto implícitamente trata estas dos como las *únicas* posibilidades para la situación actual.
+
+*   Consideremos el primer escenario: `M /\ R` (La bolsa ha caído Y las tasas han subido).
+    *   Si `M /\ R` es verdadero, entonces `M` es verdadero y `R` es verdadero.
+    *   Apliquemos la Pista 3: `M -> (~R /\ ~I)`.
+    *   Si `M` es verdadero (como asumimos), entonces `~R /\ ~I` debe ser verdadero.
+    *   Si `~R /\ ~I` es verdadero, entonces `~R` debe ser verdadero.
+    *   Hemos llegado a que `R` es verdadero (por la asunción inicial `M /\ R`) Y `~R` es verdadero (por la Pista 3).
+    *   `R /\ ~R` es una contradicción lógica.
+
+*   Como la asunción del primer escenario (`M /\ R`) lleva a una contradicción con las pistas dadas, este primer escenario *no puede* ser la situación económica actual verdadera.
+
+*   Volvamos a la Pista 1: `(M /\ R) \/ (U /\ C)`. Dado que `(M /\ R)` es falso (porque lleva a contradicción), la disyunción solo puede ser verdadera si `(U /\ C)` es verdadero.
+
+*   Por lo tanto, la única situación económica actual consistente con las pistas es que `(U /\ C)` sea verdadero.
+
+*   Si `U /\ C` es verdadero, esto implica que `U` es verdadero (El desempleo ha aumentado) Y `C` es verdadero (La confianza del consumidor ha disminuido).
+
+---
+
+**3. Hipótesis de Solución:**
+
+Basado en el análisis, la única posibilidad lógica es que la segunda parte de la disyunción inicial sea cierta. Por lo tanto, el desempleo ha aumentado y la confianza del consumidor ha disminuido. El problema concluye afirmando esto y destacando la disminución de la confianza del consumidor.
+
+*   **Hipótesis:** La confianza del consumidor ha disminuido (`C` es verdadero).
+
+---
+
+**4. Comprobación Formal con Prolog:**
+
+Vamos a representar la lógica del problema en Prolog para validar que, efectivamente, la única situación posible es la segunda, y por lo tanto, la confianza del consumidor ha disminuido.
+
+Modelaremos las dos posibles situaciones iniciales como hechos separados. Luego, definiremos una regla que capture la incompatibilidad descrita en la Pista 3. Finalmente, buscaremos qué situación inicial es "válida" (no lleva a una incompatibilidad) y afirmaremos que los hechos de esa situación válida son los que describen la `situacion_actual`.
+
+```prolog
+% Hechos: Definimos las dos posibles situaciones iniciales como escenarios.
+% scenario(Nombre_Escenario, Lista_de_Hechos_en_el_Escenario).
+situacion_inicial(escenario1, [bolsa_caida, tasas_subidas]).
+situacion_inicial(escenario2, [desempleo_aumentado, confianza_disminuida]).
+
+% Regla: Captura la incompatibilidad de la Pista 3:
+% Si la bolsa ha caído, NO puede ser que (las tasas hayan subido O la inflación se haya disparado).
+% Esto significa que un escenario es INVALIDO si contiene 'bolsa_caida' Y (contiene 'tasas_subidas' O contiene 'inflacion_disparada').
+
+% Un escenario S es invalido si contiene bolsa_caida y tasas_subidas.
+escenario_invalido(S) :-
+    member(bolsa_caida, S),
+    member(tasas_subidas, S).
+
+% Un escenario S es invalido si contiene bolsa_caida y inflacion_disparada.
+% (Aunque 'inflacion_disparada' no aparece en los escenarios iniciales, la regla M -> ~(R \/ I) la incluye)
+% Para ser estrictos con los elementos de los escenarios dados:
+% escenario_invalido(S) :-
+%     member(bolsa_caida, S),
+%     member(inflacion_disparada, S).
+% Pero como inflacion_disparada no es un hecho base en NINGUNO de los escenarios iniciales,
+% la segunda cláusula de invalidez, tal como está definida por los hechos iniciales, solo necesita verificar la primera parte (bolsa_caida Y tasas_subidas).
+% La pista 2 (R -> (R \/ I)) no impone una restricción que invalide escenarios base aquí,
+% ya que la restricción fuerte viene de la pista 3 negando la disyunción R \/ I si M es cierto.
+% Así que nos quedamos con la regla derivada de M -> ~R /\ ~I
+% Si M es cierto (~R /\ ~I) debe ser cierto.
+% Si tenemos M y R, es incompatible.
+% Si tenemos M y I, es incompatible.
+
+% Simplificando basada SÓLO en los hechos presentes en los escenarios iniciales y la Pista 3:
+% Un escenario inicial es inválido si contiene bolsa_caida Y tasas_subidas, porque esto contradice M -> ~R.
+escenario_invalido(S) :-
+    member(bolsa_caida, S),
+    member(tasas_subidas, S).
+
+% Regla: Un escenario es válido si es una situación_inicial Y NO es escenario_invalido.
+escenario_valido(Nombre) :-
+    situacion_inicial(Nombre, Hechos),
+    \+ escenario_invalido(Hechos). % \+ es negación por fallo en Prolog
+
+% Regla: Un hecho es parte de la situacion_actual si es un hecho en el único escenario válido.
+situacion_actual(Hecho) :-
+    escenario_valido(Nombre),
+    situacion_inicial(Nombre, Hechos),
+    member(Hecho, Hechos).
+
+% Nota: La pista 2 (R -> R \/ I) es siempre lógicamente verdadera si R es verdadero.
+% No introduce nuevas restricciones que invaliden los escenarios iniciales dados.
+% La clave está en la Pista 3 que restringe qué puede coexistir con 'bolsa_caida'.
+```
+
+**Explicación del Código Prolog:**
+
+1.  `situacion_inicial(escenario1, [bolsa_caida, tasas_subidas]).`: Define el primer escenario posible.
+2.  `situacion_inicial(escenario2, [desempleo_aumentado, confianza_disminuida]).`: Define el segundo escenario posible.
+3.  `escenario_invalido(S) :- member(bolsa_caida, S), member(tasas_subidas, S).`: Esta regla implementa la parte relevante de la Pista 3 (`M -> ~R`). Si un escenario `S` contiene tanto `bolsa_caida` como `tasas_subidas`, entonces es inválido según la lógica del problema. (Note: La parte `~I` de `M -> (~R /\ ~I)` no se necesita codificar directamente aquí porque `inflacion_disparada` no es un hecho presente en los escenarios iniciales).
+4.  `escenario_valido(Nombre) :- situacion_inicial(Nombre, Hechos), \+ escenario_invalido(Hechos).`: Un escenario es considerado válido si es uno de los definidos inicialmente Y no es inválido (la negación `\+` significa "no es demostrable que sea inválido").
+5.  `situacion_actual(Hecho) :- escenario_valido(Nombre), situacion_inicial(Nombre, Hechos), member(Hecho, Hechos).`: Este predicado nos permite preguntar qué hechos son verdaderos en la "situación actual". Busca el nombre del escenario válido, obtiene la lista de hechos de ese escenario y luego comprueba si el `Hecho` consultado es miembro de esa lista.
+
+**Comprobación de la Hipótesis con Consulta Prolog:**
+
+Nuestra hipótesis es que "La confianza del consumidor ha disminuido" (`confianza_disminuida`) es verdadera en la situación actual. Consultaremos al programa Prolog:
+
+```prolog
+?- situacion_actual(confianza_disminuida).
+```
+
+**Resultado Esperado de la Consulta:**
+
+Según nuestro análisis, el `escenario1` es inválido porque contiene `bolsa_caida` y `tasas_subidas`, lo cual activa la regla `escenario_invalido`. El `escenario2` no activa la regla `escenario_invalido`. Por lo tanto, `escenario_valido(escenario2)` será verdadero y `escenario_valido(escenario1)` será falso.
+
+La consulta `situacion_actual(confianza_disminuida)` buscará un `escenario_valido`. Encontrará `escenario2`. Luego buscará `situacion_inicial(escenario2, Hechos)`, obteniendo `Hechos = [desempleo_aumentado, confianza_disminuida]`. Finalmente, verificará si `confianza_disminuida` es miembro de esta lista, lo cual es cierto.
+
+Por lo tanto, la consulta debe responder `true`.
+
+Este resultado en Prolog valida nuestra hipótesis y confirma la deducción lógica realizada en el paso 2. La única situación posible es la que incluye el aumento del desempleo y la disminución de la confianza del consumidor.
+
+-------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini JSON (general) ---
+Prompt: 
+        Hola, basándote en tu respuesta anterior sobre el problema de lógica, necesito que extraigas y estructures la información de la siguiente manera en un formato JSON:
+
+        El JSON debe tener tres claves principales en el nivel raíz:
+
+        "facts": Un array de strings, donde cada string es un hecho Prolog completo tal como lo definiste.
+        "rules": Un array de strings, donde cada string es una regla Prolog completa tal como la definiste.
+        "objective": Un string que represente la consulta principal de Prolog que se usaría para obtener la solución (por ejemplo, solucion(Tweedledum, Tweedledee).).
+
+        Consejos importantes para asegurar la compatibilidad con Prolog al generar los strings de hechos y reglas:
+            Átomos: Los nombres de predicados y las constantes (átomos) en Prolog deben comenzar con una letra minúscula. Si un átomo necesita contener espacios, caracteres especiales, o comenzar con una letra mayúscula, debe ir entre comillas simples (ej: 'Yo soy Fidel', 'Luna').
+            Variables: Las variables en Prolog siempre comienzan con una letra mayúscula o un guion bajo (ej: Dia, Hermano, _Ignorado).
+            Sintaxis de Hechos: Asegúrate de que cada hecho termine con un punto (.). Ejemplo: miente_leon(lunes).
+            Sintaxis de Reglas: Las reglas deben seguir el formato cabeza :- cuerpo., donde cabeza es la conclusión, :- significa "si", y cuerpo puede ser una o más metas separadas por comas (,) que representan una conjunción lógica. Cada regla debe terminar con un punto (.). Ejemplo: dice_verdad(leon, Dia) :- + miente_leon(Dia).
+            Strings dentro de Prolog: Las frases como "Yo soy Fidel" deben ser tratadas como átomos en Prolog, es decir, encerradas en comillas simples si contienen espacios o mayúsculas no iniciales (ej: 'Yo soy Fidel').
+            Escapado en JSON: Dado que los hechos y reglas de Prolog serán strings dentro de un JSON, si alguna vez usaras comillas dobles dentro de tu código Prolog (lo cual es menos común para átomos que las comillas simples), necesitarían ser escapadas (") dentro del string JSON. Usar comillas simples para los átomos Prolog evita este problema. Las barras invertidas () en Prolog (como en + para negación) son caracteres válidos y no necesitan doble escapado a menos que el propio string JSON lo requiera para el carácter .
+            Los símbolos correctos de prolog son: \+ para negación, :- para implicación, ; para disyunción, . para final de cláusula, = para unificación, \= para desigualdad.
+            Evita usar el \ innecesariamente puesto a que por si solo es un error de sintaxis
+
+        Problema original:
+            
+In analyzing the current economic climate, we find ourselves considering two potential scenarios: either the stock market has crashed alongside rising interest rates, or there has been an increase in unemployment coupled with a decline in consumer confidence. To delve deeper, let's explore the first scenario—if both the stock market crashed and interest rates rose, we would be able to confirm that the stock market crashed and that interest rates indeed increased. If interest rates have risen, it follows that either they have increased or inflation has surged. However, this situation is complicated by the fact that if the stock market has crashed, it cannot be the case that either of the other two outcomes occurred—interest rates rising or inflation surging. This contradiction suggests that our initial assumption—that both the stock market crashed and interest rates increased—cannot hold true. Therefore, we must conclude that in this economic situation, it must be the case that unemployment has risen and consumer confidence has declined, leading us to affirm that consumer confidence has indeed declined.
+            
+
+        Por favor, procesa la siguiente respuesta tuya y genera el JSON:
+        Tu respuesta: 
+            ¡Claro! Analicemos este problema de lógica económica paso a paso.
+
+**Problema:**
+
+"In analyzing the current economic climate, we find ourselves considering two potential scenarios: either the stock market has crashed alongside rising interest rates, or there has been an increase in unemployment coupled with a decline in consumer confidence. To delve deeper, let's explore the first scenario—if both the stock market crashed and interest rates rose, we would be able to confirm that the stock market crashed and that interest rates indeed increased. If interest rates have risen, it follows that either they have increased or inflation has surged. However, this situation is complicated by the fact that if the stock market has crashed, it cannot be the case that either of the other two outcomes occurred—interest rates rising or inflation surging. This contradiction suggests that our initial assumption—that both the stock market crashed and interest rates increased—cannot hold true. Therefore, we must conclude that in this economic situation, it must be the case that unemployment has risen and consumer confidence has declined, leading us to affirm that consumer confidence has indeed declined."
+
+---
+
+**1. Entendimiento del Problema:**
+
+*   **Elementos Clave:**
+    *   La bolsa ha caído (stock market crashed).
+    *   Las tasas de interés han subido (interest rates risen).
+    *   El desempleo ha aumentado (unemployment increased).
+    *   La confianza del consumidor ha disminuido (consumer confidence declined).
+    *   La inflación se ha disparado (inflation surged).
+
+*   **Declaraciones Lógicas (Pistas):**
+    1.  La situación actual es: (La bolsa ha caído Y las tasas han subido) O (El desempleo ha aumentado Y la confianza ha disminuido).
+        *   Sea M = "La bolsa ha caído"
+        *   Sea R = "Las tasas de interés han subido"
+        *   Sea U = "El desempleo ha aumentado"
+        *   Sea C = "La confianza del consumidor ha disminuido"
+        *   Sea I = "La inflación se ha disparado"
+        *   Pista 1: `(M /\ R) \/ (U /\ C)`
+
+    2.  Si las tasas de interés han subido, entonces (las tasas han subido O la inflación se ha disparado).
+        *   Pista 2: `R -> (R \/ I)` (Esta pista es lógicamente trivial si R es verdadero, pero es parte del argumento presentado).
+
+    3.  Si la bolsa ha caído, *no puede* ser que (las tasas de interés hayan subido O la inflación se haya disparado).
+        *   Pista 3: `M -> ~(R \/ I)`
+        *   Aplicando Leyes de De Morgan a `~(R \/ I)`, obtenemos `~R /\ ~I`.
+        *   Por lo tanto, Pista 3 equivalente: `M -> (~R /\ ~I)`
+
+    *   **Inferencia Clave en el Texto:** El texto afirma que explorar el primer escenario (`M /\ R`) lleva a una contradicción.
+
+---
+
+**2. Análisis e Inferencia Preliminar:**
+
+*   Tenemos la disyunción inicial: `(M /\ R) \/ (U /\ C)`. Esto significa que solo una de las dos conjunciones (`M /\ R` o `U /\ C`) es verdadera (o ambas, pero el contexto sugiere escenarios mutuamente excluyentes en la realidad económica descrita). El texto implícitamente trata estas dos como las *únicas* posibilidades para la situación actual.
+
+*   Consideremos el primer escenario: `M /\ R` (La bolsa ha caído Y las tasas han subido).
+    *   Si `M /\ R` es verdadero, entonces `M` es verdadero y `R` es verdadero.
+    *   Apliquemos la Pista 3: `M -> (~R /\ ~I)`.
+    *   Si `M` es verdadero (como asumimos), entonces `~R /\ ~I` debe ser verdadero.
+    *   Si `~R /\ ~I` es verdadero, entonces `~R` debe ser verdadero.
+    *   Hemos llegado a que `R` es verdadero (por la asunción inicial `M /\ R`) Y `~R` es verdadero (por la Pista 3).
+    *   `R /\ ~R` es una contradicción lógica.
+
+*   Como la asunción del primer escenario (`M /\ R`) lleva a una contradicción con las pistas dadas, este primer escenario *no puede* ser la situación económica actual verdadera.
+
+*   Volvamos a la Pista 1: `(M /\ R) \/ (U /\ C)`. Dado que `(M /\ R)` es falso (porque lleva a contradicción), la disyunción solo puede ser verdadera si `(U /\ C)` es verdadero.
+
+*   Por lo tanto, la única situación económica actual consistente con las pistas es que `(U /\ C)` sea verdadero.
+
+*   Si `U /\ C` es verdadero, esto implica que `U` es verdadero (El desempleo ha aumentado) Y `C` es verdadero (La confianza del consumidor ha disminuido).
+
+---
+
+**3. Hipótesis de Solución:**
+
+Basado en el análisis, la única posibilidad lógica es que la segunda parte de la disyunción inicial sea cierta. Por lo tanto, el desempleo ha aumentado y la confianza del consumidor ha disminuido. El problema concluye afirmando esto y destacando la disminución de la confianza del consumidor.
+
+*   **Hipótesis:** La confianza del consumidor ha disminuido (`C` es verdadero).
+
+---
+
+**4. Comprobación Formal con Prolog:**
+
+Vamos a representar la lógica del problema en Prolog para validar que, efectivamente, la única situación posible es la segunda, y por lo tanto, la confianza del consumidor ha disminuido.
+
+Modelaremos las dos posibles situaciones iniciales como hechos separados. Luego, definiremos una regla que capture la incompatibilidad descrita en la Pista 3. Finalmente, buscaremos qué situación inicial es "válida" (no lleva a una incompatibilidad) y afirmaremos que los hechos de esa situación válida son los que describen la `situacion_actual`.
+
+```prolog
+% Hechos: Definimos las dos posibles situaciones iniciales como escenarios.
+% scenario(Nombre_Escenario, Lista_de_Hechos_en_el_Escenario).
+situacion_inicial(escenario1, [bolsa_caida, tasas_subidas]).
+situacion_inicial(escenario2, [desempleo_aumentado, confianza_disminuida]).
+
+% Regla: Captura la incompatibilidad de la Pista 3:
+% Si la bolsa ha caído, NO puede ser que (las tasas hayan subido O la inflación se haya disparado).
+% Esto significa que un escenario es INVALIDO si contiene 'bolsa_caida' Y (contiene 'tasas_subidas' O contiene 'inflacion_disparada').
+
+% Un escenario S es invalido si contiene bolsa_caida y tasas_subidas.
+escenario_invalido(S) :-
+    member(bolsa_caida, S),
+    member(tasas_subidas, S).
+
+% Un escenario S es invalido si contiene bolsa_caida y inflacion_disparada.
+% (Aunque 'inflacion_disparada' no aparece en los escenarios iniciales, la regla M -> ~(R \/ I) la incluye)
+% Para ser estrictos con los elementos de los escenarios dados:
+% escenario_invalido(S) :-
+%     member(bolsa_caida, S),
+%     member(inflacion_disparada, S).
+% Pero como inflacion_disparada no es un hecho base en NINGUNO de los escenarios iniciales,
+% la segunda cláusula de invalidez, tal como está definida por los hechos iniciales, solo necesita verificar la primera parte (bolsa_caida Y tasas_subidas).
+% La pista 2 (R -> (R \/ I)) no impone una restricción que invalide escenarios base aquí,
+% ya que la restricción fuerte viene de la pista 3 negando la disyunción R \/ I si M es cierto.
+% Así que nos quedamos con la regla derivada de M -> ~R /\ ~I
+% Si M es cierto (~R /\ ~I) debe ser cierto.
+% Si tenemos M y R, es incompatible.
+% Si tenemos M y I, es incompatible.
+
+% Simplificando basada SÓLO en los hechos presentes en los escenarios iniciales y la Pista 3:
+% Un escenario inicial es inválido si contiene bolsa_caida Y tasas_subidas, porque esto contradice M -> ~R.
+escenario_invalido(S) :-
+    member(bolsa_caida, S),
+    member(tasas_subidas, S).
+
+% Regla: Un escenario es válido si es una situación_inicial Y NO es escenario_invalido.
+escenario_valido(Nombre) :-
+    situacion_inicial(Nombre, Hechos),
+    \+ escenario_invalido(Hechos). % \+ es negación por fallo en Prolog
+
+% Regla: Un hecho es parte de la situacion_actual si es un hecho en el único escenario válido.
+situacion_actual(Hecho) :-
+    escenario_valido(Nombre),
+    situacion_inicial(Nombre, Hechos),
+    member(Hecho, Hechos).
+
+% Nota: La pista 2 (R -> R \/ I) es siempre lógicamente verdadera si R es verdadero.
+% No introduce nuevas restricciones que invaliden los escenarios iniciales dados.
+% La clave está en la Pista 3 que restringe qué puede coexistir con 'bolsa_caida'.
+```
+
+**Explicación del Código Prolog:**
+
+1.  `situacion_inicial(escenario1, [bolsa_caida, tasas_subidas]).`: Define el primer escenario posible.
+2.  `situacion_inicial(escenario2, [desempleo_aumentado, confianza_disminuida]).`: Define el segundo escenario posible.
+3.  `escenario_invalido(S) :- member(bolsa_caida, S), member(tasas_subidas, S).`: Esta regla implementa la parte relevante de la Pista 3 (`M -> ~R`). Si un escenario `S` contiene tanto `bolsa_caida` como `tasas_subidas`, entonces es inválido según la lógica del problema. (Note: La parte `~I` de `M -> (~R /\ ~I)` no se necesita codificar directamente aquí porque `inflacion_disparada` no es un hecho presente en los escenarios iniciales).
+4.  `escenario_valido(Nombre) :- situacion_inicial(Nombre, Hechos), \+ escenario_invalido(Hechos).`: Un escenario es considerado válido si es uno de los definidos inicialmente Y no es inválido (la negación `\+` significa "no es demostrable que sea inválido").
+5.  `situacion_actual(Hecho) :- escenario_valido(Nombre), situacion_inicial(Nombre, Hechos), member(Hecho, Hechos).`: Este predicado nos permite preguntar qué hechos son verdaderos en la "situación actual". Busca el nombre del escenario válido, obtiene la lista de hechos de ese escenario y luego comprueba si el `Hecho` consultado es miembro de esa lista.
+
+**Comprobación de la Hipótesis con Consulta Prolog:**
+
+Nuestra hipótesis es que "La confianza del consumidor ha disminuido" (`confianza_disminuida`) es verdadera en la situación actual. Consultaremos al programa Prolog:
+
+```prolog
+?- situacion_actual(confianza_disminuida).
+```
+
+**Resultado Esperado de la Consulta:**
+
+Según nuestro análisis, el `escenario1` es inválido porque contiene `bolsa_caida` y `tasas_subidas`, lo cual activa la regla `escenario_invalido`. El `escenario2` no activa la regla `escenario_invalido`. Por lo tanto, `escenario_valido(escenario2)` será verdadero y `escenario_valido(escenario1)` será falso.
+
+La consulta `situacion_actual(confianza_disminuida)` buscará un `escenario_valido`. Encontrará `escenario2`. Luego buscará `situacion_inicial(escenario2, Hechos)`, obteniendo `Hechos = [desempleo_aumentado, confianza_disminuida]`. Finalmente, verificará si `confianza_disminuida` es miembro de esta lista, lo cual es cierto.
+
+Por lo tanto, la consulta debe responder `true`.
+
+Este resultado en Prolog valida nuestra hipótesis y confirma la deducción lógica realizada en el paso 2. La única situación posible es la que incluye el aumento del desempleo y la disminución de la confianza del consumidor.
+        
+
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+Respuesta JSON de Gemini: {
+  "facts": [
+    "situacion_inicial(escenario1, [bolsa_caida, tasas_subidas]).",
+    "situacion_inicial(escenario2, [desempleo_aumentado, confianza_disminuida])."
+  ],
+  "rules": [
+    "escenario_invalido(S) :- member(bolsa_caida, S), member(tasas_subidas, S).",
+    "escenario_valido(Nombre) :- situacion_inicial(Nombre, Hechos), \b+ escenario_invalido(Hechos).",
+    "situacion_actual(Hecho) :- escenario_valido(Nombre), situacion_inicial(Nombre, Hechos), member(Hecho, Hechos)."
+  ],
+  "objetive": [
+    "situacion_actual(confianza_disminuida)."
+  ]
+}
+
+-------------------------------------------------------------------
+
+
+MFSA: Cláusulas del Problema Extraídas: 5
+
+--- Cláusulas Extraídas ---
+
+Cláusulas Objetivo:
+- situacion_actual(confianza_disminuida).
+
+Cláusulas del Problema:
+- situacion_inicial(escenario1, [bolsa_caida, tasas_subidas]).
+- situacion_inicial(escenario2, [desempleo_aumentado, confianza_disminuida]).
+- escenario_invalido(S) :- member(bolsa_caida, S), member(tasas_subidas, S).
+- escenario_valido(Nombre) :- situacion_inicial(Nombre, Hechos), + escenario_invalido(Hechos).
+- situacion_actual(Hecho) :- escenario_valido(Nombre), situacion_inicial(Nombre, Hechos), member(Hecho, Hechos).
+
+Axiomas Base:
+--- Formalización Completada ---
+KR-Store:
+  Axiomas Base: 0
+  Cláusulas del Problema: 5
+  Cláusulas Objetivo: 1
+
+======================================================================
+FIN DEL PROCESAMIENTO PARA PROBLEMA 5
+======================================================================
+
+TODOS LOS PROBLEMAS CONFIGURADOS PROCESADOS.

@@ -3,16 +3,18 @@ import tempfile
 import subprocess
 import re
 import copy
-from graphviz import Digraph
 from typing import List, Dict, Optional, Set, Tuple
 import json
 from pathlib import Path
+from collections import deque
+from typing import List, Optional
 
 class Clausula:
-    def __init__(self, nombre, valor=None, veracidad="", padre=None):
+    def __init__(self, nombre, valor=None, veracidad="", profundidad = 0, padre=None):
         self.nombre = nombre
         self.valor = valor if valor is not None else []  # array de Clausula
         self.veracidad = veracidad  # string
+        self.profundidad = profundidad
         self.padre = padre  # Clausula
 
     def __eq__(self, other):
@@ -82,25 +84,49 @@ class PrologSolver:
         """
         Ejecuta un código Prolog en SWI-Prolog, captura y devuelve la traza de stderr.
         """
+
+        enriq_trace = r"""
+        :- set_prolog_flag(trace_file, true).
+        :- leash(-all).
+
+        user:prolog_trace_interception(Port, Frame, _PC, continue) :-
+                (   prolog_frame_attribute(Frame, level, Lvl)
+                ->  Indent is Lvl * 2
+                ;   Indent = 0
+                ),
+                prolog_frame_attribute(Frame, goal,  Goal),
+                (   prolog_frame_attribute(Frame, clause, ClRef),
+                    clause_property(ClRef, file(File)),
+                    clause_property(ClRef, line_count(Line))
+                ->  true
+                ;   File = '<dynamic>', Line = 0
+                ),
+                format(user_error,
+                    '~N~*|~w: ~p @ ~w:~d~n',
+                    [Indent, Port, Goal, File, Line]).
+        """
+
         stdout_capture = ""
         stderr_capture = ""
         swipl_executable = "swipl" 
         temp_prolog_file = tempfile.NamedTemporaryFile(mode='w+', suffix='.pl', delete=False)
         temp_prolog_file_name = temp_prolog_file.name
         try:
+            temp_prolog_file.write(enriq_trace)
+            temp_prolog_file.write('\n') 
             temp_prolog_file.write(prolog_code)
             temp_prolog_file.close()
             prolog_file_path_escaped = temp_prolog_file_name.replace("'", "''")
             
             # Modificado para imprimir excepciones a user_error (stderr)
             goal_prolog = (
-                f"set_prolog_flag(verbose_load, false), "
-                f"consult('{prolog_file_path_escaped}'), "
-                f"leash(-all), "
-                f"trace, "
-                # Captura la excepción, imprime info a user_error, luego falla para continuar la traza.
-                f"catch(({consulta[:-1]}, fail), E, (format(user_error, '~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n', [E]), fail)), "
-                f"halt."
+                f"consult('{prolog_file_path_escaped}'), "          # carga el archivo
+                f"trace, "                          # inicia la traza
+                # Ejecuta la consulta, captura excepciones y continúa para ver la traza
+                f"catch(({consulta[:-1]}, fail), "
+                f"E, (format(user_error, "
+                f"'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n', [E]), fail)), "
+                "halt."
             )
             process = subprocess.Popen(
                 [swipl_executable, "-q", "-g", goal_prolog, "-t", "halt"],
@@ -138,10 +164,11 @@ class PrologSolver:
         nodo_actual = root
 
         # Regex para parsear: Tipo, Nivel (ignorado por ahora), Contenido
-        line_regex = re.compile(r"^\s*(Call|Exit|Fail|Redo):\s*\(\d+\)\s*(.*)$")
-
+        line_regex = re.compile(r'^\s*(call|exit|fail|redo)(?:\(\d+\))?:\s*([^@]+?)\s*(?:@.*)?$')
+        
         traza = traza_str.strip().split('\n')
         # Por cada linea en la traza:
+        conta = 0
         for index, line_raw in enumerate(traza):
             line = line_raw.strip()
             if not line:
@@ -153,10 +180,11 @@ class PrologSolver:
                 # print(f"Advertencia: No se pudo parsear la línea: {line}")
                 continue
 
-            tipo_llamada, contenido_str = match.group(1), match.group(2).strip()
+            tipo_llamada, contenido_str = match.groups()
             # 'nombre' y 'aridad' se infieren del 'contenido_str' según el contexto.
 
-            if tipo_llamada == "Call":
+
+            if tipo_llamada == "call":
                 # Si la linea es de tipo Call, si el contenido es fail salta la linea
                 if contenido_str == "fail":
                     continue
@@ -165,7 +193,7 @@ class PrologSolver:
                 nodo_actual.valor.append(nueva_clausula)
                 nodo_actual = nueva_clausula
             
-            elif tipo_llamada == "Exit":
+            elif tipo_llamada == "exit":
                 # El nodo_actual es el que fue llamado y ahora está saliendo (Exit)
                 exiting_node = nodo_actual
                 
@@ -179,7 +207,7 @@ class PrologSolver:
                 if exiting_node.padre:
                     nodo_actual = exiting_node.padre
                 
-            elif tipo_llamada == "Fail":
+            elif tipo_llamada == "fail":
                 # si el contenido es fail salta la linea
                 if contenido_str == "fail":
                     continue
@@ -197,7 +225,7 @@ class PrologSolver:
                 if failing_node.padre:
                     nodo_actual = failing_node.padre
 
-            elif tipo_llamada == "Redo":
+            elif tipo_llamada == "redo":
                 # Hacemos una copia del arbol almacenado en root y la guardamos en el array de ramas_de_pensamientos.
                 while nodo_actual.padre:
                     nodo_actual.veracidad = "rojo"
@@ -213,6 +241,9 @@ class PrologSolver:
                 # Usamos un set para evitar ciclos en la búsqueda si la estructura del árbol fuera inesperada,
                 # aunque con padres no debería haber ciclos descendentes.
                 visited_for_bfs = set() 
+
+                last_last_found = None
+                last_found = None
 
                 while q:
                     curr_search_node = q.pop(0)
@@ -231,13 +262,22 @@ class PrologSolver:
 
                     # Comparar nombre y aridad
                     if curr_nombre == cont_nombre and curr_aridad == cont_aridad:
+                        last_last_found = last_found
+                        last_found = curr_search_node
+
+                    if curr_search_node.nombre == contenido_str:
                         node_to_redo_found = curr_search_node
-                        break
                     for child in curr_search_node.valor:
                         if isinstance(child, Clausula): # Asegurarse de que el hijo es una Clausula
                             q.append(child)
+                if node_to_redo_found == None:
+                        node_to_redo_found = last_found
+                        node_to_redo_found.nombre = contenido_str
                 
-                if node_to_redo_found:
+                if node_to_redo_found != None:
+                    #ELIMINAR ESTO DESPUES DE LA PRUEBAs
+                    if index + 1 == len(traza):
+                        break
                     next_clausule = traza[index + 1]
                     next_contenido = line_regex.match(next_clausule).group(2).strip()
                     nombre = next_contenido.split('(')[0].strip()
@@ -247,9 +287,9 @@ class PrologSolver:
                             if clausula.nombre == nombre and len(clausula.nombre.split('(')[1].split(',')) if '(' in clausula.nombre else 0 == aridad:
                                 node_to_redo_found.valor = node_to_redo_found.valor[:index + 1]
                                 break
-                    else:
-                        # Limpiar el array de valor del nodo encontrado y reiniciar su veracidad
-                        node_to_redo_found.valor = [] 
+                        else:
+                            # Limpiar el array de valor del nodo encontrado y reiniciar su veracidad
+                            node_to_redo_found.valor = [] 
                     node_to_redo_found.veracidad = ""  # Reiniciar su estado de veracidad
                     nodo_actual = node_to_redo_found
                     current = node_to_redo_found
@@ -268,42 +308,7 @@ class PrologSolver:
         ramas_de_pensamientos.append(copy.deepcopy(root))
 
         return ramas_de_pensamientos
-    
-    def _create_thought_graph(self, data, graph=None, parent_id=None, node_counter=[0]):
-        """
-        Recursively creates nodes and edges for the Graphviz diagram from the JSON data.
-        """
-        if graph is None:
-            graph = Digraph(comment='Cadena de Pensamientos', format='png') # You can change 'png' to 'svg', 'jpg', etc.
-            graph.attr(rankdir='TB') # Top to bottom layout
-            graph.attr('node', shape='box', style='filled', fontname='Arial')
 
-        current_node_id = f"node_{node_counter[0]}"
-        node_counter[0] += 1
-
-        name = data.get("nombre", "N/A")
-        veracidad = data.get("veracidad", "")
-
-        # Define node color based on 'veracidad'
-        fill_color = "lightblue" # Default
-        if veracidad == "verde":
-            fill_color = "lightgreen"
-        elif veracidad == "rojo":
-            fill_color = "salmon"
-
-        # Add the node to the graph
-        graph.node(current_node_id, label=f"{name.replace("\\", "\\\\")}\\n({veracidad})", fillcolor=fill_color)
-
-        # Add an edge from the parent node if it exists
-        if parent_id:
-            graph.edge(parent_id, current_node_id)
-
-        # Recursively process children
-        if "valor" in data and isinstance(data["valor"], list):
-            for child in data["valor"]:
-                self._create_thought_graph(child, graph, current_node_id, node_counter)
-
-        return graph
 
     def solve(self, initial_clauses: List[str], goal_clause_obj: Optional[str] = None, problem_name: str = "Problema") -> List[Clausula]:
         """
@@ -324,7 +329,7 @@ class PrologSolver:
 
         # Ejecutar Prolog y obtener la traza
         raw_trace = self._ejecutar_prolog_con_traza_modificado(program_string, consulta)
-        raw_trace = "\n".join(raw_trace.split("\n")[1:-6])
+        raw_trace = "\n".join(raw_trace.split("\n")[3:-6])
         print("--- Traza cruda de Prolog ---")
         print(raw_trace)
         print("--- Fin de traza cruda ---")
@@ -334,8 +339,6 @@ class PrologSolver:
         
         # Crear directorios si no existen
         solutions_dir = Path("solutions")
-        success_dir = solutions_dir / "success"
-        fails_dir = solutions_dir / "fails"
 
         # Guardar el JSON
         json_path = solutions_dir / f"ramas_de_pensamiento.json"
@@ -343,17 +346,6 @@ class PrologSolver:
             # Convertir cada objeto Clausula a diccionario antes de guardar
             ramas_dict = [rama.to_dict() for rama in ramas]
             json.dump(ramas_dict, f, indent=2, ensure_ascii=False)
-        
-        for i, arbol_pensamiento in enumerate(ramas):
-            # Convertir el árbol a diccionario
-            arbol_dict = arbol_pensamiento.to_dict()
-            
-            # Determinar la carpeta basada en la veracidad del primer nodo
-            target_dir = success_dir if arbol_pensamiento.valor[0].veracidad == "verde" else fails_dir
-            
-            # Generar y guardar el gráfico
-            dot = self._create_thought_graph(arbol_dict)
-            dot.render(str(target_dir / f'arbol_pensamiento_{i}'), view=False, cleanup=True)
 
         return ramas
 

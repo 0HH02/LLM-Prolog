@@ -1,0 +1,143 @@
+
+======================================================================
+PROCESANDO PROBLEMA 5: "
+Habían aparecido cuatro cofres, dos de oro y dos de plata; se sabía que constit..."
+======================================================================
+
+--- Ejecutando MFSA ---
+
+--- Iniciando Formalización Semántica y Axiomatización (MFSA) ---
+Descripción del Problema (NL): 
+Habían aparecido cuatro cofres, dos de oro y dos de plata; se sabía que constituían
+dos juegos, pero se habían mezclado y ahora no se sabía qué cofre de oro y qué cofre
+de plata formaban pareja. Me los enseñaron y pronto pude resolver el problema por lo
+que recibí unos excelentes honorarios. Pero además pude establecer también quién
+había hecho cada cofre, por lo que recibí un extra (que consistía, entre otras cosas, en
+una excelente caja de botellas de Chianti) y un beso de una de las florentinas más
+maravillosas que haya existido nunca
+He aquí los cuatro cofres:
+Cofre A (Oro)
+EL COFRE DE PLATA ES OBRA DE UN CELLINI
+Cofre B (Plata)
+EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON
+DE BELLINI
+Cofre C (Oro)
+EL COFRE DE ORO ES OBRA DE UN BELLINI
+Cofre D (Plata)
+EL COFRE DE ORO ES OBRA DE UN BELLINI Y POR LO MENOS UNO DE
+ESTOS COFRES ES OBRA DE UN HIJO O DE BELLINI O CELLINI
+Tenemos ahora un problema:
+¿Quién hizo cada uno de los cofres?
+
+            
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini (initial_analysis_
+habían_aparecido_cu) ---
+Prompt: 
+        Hola, necesito tu ayuda para analizar y resolver un problema de lógica de manera sistemática. Por favor, sigue los siguientes pasos:
+
+        1. Entendimiento del Problema: 
+        - Identifica los elementos clave (personas, objetos, lugares, eventos, etc.) involucrados en el problema.
+        - Extrae todas las declaraciones lógicas o pistas proporcionadas, y anótalas claramente. Distingue entre hechos directos e inferencias posibles.
+
+        2. Análisis e Inferencia Preliminar:
+        - Basándote en la información organizada, realiza inferencias lógicas paso a paso. Elimina posibilidades o deduce nuevos hechos. Si es aplicable, actualiza tu representación de la información con cada nueva inferencia hasta que se clarifiquen las relaciones.
+        
+        3. Hipótesis de Solución:
+        - A partir de tu análisis e inferencias, propón una hipótesis clara sobre cuál es la solución al problema de lógica.
+        
+        4. Comprobación Formal con Prolog:
+        - Vas a crear un programa en Prolog (hechos y reglas) basado en tu hipótesis de solución y las pistas originales. Este programa debe ser capaz de demostrar la validez de tu hipótesis a través de consultas.
+        - Identifica y codifica primero las reglas globales que rigen el comportamiento de todos los agentes del sistema, pues estas definen el marco en el que se deben evaluar sus acciones individuales.
+        - Modela cada pieza de evidencia o declaración de forma atómica y fiel a su descripción original, evitando crear relaciones o dependencias artificiales entre componentes que el problema no vincula explícitamente.
+        - Garantiza una correspondencia precisa entre las entidades del problema y las variables de tu código, validando que el contexto de cada regla solo afecte a las variables que le conciernen directamente.
+        - Esto es sumamente importante: La corrección semántica y sintáctica del programa Prolog es crucial, ya que la verdad de tu hipótesis se deduce de la capacidad del programa para probarla. Asegúrate de que el código esté bien escrito y refleje lógicamente el problema y tu solución propuesta.
+        - Para modelar implicaciones lógicas en Prolog de forma declarativa, usa la negación para expresar que no puede darse el caso de que el antecedente sea cierto y el consecuente falso.
+        - Comenta el resultado esperado del programa pero nunca hables como si ya se hubiera ejecutado.
+
+        A continuación, te presento el problema de lógica:
+        
+Habían aparecido cuatro cofres, dos de oro y dos de plata; se sabía que constituían
+dos juegos, pero se habían mezclado y ahora no se sabía qué cofre de oro y qué cofre
+de plata formaban pareja. Me los enseñaron y pronto pude resolver el problema por lo
+que recibí unos excelentes honorarios. Pero además pude establecer también quién
+había hecho cada cofre, por lo que recibí un extra (que consistía, entre otras cosas, en
+una excelente caja de botellas de Chianti) y un beso de una de las florentinas más
+maravillosas que haya existido nunca
+He aquí los cuatro cofres:
+Cofre A (Oro)
+EL COFRE DE PLATA ES OBRA DE UN CELLINI
+Cofre B (Plata)
+EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON
+DE BELLINI
+Cofre C (Oro)
+EL COFRE DE ORO ES OBRA DE UN BELLINI
+Cofre D (Plata)
+EL COFRE DE ORO ES OBRA DE UN BELLINI Y POR LO MENOS UNO DE
+ESTOS COFRES ES OBRA DE UN HIJO O DE BELLINI O CELLINI
+Tenemos ahora un problema:
+¿Quién hizo cada uno de los cofres?
+
+            
+        
+
+-------------------------------------------------------------------
+Error al llamar a la API de Gemini: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'Visibility check was unavailable. Please retry the request and contact support if the problem persists', 'status': 'UNAVAILABLE'}}
+
+
+-------------------------------------------------------------------
+
+--- Pregunta a Gemini JSON (general) ---
+Prompt: 
+        Hola, basándote en tu respuesta anterior sobre el problema de lógica, necesito que extraigas y estructures la información de la siguiente manera en un formato JSON:
+
+        El JSON debe tener tres claves principales en el nivel raíz:
+
+        "facts": Un array de strings, donde cada string es un hecho Prolog completo tal como lo definiste.
+        "rules": Un array de strings, donde cada string es una regla Prolog completa tal como la definiste.
+        "objective": Un string que represente la consulta principal de Prolog que se usaría para obtener la solución (por ejemplo, solucion(Tweedledum, Tweedledee).).
+
+        Consejos importantes para asegurar la compatibilidad con Prolog al generar los strings de hechos y reglas:
+            Átomos: Los nombres de predicados y las constantes (átomos) en Prolog deben comenzar con una letra minúscula. Si un átomo necesita contener espacios, caracteres especiales, o comenzar con una letra mayúscula, debe ir entre comillas simples (ej: 'Yo soy Fidel', 'Luna').
+            Variables: Las variables en Prolog siempre comienzan con una letra mayúscula o un guion bajo (ej: Dia, Hermano, _Ignorado).
+            Sintaxis de Hechos: Asegúrate de que cada hecho termine con un punto (.). Ejemplo: miente_leon(lunes).
+            Sintaxis de Reglas: Las reglas deben seguir el formato cabeza :- cuerpo., donde cabeza es la conclusión, :- significa "si", y cuerpo puede ser una o más metas separadas por comas (,) que representan una conjunción lógica. Cada regla debe terminar con un punto (.). Ejemplo: dice_verdad(leon, Dia) :- + miente_leon(Dia).
+            Strings dentro de Prolog: Las frases como "Yo soy Fidel" deben ser tratadas como átomos en Prolog, es decir, encerradas en comillas simples si contienen espacios o mayúsculas no iniciales (ej: 'Yo soy Fidel').
+            Escapado en JSON: Dado que los hechos y reglas de Prolog serán strings dentro de un JSON, si alguna vez usaras comillas dobles dentro de tu código Prolog (lo cual es menos común para átomos que las comillas simples), necesitarían ser escapadas (") dentro del string JSON. Usar comillas simples para los átomos Prolog evita este problema. Las barras invertidas () en Prolog (como en + para negación) son caracteres válidos y no necesitan doble escapado a menos que el propio string JSON lo requiera para el carácter .
+            Los símbolos correctos de prolog son: \+ para negación, :- para implicación, ; para disyunción, . para final de cláusula, = para unificación, \= para desigualdad.
+            Evita usar el \ innecesariamente puesto a que por si solo es un error de sintaxis
+
+        Problema original:
+            
+Habían aparecido cuatro cofres, dos de oro y dos de plata; se sabía que constituían
+dos juegos, pero se habían mezclado y ahora no se sabía qué cofre de oro y qué cofre
+de plata formaban pareja. Me los enseñaron y pronto pude resolver el problema por lo
+que recibí unos excelentes honorarios. Pero además pude establecer también quién
+había hecho cada cofre, por lo que recibí un extra (que consistía, entre otras cosas, en
+una excelente caja de botellas de Chianti) y un beso de una de las florentinas más
+maravillosas que haya existido nunca
+He aquí los cuatro cofres:
+Cofre A (Oro)
+EL COFRE DE PLATA ES OBRA DE UN CELLINI
+Cofre B (Plata)
+EL COFRE DE PLATA O ES OBRA DE UN CELLINI O LOS DOS COFRES SON
+DE BELLINI
+Cofre C (Oro)
+EL COFRE DE ORO ES OBRA DE UN BELLINI
+Cofre D (Plata)
+EL COFRE DE ORO ES OBRA DE UN BELLINI Y POR LO MENOS UNO DE
+ESTOS COFRES ES OBRA DE UN HIJO O DE BELLINI O CELLINI
+Tenemos ahora un problema:
+¿Quién hizo cada uno de los cofres?
+
+            
+
+        Por favor, procesa la siguiente respuesta tuya y genera el JSON:
+        Tu respuesta: 
+            Error: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'Visibility check was unavailable. Please retry the request and contact support if the problem persists', 'status': 'UNAVAILABLE'}}
+        
+
+-------------------------------------------------------------------
