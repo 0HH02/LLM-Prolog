@@ -2,11 +2,44 @@ import importlib.util
 import os
 from typing import List, Dict, Optional
 
+from mfsa.promts import extract_problem_clauses_promt
+from common.gemini_interface import ask_gemini_json
+
 class KnowledgeRepresentationStore:
     def __init__(self):
         self.base_axioms: List[str] = []
         self.problem_clauses: List[str] = []
         self.goal_clauses: List[str] = [] # Podría ser una sola, pero lo dejamos como lista por flexibilidad
+    
+    def _llm_kge_extract_problem_clauses(self, problem_description_nl: str, problem_reformulation: str) -> List[str]:
+        """Extrae cláusulas (hechos y reglas) específicas del problema."""
+        all_clauses = []
+
+        problem_clauses_prompt = extract_problem_clauses_promt(problem_description_nl, problem_reformulation)
+        
+        response = ask_gemini_json(problem_clauses_prompt)
+        
+        facts = response["facts"]
+        rules = response["rules"]
+
+        for fact in facts:
+            all_clauses.append(fact.replace("//", "/"))
+
+        for rule in rules:
+            all_clauses.append(rule.replace("//", "/"))
+
+        objective = response["objetive"][0].replace("//", "/")
+
+        return all_clauses, objective
+
+    def update(self, problem_description: str, preview_response: str):
+        self.clear_all()
+        problem_clauses_extracted, objetive = self._llm_kge_extract_problem_clauses(problem_description, preview_response)
+        for pc in problem_clauses_extracted:
+            self.add_clause(pc, "problem_clause")
+        self.add_clause(objetive, "goal_clause")
+        print(f"MFSA: Cláusulas del Problema Extraídas: {len(problem_clauses_extracted)}")
+        return problem_clauses_extracted, objetive
 
     def _get_target_list_by_category(self, category: str) -> Optional[List[str]]:
         """Helper interno para obtener la lista de cláusulas correcta por categoría."""
@@ -92,6 +125,23 @@ class KnowledgeRepresentationStore:
                 f"  Axiomas Base: {len(self.base_axioms)}\n"
                 f"  Cláusulas del Problema: {len(self.problem_clauses)}\n"
                 f"  Cláusulas Objetivo: {len(self.goal_clauses)}")
+    
+    def print_all(self):
+        print(f"\n--- Cláusulas Extraídas ---")
+        print("\nCláusulas Objetivo:")
+        for clause in self.get_clauses_by_category("goal_clause"):
+            print(f"- {clause}")
+            
+        print("\nCláusulas del Problema:")
+        for clause in self.get_clauses_by_category("problem_clause"):
+            print(f"- {clause}")
+            
+        print("\nAxiomas Base:")
+        for clause in self.get_clauses_by_category("base_axiom"):
+            print(f"- {clause}")
+
+        print(f"--- Formalización Completada ---")
+        print(self)
 
     
 # Ejemplo de módulos axiomáticos predefinidos (podrían estar en archivos JSON/YAML)

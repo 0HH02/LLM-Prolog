@@ -1,0 +1,319 @@
+/* Estilos generales del cuerpo */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #f5f7fa;
+}
+
+/* Contenedor principal usando Flexbox para la división */
+.container {
+  display: flex;
+  height: 100%;
+}
+
+/* Contenedor del árbol (3/4 de la pantalla) */
+#tree-container {
+  flex: 3;
+  border-right: 2px solid #e1e8ed;
+  box-sizing: border-box;
+  height: 100%;
+  position: relative;
+  background-color: #ffffff;
+}
+
+/* Overlay de información sobre el árbol */
+.info-overlay {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(0, 123, 255, 0.9);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Controles de zoom */
+.zoom-controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 5px;
+  z-index: 1000;
+}
+
+.zoom-btn {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.zoom-btn:hover {
+  background-color: rgba(0, 123, 255, 0.9);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Panel lateral para traza y botones (1/4 de la pantalla) */
+#side-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border-left: 1px solid #e1e8ed;
+  overflow-y: auto;
+}
+
+h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 25px;
+  color: #1a202c;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+}
+
+h3 {
+  color: #2d3748;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 15px 0 10px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Secciones del panel lateral */
+.file-section,
+.trace-section,
+.controls-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+/* Botones de archivo */
+.file-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.file-btn {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  background-color: #6c757d;
+  color: white;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.file-btn:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+}
+
+/* Contenedor de la traza con scroll */
+#trace-container {
+  flex-grow: 1;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 12px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12px;
+  color: #d4d4d4;
+  line-height: 1.4;
+}
+
+/* Líneas de la traza */
+#trace-container div {
+  padding: 2px 0;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+}
+
+/* Resaltado para la línea actual de la traza */
+#trace-container div.highlight {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+  margin: 2px -8px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+}
+
+/* Scrollbar personalizada para el contenedor de traza */
+#trace-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+#trace-container::-webkit-scrollbar-track {
+  background: #2d2d2d;
+  border-radius: 3px;
+}
+
+#trace-container::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
+}
+
+#trace-container::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+/* Contenedor para los botones de control */
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+/* Estilo de los botones de control */
+.control-btn {
+  padding: 12px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.control-btn.primary {
+  background-color: #28a745;
+  color: white;
+}
+
+.control-btn.primary:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.control-btn.secondary {
+  background-color: #007bff;
+  color: white;
+}
+
+.control-btn.secondary:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.control-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+/* Texto de ayuda */
+.help-text {
+  font-size: 11px;
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+.help-text p {
+  margin: 5px 0;
+}
+
+.help-text strong {
+  color: #495057;
+}
+
+/* Animaciones para la carga */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.file-section,
+.trace-section,
+.controls-section {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Responsive design para pantallas más pequeñas */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  #tree-container {
+    flex: 2;
+    border-right: none;
+    border-bottom: 2px solid #e1e8ed;
+  }
+
+  #side-panel {
+    flex: 1;
+    border-left: none;
+    border-top: 1px solid #e1e8ed;
+    max-height: 40vh;
+  }
+
+  .buttons-container {
+    flex-direction: row;
+  }
+}
+
+/* Mejoras para el scroll del panel lateral */
+#side-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+#side-panel::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+#side-panel::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+#side-panel::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

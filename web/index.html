@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visualizador de Árbol de Trazas - Prolog</title>
+    <link rel="stylesheet" href="style.css" />
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"
+    ></script>
+  </head>
+  <body>
+    <div class="container">
+      <div id="tree-container">
+        <div id="tree-info" class="info-overlay">Cargando...</div>
+        <div class="zoom-controls">
+          <button id="zoom-in-btn" class="zoom-btn" title="Acercar">🔍+</button>
+          <button id="zoom-out-btn" class="zoom-btn" title="Alejar">🔍-</button>
+          <button id="fit-btn" class="zoom-btn" title="Ajustar al contenedor">
+            📐
+          </button>
+        </div>
+      </div>
+
+      <div id="side-panel">
+        <h2>Visualizador de Trazas Prolog</h2>
+
+        <!-- Sección de carga de archivos -->
+        <div class="file-section">
+          <h3>Cargar Traza</h3>
+          <input
+            type="file"
+            id="file-input"
+            accept=".txt,.log,.pl"
+            style="display: none"
+          />
+          <div class="file-buttons">
+            <button id="load-btn" class="file-btn">📁 Cargar Archivo</button>
+            <button id="reset-btn" class="file-btn">🔄 Reiniciar</button>
+          </div>
+        </div>
+
+        <!-- Sección de traza -->
+        <div class="trace-section">
+          <h3>Traza de Ejecución</h3>
+          <div id="trace-container"></div>
+        </div>
+
+        <!-- Sección de controles -->
+        <div class="controls-section">
+          <h3>Controles de Visualización</h3>
+          <div class="buttons-container">
+            <button id="step-btn" class="control-btn primary">
+              ▶️ Paso a Paso
+            </button>
+            <button id="next-btn" class="control-btn secondary">
+              ⏭️ Siguiente Árbol
+            </button>
+          </div>
+          <div class="help-text">
+            <p>
+              <strong>Paso a Paso:</strong> Visualiza cómo se construye el árbol
+              línea por línea
+            </p>
+            <p>
+              <strong>Siguiente Árbol:</strong> Muestra los diferentes estados
+              del árbol completo
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,6 +1,5 @@
 from typing import List, Dict, Any, Optional
 from mfsa.kr_store import KnowledgeRepresentationStore
-from common.horn_clause import verify_horn_clause_sintaxys
 from common.gemini_interface import ask_gemini, ask_gemini_json
 from ohi.promts import extract_clauses_from_prolog_promt, generate_refined_analysis_promt
 import re
@@ -90,11 +89,11 @@ class HeuristicInferenceOrchestrator:
         rules = response["rules"]
 
         for fact in facts:
-            all_clauses.append(verify_horn_clause_sintaxys(fact.replace("//", "/")))
+            all_clauses.append(fact.replace("//", "/"))
 
         for rule in rules:
-            all_clauses.append(verify_horn_clause_sintaxys(rule.replace("//", "/")))
+            all_clauses.append(rule.replace("//", "/"))
 
-        objective = verify_horn_clause_sintaxys(response["objetive"][0].replace("//", "/"))
+        objective = response["objetive"][0].replace("//", "/")
         
         return all_clauses, objective

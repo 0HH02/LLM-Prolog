@@ -5,6 +5,8 @@ from misa_j.cfcs import PrologSolver
 from mmrc.mmrc_module import MetaCognitionKnowledgeRefinementModule
 from checkpoints_utils import save_checkpoint, load_checkpoint
 from config import CONFIG, redirect_output, setup_logging, clear_solutions
+from llm_history import save_llm_history, load_latest_llm_history
+from datetime import datetime
 
 def main():
     # Instanciación de módulos principales
@@ -38,13 +40,22 @@ def main():
     current_kr_store = None
     thought_tree = None
     goal_clauses_mfsa = []
-    goal_clause_str_for_llms = ""
+    
+    # Cargar historial previo o inicializar uno nuevo
+    history = load_latest_llm_history(problem_description)
+    if not history:
+        history = {
+            'responses': [],
+            'timestamps': [],
+            'cycle_count': 0
+        }
 
     # --- 1. MFSA (Formalización Semántica y Axiomatización) ---
     checkpoint_kr_store_name = "mfsa_kr_store"
     loaded_kr = None
     if not CONFIG["force_run_mfsa"]:
         loaded_kr = load_checkpoint(checkpoint_kr_store_name, problem_description)
+        history = load_latest_llm_history(problem_description)
     
     if loaded_kr:
         current_kr_store = loaded_kr
@@ -53,14 +64,27 @@ def main():
         print("\n--- Ejecutando MFSA ---")
         temp_kr_store = KnowledgeRepresentationStore()
         mfsa_instance_problem = SemanticFormalizationAxiomatizationModule(temp_kr_store)
-        mfsa_instance_problem.formalize_problem(
+        mfsa_result = mfsa_instance_problem.formalize_problem(
             problem_description, 
-            problem_topic_hint=problem_topic_hint
+            history=history
         )
-        current_kr_store = temp_kr_store
+        current_kr_store = mfsa_result["kr_store"]
+            
+        # Guardar la respuesta del MFSA en el historial
+        if mfsa_result["response"]:
+            history['responses'].append({
+                'module': 'MFSA',
+                'content': mfsa_result["response"],
+                'problem_clauses': mfsa_result["problem_clauses"],
+                'objective': mfsa_result["objective"]
+            })
+            history['timestamps'].append(datetime.now().isoformat())
+            history['cycle_count'] = 0  # MFSA es pre-ciclos
+        
         if CONFIG["save_checkpoints"]:
             save_checkpoint(current_kr_store, checkpoint_kr_store_name, problem_description)
-
+            save_llm_history(history, problem_description)
+    
     for cycle in range(CONFIG["max_refinement_cycles"]):
         print(f"\n--- CICLO DE REFINAMIENTO {cycle + 1} / {CONFIG['max_refinement_cycles']} ---")
 
@@ -106,72 +130,79 @@ def main():
         mmrc_result = None
 
         if CONFIG["force_run_mmrc"]:
-            mmrc_result = mmrc_module.analyze_thought_tree(thought_tree, problem_description, selected_clauses, solver_errors)
+            mmrc_result = mmrc_module.analyze_thought_tree(thought_tree, problem_description, selected_clauses, solver_errors, history)
             if CONFIG["save_checkpoints"] and mmrc_result:
                 save_checkpoint(mmrc_result, checkpoint_mmrc_name, problem_description)
+                
+                # Guardar la respuesta en el historial
+                if mmrc_result.get("response"):
+                    history['responses'].append(mmrc_result["response"])
+                    history['timestamps'].append(datetime.now().isoformat())
+                    history['cycle_count'] = cycle + 1
+                    save_llm_history(history, problem_description)
         else:
             print("INFO: MMRC omitido, resultado cargado desde checkpoint.")
             mmrc_result = load_checkpoint(checkpoint_mmrc_name, problem_description)
             if not mmrc_result:
                 print("No se encontró checkpoint para MMRC, ejecutando módulo...")
-                mmrc_result = mmrc_module.analyze_thought_tree(thought_tree, problem_description, selected_clauses, solver_errors)
+                mmrc_result = mmrc_module.analyze_thought_tree(thought_tree, problem_description, selected_clauses, solver_errors, history)
                 if CONFIG["save_checkpoints"] and mmrc_result:
                     save_checkpoint(mmrc_result, checkpoint_mmrc_name, problem_description)
+                    
+                    # Guardar la respuesta en el historial
+                    if mmrc_result.get("response"):
+                        history['responses'].append(mmrc_result["response"])
+                        history['timestamps'].append(datetime.now().isoformat())
+                        history['cycle_count'] = cycle + 1
+                        save_llm_history(history, problem_description)
         
         print("\n=== RESULTADO DEL ANÁLISIS MMRC ===")
         if mmrc_result["status"] == "success":
             print("✅ SE ENCONTRÓ UNA SOLUCIÓN EXITOSA")
-            print("\n--- RESPUESTA GENERADA ---")
-            print(mmrc_result["response"])
-            print(f"\n--- ESTADÍSTICAS ---")
-            print(f"Ramas exitosas encontradas: {mmrc_result['successful_branches_count']}")
             break  # Salir del ciclo si se encontró solución
             
         elif mmrc_result["status"] == "failure_analysis":
             print("❌ NO SE ENCONTRÓ SOLUCIÓN - ANÁLISIS DE ERRORES")
-            print("\n--- ANÁLISIS DE FALLAS ---")
-            print(mmrc_result["analysis"])
-            print(f"\n--- ESTADÍSTICAS ---")
-            print(f"Total de ramas analizadas: {mmrc_result['total_branches']}")
-            print(f"Ramas más prometedoras: {mmrc_result['promising_branches_count']}")
-            break
-            # --- 4. OHI (Orquestación Heurística de Inferencia) ---
-            print("\n--- Ejecutando OHI (Refinamiento del Conocimiento) ---")
-            checkpoint_ohi_name = f"ohi_result_cycle{cycle}"
-            refined_kr_store = None
-
-            if CONFIG["force_run_ohi"]:
-                # Convertir cláusulas HornClause a strings para OHI
-                current_clauses_str = [str(clause) for clause in selected_clauses]
-                
-                # Refinar el conocimiento usando el análisis del MMRC
-                refined_kr_store = ohi.refine_knowledge(
-                    mmrc_result, 
-                    problem_description, 
-                    current_clauses_str
-                )
-                if CONFIG["save_checkpoints"] and refined_kr_store:
-                    save_checkpoint(refined_kr_store, checkpoint_ohi_name, problem_description)
-            else:
-                print("INFO: OHI omitido, resultado cargado desde checkpoint.")
-                refined_kr_store = load_checkpoint(checkpoint_ohi_name, problem_description)
-                if not refined_kr_store:
-                    print("No se encontró checkpoint para OHI, ejecutando módulo...")
-                    current_clauses_str = [str(clause) for clause in selected_clauses]
-                    refined_kr_store = ohi.refine_knowledge(
-                        mmrc_result,
-                        problem_description,
-                        current_clauses_str
-                    )
-                    if CONFIG["save_checkpoints"] and refined_kr_store:
-                        save_checkpoint(refined_kr_store, checkpoint_ohi_name, problem_description)
+            current_kr_store.update(problem_description, mmrc_result["analysis"])
+            current_kr_store.print_all()
             
-            # Actualizar el KR Store actual con el refinado
-            if refined_kr_store:
-                current_kr_store = refined_kr_store
-                print("OHI: Conocimiento refinado. Continuando con el siguiente ciclo...")
-            else:
-                print("ADVERTENCIA: OHI no pudo refinar el conocimiento. Usando KR Store anterior.")
+            # # --- 4. OHI (Orquestación Heurística de Inferencia) ---
+            # print("\n--- Ejecutando OHI (Refinamiento del Conocimiento) ---")
+            # checkpoint_ohi_name = f"ohi_result_cycle{cycle}"
+            # refined_kr_store = None
+
+            # if CONFIG["force_run_ohi"]:
+            #     # Convertir cláusulas HornClause a strings para OHI
+            #     current_clauses_str = [str(clause) for clause in selected_clauses]
+                
+            #     # Refinar el conocimiento usando el análisis del MMRC
+            #     refined_kr_store = ohi.refine_knowledge(
+            #         mmrc_result, 
+            #         problem_description, 
+            #         current_clauses_str
+            #     )
+            #     if CONFIG["save_checkpoints"] and refined_kr_store:
+            #         save_checkpoint(refined_kr_store, checkpoint_ohi_name, problem_description)
+            # else:
+            #     print("INFO: OHI omitido, resultado cargado desde checkpoint.")
+            #     refined_kr_store = load_checkpoint(checkpoint_ohi_name, problem_description)
+            #     if not refined_kr_store:
+            #         print("No se encontró checkpoint para OHI, ejecutando módulo...")
+            #         current_clauses_str = [str(clause) for clause in selected_clauses]
+            #         refined_kr_store = ohi.refine_knowledge(
+            #             mmrc_result,
+            #             problem_description,
+            #             current_clauses_str
+            #         )
+            #         if CONFIG["save_checkpoints"] and refined_kr_store:
+            #             save_checkpoint(refined_kr_store, checkpoint_ohi_name, problem_description)
+            
+            # # Actualizar el KR Store actual con el refinado
+            # if refined_kr_store:
+            #     current_kr_store = refined_kr_store
+            #     print("OHI: Conocimiento refinado. Continuando con el siguiente ciclo...")
+            # else:
+            #     print("ADVERTENCIA: OHI no pudo refinar el conocimiento. Usando KR Store anterior.")
         
     print("\nTODOS LOS PROBLEMAS CONFIGURADOS PROCESADOS.")
 

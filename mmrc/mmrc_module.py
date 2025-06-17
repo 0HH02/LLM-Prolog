@@ -1,5 +1,7 @@
 from typing import List, Optional, Dict, Any
 from common.gemini_interface import ask_gemini
+from mmrc.promts import generate_successful_response_prompt, _analyze_failure_prompt
+
 import json
 from pathlib import Path
 from graphviz import Digraph
@@ -54,7 +56,7 @@ class MetaCognitionKnowledgeRefinementModule:
 
         return graph
     
-    def analyze_thought_tree(self, thought_tree: List[Any], problem_description: str, clauses: List[str], solver_errors: List[str] = None) -> Dict[str, Any]:
+    def analyze_thought_tree(self, thought_tree: List[Any], problem_description: str, clauses: List[str], solver_errors: List[str] = None, history: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Analiza el árbol de pensamientos y genera una respuesta o análisis de errores.
         
@@ -86,9 +88,9 @@ class MetaCognitionKnowledgeRefinementModule:
                 # Generar y guardar el gráfico
                 dot = self._create_thought_graph(arbol_dict)
                 dot.render(str(target_dir / f'arbol_pensamiento_{i}'), view=False, cleanup=True)
-            return self._generate_successful_response(successful_branches, problem_description, clauses)
+            return self._generate_successful_response(successful_branches, problem_description, clauses, history)
         else:
-            return self._analyze_failure(thought_tree, problem_description, clauses, solver_errors)
+            return self._analyze_failure(thought_tree, problem_description, clauses, solver_errors, history)
     
     def _find_successful_branches(self, thought_tree: List[Any]) -> List[Any]:
         """
@@ -102,14 +104,18 @@ class MetaCognitionKnowledgeRefinementModule:
         """
         successful_branches = []
         for branch in thought_tree:
-            if branch.valor[0].veracidad == "verde":
-                successful_branches.append(branch)
+            if "CAUGHT_EXCEPTION" in branch.valor[0].nombre:
+                if branch.valor[0].valor[0].veracidad == "verde":
+                    successful_branches.append(branch)
+            else:
+                if branch.valor[0].veracidad == "verde":
+                    successful_branches.append(branch)
 
         
         return successful_branches
 
     
-    def _generate_successful_response(self, successful_branches_clausule: List[Any], problem_description: str, clauses: List[str]) -> Dict[str, Any]:
+    def _generate_successful_response(self, successful_branches_clausule: List[Any], problem_description: str, clauses: List[str], history: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Genera una respuesta argumentada basada en las ramas exitosas.
         
@@ -121,30 +127,7 @@ class MetaCognitionKnowledgeRefinementModule:
             Dict con la respuesta generada
         """
         successful_branches =[branch.to_dict() for branch in successful_branches_clausule]
-        prompt = f"""
-Como experto en lógica y razonamiento, necesito que analices el siguiente problema y su solución:
-
-PROBLEMA ORIGINAL:
-{problem_description}
-
-CLAUSULAS USADAS:
-{clauses}
-
-RAMAS DE PENSAMIENTOS EXITOSAS:
-{json.dumps(successful_branches, indent=2, ensure_ascii=False)}
-
-INSTRUCCIONES:
-1. Analiza las ramas de pensamientos que llevaron a una solución exitosa
-2. Formula una respuesta bien argumentada y clara al problema original
-3. Explica paso a paso cómo se llegó a esta solución
-4. Asegúrate de que la respuesta sea comprensible para alguien sin conocimientos técnicos de lógica formal
-
-Por favor, proporciona una respuesta estructurada que incluya:
-- La respuesta directa al problema
-- La justificación lógica paso a paso
-- Una explicación clara del razonamiento utilizado
-- Un resumen siendo contundente y breve con la pregunta que se te presentó al principio.
-"""
+        prompt = generate_successful_response_prompt(successful_branches, problem_description, clauses, history["responses"][-1]["content"])
         
         try:
             response = ask_gemini(prompt)
@@ -160,7 +143,7 @@ Por favor, proporciona una respuesta estructurada que incluya:
                 "successful_branches_count": len(successful_branches)
             }
     
-    def _analyze_failure(self, thought_tree: List[Any], problem_description: str, clauses: List[str], solver_errors: List[str] = None) -> Dict[str, Any]:
+    def _analyze_failure(self, thought_tree: List[Any], problem_description: str, clauses: List[str], solver_errors: List[str] = None, history: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Analiza por qué no se encontró una solución y sugiere mejoras.
         
@@ -179,56 +162,11 @@ Por favor, proporciona una respuesta estructurada que incluya:
         # Convertir las ramas más prometedoras a diccionarios
         promising_branches_dict = [branch.to_dict() for branch in promising_branches]
         
-        # Agregar información de errores del solver si están disponibles
-        solver_error_section = ""
-        if solver_errors:
-            solver_error_section = f"""
-ERRORES DEL SOLVER DETECTADOS:
-{chr(10).join(f"- {error}" for error in solver_errors)}
-"""
-        
-        prompt = f"""
-Como experto en lógica y razonamiento, necesito que analices por qué no se pudo resolver el siguiente problema:
-
-PROBLEMA ORIGINAL:
-{problem_description}
-
-CLAUSULAS USADAS:
-{clauses}
-{solver_error_section}
-RAMAS DE PENSAMIENTO MÁS PROMETEDORAS:
-{json.dumps(promising_branches_dict, indent=2, ensure_ascii=False)}
-
-CONTEXTO:
-El sistema de razonamiento lógico no pudo encontrar una solución exitosa. Todas las ramas de pensamiento terminaron sin éxito.
-{f"Además, se detectaron errores durante la ejecución del solver que pueden haber afectado el proceso de razonamiento." if solver_errors else ""}
-
-INSTRUCCIONES:
-1. Analiza las ramas de pensamiento que más se acercaron al éxito
-2. Identifica posibles errores en:
-   - Las premisas del problema (¿faltan premisas importantes?)
-   - Las premisas formuladas (¿hay premisas incorrectas o mal interpretadas?)
-   - La lógica implementada (¿hay problemas en el razonamiento?)
-   - Inconsistencias o contradicciones en las premisas
-   {f"- Errores técnicos del solver que pudieron haber impedido una resolución exitosa" if solver_errors else ""}
-
-3. Proporciona sugerencias específicas para:
-   - Premisas que podrían estar faltando
-   - Premisas que podrían estar mal formuladas
-   - Mejoras en la lógica de razonamiento
-   - Resolución de inconsistencias
-   {f"- Soluciones para los errores técnicos detectados" if solver_errors else ""}
-
-Por favor, proporciona un análisis estructurado que incluya:
-- Diagnóstico del problema principal
-- Análisis detallado de las ramas más prometedoras
-{f"- Análisis de los errores técnicos del solver" if solver_errors else ""}
-- Sugerencias específicas de mejora
-- Recomendaciones para futuras iteraciones
-"""
+        prompt = _analyze_failure_prompt(promising_branches_dict, problem_description, clauses, solver_errors)
         
         try:
             response = ask_gemini(prompt)
+            
             return {
                 "status": "failure_analysis",
                 "analysis": response,

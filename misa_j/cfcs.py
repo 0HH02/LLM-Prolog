@@ -295,7 +295,11 @@ class PrologSolver:
                     current = node_to_redo_found
                     while current.padre:
 
-                        indice = current.padre.valor.index(current)
+                        indice = 0
+                        for son in current.padre.valor:
+                            if son.nombre == current.nombre:
+                                break
+                            indice += 1
                         # Truncar el array de valor del padre hasta el índice encontrado
                         current.padre.valor = current.padre.valor[:indice + 1]
                         current = current.padre
@@ -329,7 +333,7 @@ class PrologSolver:
 
         # Ejecutar Prolog y obtener la traza
         raw_trace = self._ejecutar_prolog_con_traza_modificado(program_string, consulta)
-        raw_trace = "\n".join(raw_trace.split("\n")[3:-6])
+        raw_trace = "\n".join(raw_trace.split("\n")[1:-6])
         print("--- Traza cruda de Prolog ---")
         print(raw_trace)
         print("--- Fin de traza cruda ---")

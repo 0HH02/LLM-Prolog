@@ -1,289 +1,301 @@
-import re
-import copy
-import json
-from pathlib import Path
-from collections import deque
-# from graphviz import Digraph
+// --- LÓGICA DE PROCESAMIENTO DE TRAZAS (Adaptada del código Python c.py) ---
 
-class Clausula:
-    def __init__(self, nombre, origen="<dynamic>:0", veracidad="",
-                 profundidad=0, padre=None):
-        self.nombre = nombre                       # p/2(args) …
-        self.origen = origen                       # fichero:línea
-        self.veracidad = veracidad                 # "", "verde", "rojo"
-        self.profundidad = profundidad             # nivel
-        self.padre = padre                         # Clausula | None
-        self.valor = []                            # list[Clausula]
-        self.choice_open = False                   # ¿dejé choice-point?
+class Clausula {
+  constructor(
+    nombre,
+    origen = "<dynamic>:0",
+    veracidad = "",
+    profundidad = 0,
+    padre = null
+  ) {
+    this.nombre = nombre;
+    this.origen = origen;
+    this.veracidad = veracidad; // "", "verde", "rojo"
+    this.profundidad = profundidad;
+    this.padre = padre;
+    this.valor = []; // list[Clausula]
+    this.id = Clausula.nextId++; // ID único para cada nodo
+  }
 
-    def __eq__(self, other):
-        if not isinstance(other, Clausula):
-            return False
-        self_nombre = self.nombre.split('(')[0].strip()
-        self_aridad = len(self.nombre.split('(')[1].split(',')) if '(' in self.nombre else 0
+  // Generador de ID para los nodos, crucial para vis.js
+  static nextId = 0;
 
-        # Extraer nombre y aridad del contenido
-        other_nombre = other.nombre.split('(')[0].strip()
-        other_aridad = len(other.nombre.split('(')[1].split(',')) if '(' in other.nombre else 0
-        return (self_nombre == other_nombre and self_aridad == other_aridad and self.veracidad == other.veracidad and len(self.valor) == len(other.valor))
+  toDict() {
+    const d = {
+      nombre: this.nombre,
+      origen: this.origen,
+      veracidad: this.veracidad,
+      profundidad: this.profundidad,
+    };
+    if (this.valor.length > 0) {
+      d.valor = this.valor.map((h) => h.toDict());
+    }
+    return d;
+  }
 
-    def to_dict(self):
-        d = {"nombre": self.nombre,
-             "origen": self.origen,
-             "veracidad": self.veracidad}
-        if self.valor:
-            d["valor"] = [h.to_dict() for h in self.valor]
-        return d
+  prettyPrint(indentLevel = 0) {
+    const indent = "  ".repeat(indentLevel);
+    const output = [];
+    output.push(`${indent}{`);
+    output.push(`${indent}  "nombre": "${this.nombre}",`);
 
-    def pretty_print(self, indent_level=0):
-        indent = "  " * indent_level
-        output = []
-        output.append(f"{indent}{{")
-        output.append(f"{indent}  \"nombre\": \"{self.nombre}\",")
-        
-        # La línea de veracidad no lleva coma si no hay 'valor' o si 'valor' está vacío.
-        veracidad_line = f"{indent}  \"veracidad\": \"{self.veracidad}\""
+    const veracidadLine = `${indent}  "veracidad": "${this.veracidad}"`;
 
-        if self.valor:
-            output.append(veracidad_line + ",") # Añadir coma si 'valor' sigue
-            output.append(f"{indent}  \"valor\": [")
-            child_strings = []
-            for i, child in enumerate(self.valor):
-                child_strings.append(child.pretty_print(indent_level + 2))
-            output.append(",\n".join(child_strings)) # Los hijos se unen con ',\n'
-            output.append(f"{indent}  ]")
-        else:
-            output.append(veracidad_line) # Sin coma si 'valor' no sigue o está vacío.
+    if (this.valor.length > 0) {
+      output.push(veracidadLine + ",");
+      output.push(`${indent}  "valor": [`);
+      const childStrings = this.valor.map((child) =>
+        child.prettyPrint(indentLevel + 2)
+      );
+      output.push(childStrings.join(",\n"));
+      output.push(`${indent}  ]`);
+    } else {
+      output.push(veracidadLine);
+    }
 
-        output.append(f"{indent}}}")
-        return "\n".join(output)
+    output.push(`${indent}}`);
+    return output.join("\n");
+  }
+}
 
-    def __repr__(self):
-        return (f"Clausula('{self.nombre}', nivel={self.profundidad}, "
-                f"veracidad='{self.veracidad}', valor={len(self.valor)})")
+function procesarTraza(trazaStr) {
+  const ramasDePensamientos = [];
+  const rangosDeLineas = []; // Nuevo: guardar el rango de líneas para cada árbol
+  let root = new Clausula("root");
+  let nodoActual = root;
+  let inicioArbolActual = 0; // Índice donde inicia el árbol actual
 
-# -------------  AJUSTA SOLO ESTA FUNCIÓN  ------------------------------------
-def procesar_traza(traza_str):
-        # Inicializamos un array de Clausulas llamado ramas_de_pensamientos
-        ramas_de_pensamientos = []
-        # Inicializamos una variable llamada root con la Clausula root con el nombre root, array vacío, valor = "" y padre = None
-        root = Clausula(nombre="root", veracidad="", padre=None)
-        # Inicializamos una variable llamada nodo_actual que será igual a root
-        nodo_actual = root
+  // Regex mejorada para capturar el formato completo
+  const lineRegex =
+    /^\s*(call|exit|fail|redo)(?:\(\d+\))?:\s*([^@]+?)\s*(?:@.*)?$/;
 
-        # Regex para parsear: Tipo, Nivel (ignorado por ahora), Contenido
-        line_regex = re.compile(r'^\s*(call|exit|fail|redo)(?:\(\d+\))?:\s*([^@]+?)\s*(?:@.*)?$')
-        
-        traza = traza_str.strip().split('\n')
-        # Por cada linea en la traza:
-        conta = 0
-        for index, line_raw in enumerate(traza):
-            line = line_raw.strip()
-            if not line:
-                continue
+  const traza = trazaStr
+    .trim()
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
 
-            # Parseala para determinar el contenido de la linea y desestrúcturalo en nombre, aridad y tipo de llamada.
-            match = line_regex.match(line)
-            if not match:
-                # print(f"Advertencia: No se pudo parsear la línea: {line}")
-                continue
+  traza.forEach((lineRaw, index) => {
+    const match = lineRegex.exec(lineRaw);
+    if (!match) {
+      console.warn(`No se pudo parsear la línea: ${lineRaw}`);
+      return;
+    }
 
-            tipo_llamada, contenido_str = match.groups()
-            # 'nombre' y 'aridad' se infieren del 'contenido_str' según el contexto.
+    const [, tipoLlamada, contenidoStr] = match;
 
+    if (tipoLlamada === "call") {
+      if (contenidoStr === "fail") return;
 
-            if tipo_llamada == "call":
-                # Si la linea es de tipo Call, si el contenido es fail salta la linea
-                if contenido_str == "fail":
-                    continue
-                # si no crea una Clausula con nombre = al contenido y padre = nodo_actual, esta será el nuevo nodo_actual
-                nueva_clausula = Clausula(nombre=contenido_str, padre=nodo_actual)
-                nodo_actual.valor.append(nueva_clausula)
-                nodo_actual = nueva_clausula
-            
-            elif tipo_llamada == "exit":
-                # El nodo_actual es el que fue llamado y ahora está saliendo (Exit)
-                exiting_node = nodo_actual
-                
-                # Si el array valor está vacío crea una Cláusula con el nombre = al contenido, veracidad = "verde" y agrégalo al array de cláusulas de valor del nodo_actual.
-                if not exiting_node.valor: 
-                    clausula_resultado = Clausula(nombre=contenido_str, veracidad="verde", padre=exiting_node)
-                    exiting_node.valor.append(clausula_resultado)
-                exiting_node.veracidad = "verde"
-                
-                # Nodo_actual será nodo_actual.padre (para ambos casos de Exit)
-                if exiting_node.padre:
-                    nodo_actual = exiting_node.padre
-                
-            elif tipo_llamada == "fail":
-                # si el contenido es fail salta la linea
-                if contenido_str == "fail":
-                    continue
-                
-                failing_node = nodo_actual # El nodo que fue llamado y ahora está fallando (Fail)
-                
-                # si no si el array valor está vacío crea una Cláusula con el nombre = al contenido, veracidad = "rojo" y agrégalo al array de cláusulas de valor del nodo_actual.
-                if not failing_node.valor:
-                    clausula_resultado = Clausula(nombre=contenido_str, veracidad="rojo", padre=failing_node)
-                    failing_node.valor.append(clausula_resultado)
+      const nuevaClausula = new Clausula(
+        contenidoStr,
+        "<dynamic>:0",
+        "",
+        nodoActual.profundidad + 1,
+        nodoActual
+      );
+      nodoActual.valor.push(nuevaClausula);
+      nodoActual = nuevaClausula;
+    } else if (tipoLlamada === "exit") {
+      const exitingNode = nodoActual;
 
-                failing_node.veracidad = "rojo"
-                
-                # y el nodo_actual será nodo_actual.padre (para ambos casos de Fail)
-                if failing_node.padre:
-                    nodo_actual = failing_node.padre
+      // Si el array valor está vacío, crear una cláusula resultado
+      if (exitingNode.valor.length === 0) {
+        const clausulaResultado = new Clausula(
+          contenidoStr,
+          "<dynamic>:0",
+          "verde",
+          exitingNode.profundidad + 1,
+          exitingNode
+        );
+        exitingNode.valor.push(clausulaResultado);
+      }
+      exitingNode.veracidad = "verde";
 
-            elif tipo_llamada == "redo":
-                # Hacemos una copia del arbol almacenado en root y la guardamos en el array de ramas_de_pensamientos.
-                while nodo_actual.padre:
-                    nodo_actual.veracidad = "rojo"
-                    nodo_actual = nodo_actual.padre
-                ramas_de_pensamientos.append(copy.deepcopy(root))
-                arbol_dict = ramas_de_pensamientos[-1].to_dict()
-        
-                # Determinar la carpeta basada en la veracidad del primer nodo
-                target_dir = Path("solutions/pruebas/success")
-                
-                # Generar y guardar el gráfico
-                # dot = _create_thought_graph(arbol_dict)
-                # dot.render(str(target_dir / f'arbol_pensamiento_{conta}'), view=False, cleanup=True)
-                conta += 1
-                print(line_raw)
-                if line_raw == "                            redo(17): (cellini=bellini)log_equiv inscripcion_verdadera_en(b,[cofre(a,bellini),cofre(b,cellini),cofre(c,bellini),cofre(d,bellini)],[(a,b),(c,d)]) @ /tmp/tmpv4goqdt7.pl:36":
-                    print("llegue")
-                
-                # Luego bajamos por el arbol desde root hasta encontrar una de las cláusulas 
-                # ... con nombre igual al contenido de la linea
-                # (contenido_str es, por ej., "hola(_4668)")
-                
-                q = [root] # Cola para búsqueda BFS para encontrar el nodo
-                node_to_redo_found = None
-                # Usamos un set para evitar ciclos en la búsqueda si la estructura del árbol fuera inesperada,
-                # aunque con padres no debería haber ciclos descendentes.
-                visited_for_bfs = set() 
+      if (exitingNode.padre) {
+        nodoActual = exitingNode.padre;
+      }
+    } else if (tipoLlamada === "fail") {
+      if (contenidoStr === "fail") return;
 
-                last_last_found = None
-                last_found = None
+      const failingNode = nodoActual;
 
-                while q:
-                    curr_search_node = q.pop(0)
-                    
-                    if id(curr_search_node) in visited_for_bfs: # Comprobar por id del objeto
-                        continue
-                    visited_for_bfs.add(id(curr_search_node))
+      // Si el array valor está vacío, crear una cláusula resultado
+      if (failingNode.valor.length === 0) {
+        const clausulaResultado = new Clausula(
+          contenidoStr,
+          "<dynamic>:0",
+          "rojo",
+          failingNode.profundidad + 1,
+          failingNode
+        );
+        failingNode.valor.push(clausulaResultado);
+      }
+      failingNode.veracidad = "rojo";
 
-                    # Extraer nombre y aridad del nodo actual
-                    curr_nombre = curr_search_node.nombre.split('(')[0].strip()
-                    curr_aridad = len(curr_search_node.nombre.split('(')[1].split(',')) if '(' in curr_search_node.nombre else 0
+      if (failingNode.padre) {
+        nodoActual = failingNode.padre;
+      }
+    } else if (tipoLlamada === "redo") {
+      // Marcar nodos como rojos hasta llegar al padre
+      while (nodoActual.padre) {
+        nodoActual.veracidad = "rojo";
+        nodoActual = nodoActual.padre;
+      }
 
-                    # Extraer nombre y aridad del contenido
-                    cont_nombre = contenido_str.split('(')[0].strip()
-                    cont_aridad = len(contenido_str.split('(')[1].split(',')) if '(' in contenido_str else 0
+      // Hacer copia profunda del árbol y guardar el rango de líneas
+      ramasDePensamientos.push(JSON.parse(JSON.stringify(root.toDict())));
+      rangosDeLineas.push({
+        inicio: inicioArbolActual,
+        fin: index,
+        redoLinea: index,
+      });
 
-                    # Comparar nombre y aridad
-                    if curr_nombre == cont_nombre and curr_aridad == cont_aridad:
-                        last_last_found = last_found
-                        last_found = curr_search_node
+      // Buscar el nodo a rehacer usando BFS
+      const q = [root];
+      let nodeToRedoFound = null;
+      const visitedForBfs = new Set();
+      let lastFound = null;
+      let lastLastFound = null;
 
-                    if curr_search_node.nombre == contenido_str:
-                        node_to_redo_found = curr_search_node
-                        # print("node_found: ", node_to_redo_found)
-                    for child in curr_search_node.valor:
-                        if isinstance(child, Clausula): # Asegurarse de que el hijo es una Clausula
-                            q.append(child)
-                if node_to_redo_found == None:
-                        print(last_found)
-                        print(last_last_found)
-                        print(contenido_str)
+      while (q.length > 0) {
+        const currSearchNode = q.shift();
 
-                        node_to_redo_found = last_found
-                        node_to_redo_found.nombre = contenido_str
-                        print("Solo se encontró un nodo con igual nombre, aridad y profundidad")
-                
-                if node_to_redo_found != None:
-                    #ELIMINAR ESTO DESPUES DE LA PRUEBAs
-                    if index + 1 == len(traza):
-                        break
-                    next_clausule = traza[index + 1]
-                    next_contenido = line_regex.match(next_clausule).group(2).strip()
-                    nombre = next_contenido.split('(')[0].strip()
-                    aridad = len(next_contenido.split('(')[1].split(',')) if '(' in next_contenido else 0
-                    if node_to_redo_found.valor != []:
-                        for index, clausula in enumerate(node_to_redo_found.valor):
-                            if clausula.nombre == nombre and (len(clausula.nombre.split('(')[1].split(',')) if '(' in clausula.nombre else 0) == aridad:
-                                node_to_redo_found.valor = node_to_redo_found.valor[:index + 1]
-                                break
-                        else:
-                            # Limpiar el array de valor del nodo encontrado y reiniciar su veracidad
-                            node_to_redo_found.valor = []
-                     
-                    node_to_redo_found.veracidad = ""  # Reiniciar su estado de veracidad
-                    nodo_actual = node_to_redo_found
-                    current = node_to_redo_found
-                    while current.padre:
-                        indice = 0
-                        for son in current.padre.valor:
-                            if son.nombre == current.nombre:
-                                break
-                            indice += 1
-                        # Truncar el array de valor del padre hasta el índice encontrado
-                        current.padre.valor = current.padre.valor[:indice + 1]
-                        current = current.padre
-                        
-                else:
-                    # Este caso idealmente no debería ocurrir si la traza es consistente.
-                    # print(f"Advertencia: Objetivo de REDO '{contenido_str}' no encontrado en el estado actual del árbol.")
-                    pass
+        if (visitedForBfs.has(currSearchNode.id)) {
+          continue;
+        }
+        visitedForBfs.add(currSearchNode.id);
 
-        ramas_de_pensamientos.append(copy.deepcopy(root))
+        // Extraer nombre y aridad del nodo actual
+        const currNombre = currSearchNode.nombre.split("(")[0].trim();
+        const currAridadMatch = currSearchNode.nombre.match(/\((.*)\)/);
+        const currAridad = currAridadMatch
+          ? currAridadMatch[1].split(",").length
+          : 0;
 
-        return ramas_de_pensamientos
-# ------------------------------------------------------------------------------
+        // Extraer nombre y aridad del contenido
+        const contNombre = contenidoStr.split("(")[0].trim();
+        const contAridadMatch = contenidoStr.match(/\((.*)\)/);
+        const contAridad = contAridadMatch
+          ? contAridadMatch[1].split(",").length
+          : 0;
 
-# def _create_thought_graph(data, graph=None, parent_id=None, node_counter=[0]):
-#     """
-#     Recursively creates nodes and edges for the Graphviz diagram from the JSON data.
-#     """
-#     if graph is None:
-#         graph = Digraph(comment='Cadena de Pensamientos', format='png') # You can change 'png' to 'svg', 'jpg', etc.
-#         graph.attr(rankdir='TB') # Top to bottom layout
-#         graph.attr('node', shape='box', style='filled', fontname='Arial')
+        // Comparar nombre y aridad
+        if (currNombre === contNombre && currAridad === contAridad) {
+          lastLastFound = lastFound;
+          lastFound = currSearchNode;
+        }
 
-#     current_node_id = f"node_{node_counter[0]}"
-#     node_counter[0] += 1
+        if (currSearchNode.nombre === contenidoStr) {
+          nodeToRedoFound = currSearchNode;
+        }
 
-#     name = data.get("nombre", "N/A")
-#     veracidad = data.get("veracidad", "")
+        if (currSearchNode.valor && Array.isArray(currSearchNode.valor)) {
+          currSearchNode.valor.forEach((child) => {
+            if (child && typeof child === "object") {
+              q.push(child);
+            }
+          });
+        }
+      }
 
-#     # Define node color based on 'veracidad'
-#     fill_color = "lightblue" # Default
-#     if veracidad == "verde":
-#         fill_color = "lightgreen"
-#     elif veracidad == "rojo":
-#         fill_color = "salmon"
+      if (!nodeToRedoFound) {
+        if (lastFound) {
+          nodeToRedoFound = lastFound;
+          nodeToRedoFound.nombre = contenidoStr;
+          console.log(
+            "Solo se encontró un nodo con igual nombre, aridad y profundidad"
+          );
+        }
+      }
 
-#     # Add the node to the graph
-#     graph.node(current_node_id, label="{}\\n({})".format(name.replace('\\', '\\\\'), veracidad), fillcolor=fill_color)
+      if (nodeToRedoFound) {
+        // Lógica correcta de limpieza basada en c.py
+        // No eliminar todo el árbol, solo los nodos que vinieron después del redo
 
-#     # Add an edge from the parent node if it exists
-#     if parent_id:
-#         graph.edge(parent_id, current_node_id)
+        if (index + 1 < traza.length) {
+          const nextClausule = traza[index + 1];
+          const nextMatch = lineRegex.exec(nextClausule);
+          if (nextMatch) {
+            const nextContenido = nextMatch[2].trim();
+            const nombre = nextContenido.split("(")[0].trim();
+            const aridadMatch = nextContenido.match(/\((.*)\)/);
+            const aridad = aridadMatch ? aridadMatch[1].split(",").length : 0;
 
-#     # Recursively process children
-#     if "valor" in data and isinstance(data["valor"], list):
-#         for child in data["valor"]:
-#             _create_thought_graph(child, graph, current_node_id, node_counter)
+            // Si hay hijos en el nodo del redo
+            if (nodeToRedoFound.valor.length > 0) {
+              let found = false;
+              for (let i = 0; i < nodeToRedoFound.valor.length; i++) {
+                const clausula = nodeToRedoFound.valor[i];
+                const clausulaNombre = clausula.nombre.split("(")[0].trim();
+                const clausulaAridadMatch = clausula.nombre.match(/\((.*)\)/);
+                const clausulaAridad = clausulaAridadMatch
+                  ? clausulaAridadMatch[1].split(",").length
+                  : 0;
 
-#     return graph
+                // Si encontramos el nodo que coincide con la siguiente línea
+                if (clausulaNombre === nombre && clausulaAridad === aridad) {
+                  // Mantener solo hasta este índice (inclusive)
+                  nodeToRedoFound.valor = nodeToRedoFound.valor.slice(0, i + 1);
+                  found = true;
+                  break;
+                }
+              }
+              // Si no se encontró coincidencia, limpiar completamente
+              if (!found) {
+                nodeToRedoFound.valor = [];
+              }
+            }
+          }
+        }
 
-# -------------------
-# Example usage
-# -------------------
-if __name__ == "__main__":
-    import textwrap
+        // Reiniciar el estado de veracidad del nodo del redo
+        nodeToRedoFound.veracidad = "";
+        nodoActual = nodeToRedoFound;
 
-    sample_trace = textwrap.dedent("""
-                        call: catch((solucion(_4650,_4652,_4654,_4656,_4658),fail),_4670,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4670]),fail)) @ <dynamic>:0
+        // Limpiar hacia arriba en la jerarquía: mantener solo hasta el índice del nodo actual
+        let current = nodeToRedoFound;
+        while (current.padre) {
+          const indice = current.padre.valor.indexOf(current);
+          // Truncar el array de valor del padre hasta el índice encontrado (inclusive)
+          current.padre.valor = current.padre.valor.slice(0, indice + 1);
+          current = current.padre;
+        }
+      }
+
+      // Reiniciar para el siguiente árbol
+      inicioArbolActual = index + 1;
+    }
+  });
+
+  // Añadir el estado final y su rango
+  ramasDePensamientos.push(JSON.parse(JSON.stringify(root.toDict())));
+  rangosDeLineas.push({
+    inicio: inicioArbolActual,
+    fin: traza.length - 1,
+    redoLinea: null, // El último árbol no termina en redo
+  });
+
+  return {
+    arboles: ramasDePensamientos,
+    rangos: rangosDeLineas,
+  };
+}
+
+// --- LÓGICA DE LA INTERFAZ WEB ---
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Contenedores y botones del DOM
+  const treeContainer = document.getElementById("tree-container");
+  const traceContainer = document.getElementById("trace-container");
+  const nextBtn = document.getElementById("next-btn");
+  const stepBtn = document.getElementById("step-btn");
+  const fileInput = document.getElementById("file-input");
+  const loadBtn = document.getElementById("load-btn");
+  const resetBtn = document.getElementById("reset-btn");
+
+  // Traza de ejemplo por defecto
+  let currentTraceStr = `call: catch((solucion(_4650,_4652,_4654,_4656,_4658),fail),_4670,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4670]),fail)) @ <dynamic>:0
                         call: solucion(_4650,_4652,_4654,_4656,_4658) @ <dynamic>:0
                           call: posibles_parejas(_7690) @ <dynamic>:0
                           exit: posibles_parejas([[(a,b),(c,d)],[(a,d),(c,b)]]) @ /tmp/tmpv4goqdt7.pl:27
@@ -2107,8 +2119,344 @@ if __name__ == "__main__":
                               fail: lists:member(cofre(a,_15946),[cofre(a,cellini),cofre(b,cellini),cofre(c,cellini),cofre(d,cellini)]) @ <dynamic>:0
                             fail: get_autor(a,_15946,[cofre(a,cellini),cofre(b,cellini),cofre(c,cellini),cofre(d,cellini)]) @ <dynamic>:0
                           fail: es_estado_consistente([cofre(a,cellini),cofre(b,cellini),cofre(c,cellini),cofre(d,cellini)],[(a,d),(c,b)]) @ <dynamic>:0
-                        fail: solucion(_4650,_4652,_4654,_4656,_4658) @ <dynamic>:0
-v
-""")
+                        fail: solucion(_4650,_4652,_4654,_4656,_4658) @ <dynamic>:0`;
 
-    clauses = procesar_traza(sample_trace)
+  let fullTraceLines = [];
+  let completeTrees = [];
+  let treeRanges = []; // Nuevo: rangos de líneas para cada árbol
+  let currentTreeIndex = 0;
+  let currentLineIndex = 0;
+  let network = null;
+  let stepByStepMode = false;
+
+  // Función para cargar y mostrar la traza
+  function loadTrace(traceStr) {
+    currentTraceStr = traceStr;
+    fullTraceLines = traceStr
+      .trim()
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    traceContainer.innerHTML = fullTraceLines
+      .map((line, index) => `<div data-line="${index}">${line}</div>`)
+      .join("");
+
+    // Reiniciar variables
+    completeTrees = [];
+    treeRanges = [];
+    currentTreeIndex = 0;
+    currentLineIndex = 0;
+    stepByStepMode = false;
+
+    // Habilitar botones
+    nextBtn.disabled = false;
+    stepBtn.disabled = false;
+
+    console.log(`Traza cargada con ${fullTraceLines.length} líneas`);
+  }
+
+  // Función para dibujar/actualizar el árbol
+  function drawTree(treeData) {
+    const nodes = [];
+    const edges = [];
+    const levelInfo = new Map(); // Para rastrear cuántos nodos hay en cada nivel
+
+    function traverse(node, parentId, level = 0) {
+      const nodeId = `node_${nodes.length}`;
+
+      // Rastrear información del nivel
+      if (!levelInfo.has(level)) {
+        levelInfo.set(level, 0);
+      }
+      levelInfo.set(level, levelInfo.get(level) + 1);
+
+      nodes.push({
+        id: nodeId,
+        label: node.nombre,
+        level: level, // Asignar nivel explícitamente
+        color: {
+          background:
+            node.veracidad === "verde"
+              ? "#90EE90"
+              : node.veracidad === "rojo"
+              ? "#FFB6C1"
+              : "#ADD8E6",
+          border: "#2B7CE9",
+        },
+        shape: "box",
+        font: { size: 14 },
+        margin: 15, // Aumentar margen interno
+        widthConstraint: { minimum: 120, maximum: 300 }, // Controlar ancho
+      });
+
+      if (parentId !== null) {
+        edges.push({ from: parentId, to: nodeId });
+      }
+
+      if (node.valor && Array.isArray(node.valor)) {
+        node.valor.forEach((child) => traverse(child, nodeId, level + 1));
+      }
+
+      return nodeId;
+    }
+
+    const rootId = traverse(treeData, null);
+
+    // Calcular espaciado dinámico basado en el número de nodos
+    const maxNodesInLevel = Math.max(...Array.from(levelInfo.values()));
+    const dynamicNodeSpacing = Math.max(150, maxNodesInLevel * 20); // Espaciado mínimo de 150
+    const dynamicLevelSeparation = 180; // Separación vertical entre niveles
+
+    const data = {
+      nodes: new vis.DataSet(nodes),
+      edges: new vis.DataSet(edges),
+    };
+
+    const options = {
+      layout: {
+        hierarchical: {
+          direction: "UD", // Up-Down
+          sortMethod: "directed",
+          nodeSpacing: dynamicNodeSpacing, // Espaciado horizontal dinámico
+          levelSeparation: dynamicLevelSeparation, // Separación vertical entre niveles
+          treeSpacing: 200, // Espacio entre diferentes árboles
+          blockShifting: true, // Permite mover bloques para evitar solapamiento
+          edgeMinimization: true, // Minimiza cruces de aristas
+          parentCentralization: true, // Centra padres sobre sus hijos
+          shakeTowards: "leaves", // Optimiza hacia las hojas
+        },
+      },
+      physics: {
+        enabled: false, // Deshabilitado para layout fijo
+      },
+      nodes: {
+        margin: 15,
+        borderWidth: 2,
+        borderWidthSelected: 3,
+        font: {
+          size: 12,
+          face: "Arial",
+          align: "center",
+        },
+        chosen: {
+          node: function (values, id, selected, hovering) {
+            values.borderWidth = 3;
+          },
+        },
+      },
+      edges: {
+        arrows: {
+          to: { enabled: true, scaleFactor: 1.2 },
+        },
+        smooth: {
+          type: "cubicBezier",
+          forceDirection: "vertical",
+          roundness: 0.4,
+        },
+        width: 2,
+        color: {
+          color: "#2B7CE9",
+          highlight: "#2B7CE9",
+          hover: "#2B7CE9",
+        },
+      },
+      interaction: {
+        hover: true,
+        selectConnectedEdges: false,
+      },
+    };
+
+    if (network) {
+      network.destroy();
+    }
+    network = new vis.Network(treeContainer, data, options);
+
+    // Ajustar la vista para mostrar todo el árbol
+    network.once("afterDrawing", function () {
+      network.fit({
+        nodes: nodes.map((n) => n.id),
+        animation: {
+          duration: 500,
+          easingFunction: "easeInOutQuad",
+        },
+      });
+    });
+  }
+
+  // Resalta la línea actual en el panel de traza
+  function highlightTraceLine(index) {
+    const divs = traceContainer.querySelectorAll("div");
+    divs.forEach((div, i) => {
+      div.classList.toggle("highlight", i === index);
+    });
+    if (divs[index]) {
+      divs[index].scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }
+
+  // --- Event Listeners ---
+
+  // Cargar archivo
+  loadBtn.addEventListener("click", () => {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        loadTrace(e.target.result);
+        drawInitialTree();
+      };
+      reader.readAsText(file);
+    }
+  });
+
+  // Reiniciar
+  resetBtn.addEventListener("click", () => {
+    loadTrace(currentTraceStr);
+    drawInitialTree();
+  });
+
+  // Botón "Saltar al Siguiente Árbol"
+  nextBtn.addEventListener("click", () => {
+    if (!completeTrees.length) {
+      const result = procesarTraza(currentTraceStr);
+      completeTrees = result.arboles;
+      treeRanges = result.rangos;
+    }
+
+    if (completeTrees.length > 0) {
+      drawTree(completeTrees[currentTreeIndex]);
+
+      // Actualizar currentLineIndex para que apunte al final del árbol actual
+      if (treeRanges[currentTreeIndex]) {
+        currentLineIndex = treeRanges[currentTreeIndex].fin + 1;
+      }
+
+      // Mostrar información del árbol actual
+      const info = document.getElementById("tree-info");
+      if (info) {
+        const rangoActual = treeRanges[currentTreeIndex];
+        const tipoFinalizacion =
+          rangoActual && rangoActual.redoLinea !== null
+            ? `(terminó en redo en línea ${rangoActual.redoLinea + 1})`
+            : "(árbol final)";
+        info.textContent = `Árbol ${currentTreeIndex + 1} de ${
+          completeTrees.length
+        } ${tipoFinalizacion}`;
+      }
+
+      currentTreeIndex = (currentTreeIndex + 1) % completeTrees.length;
+      stepByStepMode = false;
+      stepBtn.disabled = false;
+    }
+  });
+
+  // Botón "Visualizar Línea por Línea"
+  stepBtn.addEventListener("click", () => {
+    // Si no se han cargado los árboles, cargarlos
+    if (!completeTrees.length) {
+      const result = procesarTraza(currentTraceStr);
+      completeTrees = result.arboles;
+      treeRanges = result.rangos;
+    }
+
+    // Determinar en qué árbol estamos basado en currentLineIndex
+    let arbolActual = 0;
+    for (let i = 0; i < treeRanges.length; i++) {
+      if (
+        currentLineIndex >= treeRanges[i].inicio &&
+        currentLineIndex <= treeRanges[i].fin
+      ) {
+        arbolActual = i;
+        break;
+      }
+      if (currentLineIndex < treeRanges[i].inicio) {
+        arbolActual = i;
+        currentLineIndex = treeRanges[i].inicio;
+        break;
+      }
+    }
+
+    // Si llegamos al final de todos los árboles
+    if (currentLineIndex >= fullTraceLines.length) {
+      alert("Fin de la traza.");
+      currentLineIndex = 0;
+      stepByStepMode = false;
+      nextBtn.disabled = false;
+      return;
+    }
+
+    stepByStepMode = true;
+    nextBtn.disabled = true;
+
+    // Determinar qué líneas procesar para el paso actual
+    const rangoActual = treeRanges[arbolActual];
+    const inicioRango = rangoActual.inicio;
+    const finLinea = Math.min(currentLineIndex, rangoActual.fin);
+
+    // Procesar solo las líneas hasta la línea actual dentro del rango del árbol
+    const lineasParaProcesar = fullTraceLines.slice(inicioRango, finLinea + 1);
+    const currentTrace = lineasParaProcesar.join("\n");
+
+    try {
+      if (currentTrace.trim()) {
+        const result = procesarTraza(currentTrace);
+        const treesForStep = result.arboles;
+        const lastTree = treesForStep[treesForStep.length - 1];
+
+        drawTree(lastTree);
+        highlightTraceLine(currentLineIndex);
+
+        // Mostrar información del paso actual
+        const info = document.getElementById("tree-info");
+        if (info) {
+          info.textContent = `Árbol ${arbolActual + 1}: Procesando línea ${
+            currentLineIndex + 1
+          } de ${fullTraceLines.length} (rango: ${rangoActual.inicio + 1}-${
+            rangoActual.fin + 1
+          })`;
+        }
+      }
+
+      // Avanzar al siguiente paso
+      currentLineIndex++;
+
+      // Si hemos llegado al final del árbol actual, saltar al siguiente
+      if (
+        currentLineIndex > rangoActual.fin &&
+        arbolActual + 1 < treeRanges.length
+      ) {
+        currentLineIndex = treeRanges[arbolActual + 1].inicio;
+      }
+    } catch (error) {
+      console.error("Error procesando traza:", error);
+      alert("Error al procesar la traza en la línea " + (currentLineIndex + 1));
+    }
+  });
+
+  // Función para dibujar el árbol inicial
+  function drawInitialTree() {
+    if (fullTraceLines.length > 0) {
+      const result = procesarTraza(currentTraceStr);
+      completeTrees = result.arboles;
+      treeRanges = result.rangos;
+
+      if (completeTrees.length > 0) {
+        drawTree(completeTrees[0]);
+
+        const info = document.getElementById("tree-info");
+        if (info) {
+          info.textContent = `Traza cargada. ${completeTrees.length} estados de árbol disponibles.`;
+        }
+      }
+    }
+  }
+
+  // Inicialización
+  loadTrace(currentTraceStr);
+  drawInitialTree();
+});
