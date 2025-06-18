@@ -1,7 +1,7 @@
 from typing import List, Dict, Optional, Tuple
 from common.gemini_interface import ask_gemini, ask_gemini_json # Asumiendo que la función ask_gemini está definida como antes
 from .kr_store import KnowledgeRepresentationStore
-from mfsa.promts import initial_analysis_promt, formalize_statement_promt, enrich_axioms_promt, formalize_in_logic_statement_promt
+from mfsa.promts import initial_analysis_promt, enrich_axioms_promt, nl_to_prolog_promt
 from datetime import datetime
 
 class SemanticFormalizationAxiomatizationModule:
@@ -15,10 +15,45 @@ class SemanticFormalizationAxiomatizationModule:
         Paso 1 del LLM-KGE: Comprensión, reificación, identificación de objetivo y ambigüedades.
         Devuelve: (reformulación_llm, objetivo_nl, entidades_relaciones_str, ambiguedades_detectadas)
         """
+        config = {
+                "response_mime_type": "application/json",
+                "response_schema": {
+                    "type": "object",
+                    "properties": {
+                        "general_description": {"type": "string"},
+                        "objetive": {"type": "string"},
+                        "premises": {"type": "array", "items": {"type": "string"}}
+                    },
+                    "required": ["general_description", "objetive", "premises"]
+                }
+            }
         prompt = initial_analysis_promt(problem_description_nl)
-        response = ask_gemini(prompt, f"initial_analysis_{problem_description_nl[:20].replace(' ','_').lower()}") # task_hint dinámico para mock
+        response = ask_gemini_json(prompt, f"initial_analysis_{problem_description_nl[:20].replace(' ','_').lower()}", config=config) # task_hint dinámico para mock
+        
+        print("===Premisas encontradas===")
+        for premise in response["premises"]:
+            print(premise)
+        user_clarification = input("Estas son las premisas que he encontrado. Si crees que me he saltado algunas puedes comentármelas si no presiona enter para continuar")
+        print("Continuando...")
+        
+        all_premises = "\n".join(response["premises"]) + "\nAclaración del Usuario: " + user_clarification
 
-        return response
+
+        config = {
+                "response_mime_type": "application/json",
+                "response_schema": {
+                    "type": "object",
+                    "properties": {
+                        "preview_analysis": {"type": "string"},
+                        "hypothetical_solution": {"type": "string"},
+                        "output_desired": {"type": "string"},
+                        "prolog_code": {"type": "string"},
+                    },
+                    "required": ["preview_analysis", "hypothetical_solution", "output_desired", "prolog_code"]}
+                }
+        prompt = nl_to_prolog_promt(problem_description_nl, all_premises, response["general_description"])
+        response = ask_gemini_json(prompt, f"nl_to_prolog_{problem_description_nl[:20].replace(' ','_').lower()}", config=config)
+        return response["prolog_code"]
 
     def _llm_kge_request_disambiguation(self, ambiguities: List[str], problem_description_nl: str) -> str:
         """Solicita aclaraciones al usuario."""
@@ -66,14 +101,6 @@ class SemanticFormalizationAxiomatizationModule:
 
         # 1. LLM-KGE: Análisis inicial, identificación de objetivo NL, y detección de ambigüedades
         initial_LLM_analysis = self._llm_kge_initial_analysis(problem_description_nl)
-
-        # 2. LLM-KGE: Desambiguación con el usuario (si es necesario)
-        # problem_description_final_nl = self._llm_kge_request_disambiguation(ambiguities, problem_description_nl)
-        # if problem_description_final_nl != problem_description_nl: # Si hubo aclaración
-        #     print(f"MFSA: Descripción del problema actualizada tras desambiguación.")
-            # Opcional: Re-analizar si la aclaración fue sustancial
-            # initial_LLM_analysis, goal_nl, entities_relations_str, _ = self._llm_kge_initial_analysis(problem_description_final_nl)
-            # Por simplicidad, asumimos que la aclaración se añade al contexto.
 
         # 4. LLM-KGE: Extraer Cláusulas Específicas del Problema
         problem_clauses_extracted, objective = self.kr_store.update(problem_description_nl, initial_LLM_analysis)

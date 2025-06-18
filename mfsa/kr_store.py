@@ -17,7 +17,19 @@ class KnowledgeRepresentationStore:
 
         problem_clauses_prompt = extract_problem_clauses_promt(problem_description_nl, problem_reformulation)
         
-        response = ask_gemini_json(problem_clauses_prompt)
+        config = {
+                "response_mime_type": "application/json",
+                "response_schema": {
+                    "type": "object",
+                    "properties": {
+                        "facts": {"type": "array", "items": {"type": "string"}},
+                        "rules": {"type": "array", "items": {"type": "string"}},
+                        "objetive": {"type": "array", "items": {"type": "string"}}
+                    },
+                    "required": ["facts", "rules", "objetive"]
+                }
+            }
+        response = ask_gemini_json(problem_clauses_prompt, config=config)
         
         facts = response["facts"]
         rules = response["rules"]

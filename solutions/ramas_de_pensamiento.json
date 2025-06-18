@@ -4,57 +4,87 @@
     "veracidad": "",
     "valor": [
       {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
         "veracidad": "rojo",
         "valor": [
           {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
             "veracidad": "rojo",
             "valor": [
               {
-                "nombre": "fabricante(_4650)",
+                "nombre": "possible_maker(_4650)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4652)",
+                "nombre": "possible_maker(_4652)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4654)",
+                "nombre": "possible_maker(_4654)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4656)",
+                "nombre": "possible_maker(_4656)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "check_solucion(bellini,bellini,bellini,bellini)",
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,b,c,d)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,bellini,a,b,c,d)",
                 "veracidad": "rojo",
                 "valor": [
+                  {
+                    "nombre": "_8096=(a,b,c,d)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,b,c,d)=(a,b,c,d)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8216=(bellini,bellini,bellini,bellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,bellini)=(bellini,bellini,bellini,bellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
                   {
                     "nombre": "bellini=bellini",
                     "veracidad": "verde",
@@ -66,11 +96,575 @@
                     ]
                   },
                   {
-                    "nombre": "contenido_a_es_verdadera(bellini,bellini,bellini,bellini)",
+                    "nombre": "statement_content_holds(a,(a,b,c,d),(bellini,bellini,bellini,bellini))",
                     "veracidad": "rojo",
                     "valor": [
                       {
-                        "nombre": "contenido_a_es_verdadera(bellini,bellini,bellini,bellini)",
+                        "nombre": "get_paired_chest(a,a,b,c,d,_8488)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "_8488=b",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "b=b",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "get_maker(b,bellini,bellini,bellini,bellini,_8816)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(b,bellini,bellini,bellini,bellini,bellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "bellini=cellini",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "bellini=cellini",
+                            "veracidad": "rojo"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
+        "veracidad": "rojo",
+        "valor": [
+          {
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
+            "veracidad": "rojo",
+            "valor": [
+              {
+                "nombre": "possible_maker(_4650)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4652)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4654)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4656)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,b,c,d)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,bellini,a,b,c,d)",
+                "veracidad": "rojo",
+                "valor": [
+                  {
+                    "nombre": "_8096=(a,b,c,d)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,b,c,d)=(a,b,c,d)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8216=(bellini,bellini,bellini,bellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,bellini)=(bellini,bellini,bellini,bellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(a,(a,b,c,d),(bellini,bellini,bellini,bellini))",
+                    "veracidad": "rojo",
+                    "valor": [
+                      {
+                        "nombre": "get_paired_chest(a,a,b,c,d,_8488)",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "a=b",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "a=b",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
+        "veracidad": "rojo",
+        "valor": [
+          {
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
+            "veracidad": "rojo",
+            "valor": [
+              {
+                "nombre": "possible_maker(_4650)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4652)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4654)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4656)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,b,c,d)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,bellini,a,b,c,d)",
+                "veracidad": "rojo",
+                "valor": [
+                  {
+                    "nombre": "_8096=(a,b,c,d)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,b,c,d)=(a,b,c,d)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8216=(bellini,bellini,bellini,bellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,bellini)=(bellini,bellini,bellini,bellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(a,(a,b,c,d),(bellini,bellini,bellini,bellini))",
+                    "veracidad": "rojo",
+                    "valor": [
+                      {
+                        "nombre": "get_paired_chest(a,a,b,c,d,_8488)",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "a=c",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "a=c",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
+        "veracidad": "rojo",
+        "valor": [
+          {
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
+            "veracidad": "rojo",
+            "valor": [
+              {
+                "nombre": "possible_maker(_4650)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4652)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4654)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4656)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,b,c,d)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,bellini,a,b,c,d)",
+                "veracidad": "rojo",
+                "valor": [
+                  {
+                    "nombre": "_8096=(a,b,c,d)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,b,c,d)=(a,b,c,d)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8216=(bellini,bellini,bellini,bellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,bellini)=(bellini,bellini,bellini,bellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(a,(a,b,c,d),(bellini,bellini,bellini,bellini))",
+                    "veracidad": "rojo",
+                    "valor": [
+                      {
+                        "nombre": "get_paired_chest(a,a,b,c,d,_8488)",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "a=d",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "a=d",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
+        "veracidad": "rojo",
+        "valor": [
+          {
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
+            "veracidad": "rojo",
+            "valor": [
+              {
+                "nombre": "possible_maker(_4650)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4652)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4654)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4656)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,b,c,d)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,bellini,a,b,c,d)",
+                "veracidad": "rojo",
+                "valor": [
+                  {
+                    "nombre": "_8096=(a,b,c,d)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,b,c,d)=(a,b,c,d)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8216=(bellini,bellini,bellini,bellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,bellini)=(bellini,bellini,bellini,bellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=cellini",
+                    "veracidad": "rojo",
+                    "valor": [
+                      {
+                        "nombre": "bellini=cellini",
                         "veracidad": "rojo"
                       }
                     ]
@@ -88,57 +682,87 @@
     "veracidad": "",
     "valor": [
       {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
         "veracidad": "rojo",
         "valor": [
           {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
             "veracidad": "rojo",
             "valor": [
               {
-                "nombre": "fabricante(_4650)",
+                "nombre": "possible_maker(_4650)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4652)",
+                "nombre": "possible_maker(_4652)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4654)",
+                "nombre": "possible_maker(_4654)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4656)",
+                "nombre": "possible_maker(_4656)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(cellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "check_solucion(bellini,bellini,bellini,cellini)",
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,d,c,b)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,bellini,a,d,c,b)",
                 "veracidad": "rojo",
                 "valor": [
+                  {
+                    "nombre": "_8166=(a,d,c,b)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,d,c,b)=(a,d,c,b)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8286=(bellini,bellini,bellini,bellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,bellini)=(bellini,bellini,bellini,bellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
                   {
                     "nombre": "bellini=bellini",
                     "veracidad": "verde",
@@ -150,11 +774,575 @@
                     ]
                   },
                   {
-                    "nombre": "contenido_a_es_verdadera(bellini,bellini,bellini,cellini)",
+                    "nombre": "statement_content_holds(a,(a,d,c,b),(bellini,bellini,bellini,bellini))",
                     "veracidad": "rojo",
                     "valor": [
                       {
-                        "nombre": "contenido_a_es_verdadera(bellini,bellini,bellini,cellini)",
+                        "nombre": "get_paired_chest(a,a,d,c,b,_8558)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "_8558=d",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "d=d",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "get_maker(d,bellini,bellini,bellini,bellini,_8886)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(d,bellini,bellini,bellini,bellini,bellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "bellini=cellini",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "bellini=cellini",
+                            "veracidad": "rojo"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
+        "veracidad": "rojo",
+        "valor": [
+          {
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
+            "veracidad": "rojo",
+            "valor": [
+              {
+                "nombre": "possible_maker(_4650)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4652)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4654)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4656)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,d,c,b)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,bellini,a,d,c,b)",
+                "veracidad": "rojo",
+                "valor": [
+                  {
+                    "nombre": "_8166=(a,d,c,b)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,d,c,b)=(a,d,c,b)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8286=(bellini,bellini,bellini,bellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,bellini)=(bellini,bellini,bellini,bellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(a,(a,d,c,b),(bellini,bellini,bellini,bellini))",
+                    "veracidad": "rojo",
+                    "valor": [
+                      {
+                        "nombre": "get_paired_chest(a,a,d,c,b,_8558)",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "a=d",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "a=d",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
+        "veracidad": "rojo",
+        "valor": [
+          {
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
+            "veracidad": "rojo",
+            "valor": [
+              {
+                "nombre": "possible_maker(_4650)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4652)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4654)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4656)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,d,c,b)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,bellini,a,d,c,b)",
+                "veracidad": "rojo",
+                "valor": [
+                  {
+                    "nombre": "_8166=(a,d,c,b)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,d,c,b)=(a,d,c,b)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8286=(bellini,bellini,bellini,bellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,bellini)=(bellini,bellini,bellini,bellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(a,(a,d,c,b),(bellini,bellini,bellini,bellini))",
+                    "veracidad": "rojo",
+                    "valor": [
+                      {
+                        "nombre": "get_paired_chest(a,a,d,c,b,_8558)",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "a=c",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "a=c",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
+        "veracidad": "rojo",
+        "valor": [
+          {
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
+            "veracidad": "rojo",
+            "valor": [
+              {
+                "nombre": "possible_maker(_4650)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4652)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4654)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4656)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,d,c,b)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,bellini,a,d,c,b)",
+                "veracidad": "rojo",
+                "valor": [
+                  {
+                    "nombre": "_8166=(a,d,c,b)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,d,c,b)=(a,d,c,b)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8286=(bellini,bellini,bellini,bellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,bellini)=(bellini,bellini,bellini,bellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(a,(a,d,c,b),(bellini,bellini,bellini,bellini))",
+                    "veracidad": "rojo",
+                    "valor": [
+                      {
+                        "nombre": "get_paired_chest(a,a,d,c,b,_8558)",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "a=b",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "a=b",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
+        "veracidad": "rojo",
+        "valor": [
+          {
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
+            "veracidad": "rojo",
+            "valor": [
+              {
+                "nombre": "possible_maker(_4650)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4652)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4654)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4656)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,d,c,b)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,bellini,a,d,c,b)",
+                "veracidad": "rojo",
+                "valor": [
+                  {
+                    "nombre": "_8166=(a,d,c,b)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,d,c,b)=(a,d,c,b)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8286=(bellini,bellini,bellini,bellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,bellini)=(bellini,bellini,bellini,bellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=cellini",
+                    "veracidad": "rojo",
+                    "valor": [
+                      {
+                        "nombre": "bellini=cellini",
                         "veracidad": "rojo"
                       }
                     ]
@@ -172,57 +1360,87 @@
     "veracidad": "",
     "valor": [
       {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
         "veracidad": "rojo",
         "valor": [
           {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
             "veracidad": "rojo",
             "valor": [
               {
-                "nombre": "fabricante(_4650)",
+                "nombre": "possible_maker(_4650)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4652)",
+                "nombre": "possible_maker(_4652)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4654)",
+                "nombre": "possible_maker(_4654)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(cellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4656)",
+                "nombre": "possible_maker(_4656)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(cellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "check_solucion(bellini,bellini,cellini,bellini)",
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,b,c,d)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,cellini,a,b,c,d)",
                 "veracidad": "rojo",
                 "valor": [
+                  {
+                    "nombre": "_8160=(a,b,c,d)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,b,c,d)=(a,b,c,d)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8280=(bellini,bellini,bellini,cellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,cellini)=(bellini,bellini,bellini,cellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
                   {
                     "nombre": "bellini=bellini",
                     "veracidad": "verde",
@@ -234,11 +1452,575 @@
                     ]
                   },
                   {
-                    "nombre": "contenido_a_es_verdadera(bellini,bellini,cellini,bellini)",
+                    "nombre": "statement_content_holds(a,(a,b,c,d),(bellini,bellini,bellini,cellini))",
                     "veracidad": "rojo",
                     "valor": [
                       {
-                        "nombre": "contenido_a_es_verdadera(bellini,bellini,cellini,bellini)",
+                        "nombre": "get_paired_chest(a,a,b,c,d,_8552)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "_8552=b",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "b=b",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "get_maker(b,bellini,bellini,bellini,cellini,_8880)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(b,bellini,bellini,bellini,cellini,bellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "bellini=cellini",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "bellini=cellini",
+                            "veracidad": "rojo"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
+        "veracidad": "rojo",
+        "valor": [
+          {
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
+            "veracidad": "rojo",
+            "valor": [
+              {
+                "nombre": "possible_maker(_4650)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4652)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4654)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4656)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(cellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,b,c,d)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,cellini,a,b,c,d)",
+                "veracidad": "rojo",
+                "valor": [
+                  {
+                    "nombre": "_8160=(a,b,c,d)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,b,c,d)=(a,b,c,d)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8280=(bellini,bellini,bellini,cellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,cellini)=(bellini,bellini,bellini,cellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(a,(a,b,c,d),(bellini,bellini,bellini,cellini))",
+                    "veracidad": "rojo",
+                    "valor": [
+                      {
+                        "nombre": "get_paired_chest(a,a,b,c,d,_8552)",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "a=b",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "a=b",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
+        "veracidad": "rojo",
+        "valor": [
+          {
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
+            "veracidad": "rojo",
+            "valor": [
+              {
+                "nombre": "possible_maker(_4650)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4652)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4654)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4656)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(cellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,b,c,d)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,cellini,a,b,c,d)",
+                "veracidad": "rojo",
+                "valor": [
+                  {
+                    "nombre": "_8160=(a,b,c,d)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,b,c,d)=(a,b,c,d)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8280=(bellini,bellini,bellini,cellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,cellini)=(bellini,bellini,bellini,cellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(a,(a,b,c,d),(bellini,bellini,bellini,cellini))",
+                    "veracidad": "rojo",
+                    "valor": [
+                      {
+                        "nombre": "get_paired_chest(a,a,b,c,d,_8552)",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "a=c",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "a=c",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
+        "veracidad": "rojo",
+        "valor": [
+          {
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
+            "veracidad": "rojo",
+            "valor": [
+              {
+                "nombre": "possible_maker(_4650)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4652)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4654)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4656)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(cellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,b,c,d)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,cellini,a,b,c,d)",
+                "veracidad": "rojo",
+                "valor": [
+                  {
+                    "nombre": "_8160=(a,b,c,d)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,b,c,d)=(a,b,c,d)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8280=(bellini,bellini,bellini,cellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,cellini)=(bellini,bellini,bellini,cellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(a,(a,b,c,d),(bellini,bellini,bellini,cellini))",
+                    "veracidad": "rojo",
+                    "valor": [
+                      {
+                        "nombre": "get_paired_chest(a,a,b,c,d,_8552)",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "a=d",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "a=d",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
+        "veracidad": "rojo",
+        "valor": [
+          {
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
+            "veracidad": "rojo",
+            "valor": [
+              {
+                "nombre": "possible_maker(_4650)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4652)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4654)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4656)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(cellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,b,c,d)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,cellini,a,b,c,d)",
+                "veracidad": "rojo",
+                "valor": [
+                  {
+                    "nombre": "_8160=(a,b,c,d)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,b,c,d)=(a,b,c,d)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8280=(bellini,bellini,bellini,cellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,cellini)=(bellini,bellini,bellini,cellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=cellini",
+                    "veracidad": "rojo",
+                    "valor": [
+                      {
+                        "nombre": "bellini=cellini",
                         "veracidad": "rojo"
                       }
                     ]
@@ -256,57 +2038,87 @@
     "veracidad": "",
     "valor": [
       {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
         "veracidad": "rojo",
         "valor": [
           {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
             "veracidad": "rojo",
             "valor": [
               {
-                "nombre": "fabricante(_4650)",
+                "nombre": "possible_maker(_4650)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4652)",
+                "nombre": "possible_maker(_4652)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4654)",
+                "nombre": "possible_maker(_4654)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(cellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4656)",
+                "nombre": "possible_maker(_4656)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(cellini)",
+                    "nombre": "possible_maker(cellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "check_solucion(bellini,bellini,cellini,cellini)",
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,d,c,b)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,cellini,a,d,c,b)",
                 "veracidad": "rojo",
                 "valor": [
+                  {
+                    "nombre": "_8230=(a,d,c,b)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,d,c,b)=(a,d,c,b)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8350=(bellini,bellini,bellini,cellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,cellini)=(bellini,bellini,bellini,cellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
                   {
                     "nombre": "bellini=bellini",
                     "veracidad": "verde",
@@ -318,12 +2130,96 @@
                     ]
                   },
                   {
-                    "nombre": "contenido_a_es_verdadera(bellini,bellini,cellini,cellini)",
+                    "nombre": "statement_content_holds(a,(a,d,c,b),(bellini,bellini,bellini,cellini))",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "get_paired_chest(a,a,d,c,b,_8622)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "_8622=d",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "d=d",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "get_maker(d,bellini,bellini,bellini,cellini,_8950)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(d,bellini,bellini,bellini,cellini,cellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "cellini=cellini",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "cellini=cellini",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(b,(a,d,c,b),(bellini,bellini,bellini,cellini))",
                     "veracidad": "rojo",
                     "valor": [
                       {
-                        "nombre": "contenido_a_es_verdadera(bellini,bellini,cellini,cellini)",
-                        "veracidad": "rojo"
+                        "nombre": "get_maker(b,bellini,bellini,bellini,cellini,_9392)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(b,bellini,bellini,bellini,cellini,bellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "get_paired_chest(b,a,d,c,b,_9520)",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "b=a",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "b=a",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          }
+                        ]
                       }
                     ]
                   }
@@ -340,57 +2236,87 @@
     "veracidad": "",
     "valor": [
       {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
         "veracidad": "rojo",
         "valor": [
           {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
             "veracidad": "rojo",
             "valor": [
               {
-                "nombre": "fabricante(_4650)",
+                "nombre": "possible_maker(_4650)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4652)",
+                "nombre": "possible_maker(_4652)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(cellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4654)",
+                "nombre": "possible_maker(_4654)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4656)",
+                "nombre": "possible_maker(_4656)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(cellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "check_solucion(bellini,cellini,bellini,bellini)",
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,d,c,b)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,cellini,a,d,c,b)",
                 "veracidad": "rojo",
                 "valor": [
+                  {
+                    "nombre": "_8230=(a,d,c,b)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,d,c,b)=(a,d,c,b)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8350=(bellini,bellini,bellini,cellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,cellini)=(bellini,bellini,bellini,cellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
                   {
                     "nombre": "bellini=bellini",
                     "veracidad": "verde",
@@ -402,12 +2328,846 @@
                     ]
                   },
                   {
-                    "nombre": "contenido_a_es_verdadera(bellini,cellini,bellini,bellini)",
+                    "nombre": "statement_content_holds(a,(a,d,c,b),(bellini,bellini,bellini,cellini))",
                     "veracidad": "verde",
                     "valor": [
                       {
-                        "nombre": "contenido_a_es_verdadera(bellini,cellini,bellini,bellini)",
+                        "nombre": "get_paired_chest(a,a,d,c,b,_8622)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "_8622=d",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "d=d",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "get_maker(d,bellini,bellini,bellini,cellini,_8950)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(d,bellini,bellini,bellini,cellini,cellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "cellini=cellini",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "cellini=cellini",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
                         "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(b,(a,d,c,b),(bellini,bellini,bellini,cellini))",
+                    "veracidad": "rojo",
+                    "valor": [
+                      {
+                        "nombre": "get_maker(b,bellini,bellini,bellini,cellini,_9392)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(b,bellini,bellini,bellini,cellini,bellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "get_paired_chest(b,a,d,c,b,_9520)",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "b=a",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "b=a",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "b=d",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "b=d",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
+        "veracidad": "rojo",
+        "valor": [
+          {
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
+            "veracidad": "rojo",
+            "valor": [
+              {
+                "nombre": "possible_maker(_4650)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4652)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4654)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4656)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(cellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,d,c,b)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,cellini,a,d,c,b)",
+                "veracidad": "rojo",
+                "valor": [
+                  {
+                    "nombre": "_8230=(a,d,c,b)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,d,c,b)=(a,d,c,b)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8350=(bellini,bellini,bellini,cellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,cellini)=(bellini,bellini,bellini,cellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(a,(a,d,c,b),(bellini,bellini,bellini,cellini))",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "get_paired_chest(a,a,d,c,b,_8622)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "_8622=d",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "d=d",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "get_maker(d,bellini,bellini,bellini,cellini,_8950)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(d,bellini,bellini,bellini,cellini,cellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "cellini=cellini",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "cellini=cellini",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(b,(a,d,c,b),(bellini,bellini,bellini,cellini))",
+                    "veracidad": "rojo",
+                    "valor": [
+                      {
+                        "nombre": "get_maker(b,bellini,bellini,bellini,cellini,_9392)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(b,bellini,bellini,bellini,cellini,bellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "get_paired_chest(b,a,d,c,b,_9520)",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "b=a",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "b=a",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "b=c",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "b=c",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
+        "veracidad": "rojo",
+        "valor": [
+          {
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
+            "veracidad": "rojo",
+            "valor": [
+              {
+                "nombre": "possible_maker(_4650)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4652)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4654)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4656)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(cellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,d,c,b)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,cellini,a,d,c,b)",
+                "veracidad": "rojo",
+                "valor": [
+                  {
+                    "nombre": "_8230=(a,d,c,b)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,d,c,b)=(a,d,c,b)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8350=(bellini,bellini,bellini,cellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,cellini)=(bellini,bellini,bellini,cellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(a,(a,d,c,b),(bellini,bellini,bellini,cellini))",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "get_paired_chest(a,a,d,c,b,_8622)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "_8622=d",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "d=d",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "get_maker(d,bellini,bellini,bellini,cellini,_8950)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(d,bellini,bellini,bellini,cellini,cellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "cellini=cellini",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "cellini=cellini",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(b,(a,d,c,b),(bellini,bellini,bellini,cellini))",
+                    "veracidad": "rojo",
+                    "valor": [
+                      {
+                        "nombre": "get_maker(b,bellini,bellini,bellini,cellini,_9392)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(b,bellini,bellini,bellini,cellini,bellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "get_paired_chest(b,a,d,c,b,_9520)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "b=a",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "b=a",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "b=b",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "b=b",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "_9520=c",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "c=c",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "get_maker(c,bellini,bellini,bellini,cellini,_9996)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(c,bellini,bellini,bellini,cellini,bellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "bellini=cellini",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "bellini=cellini",
+                            "veracidad": "rojo"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "nombre": "root",
+    "veracidad": "",
+    "valor": [
+      {
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
+        "veracidad": "rojo",
+        "valor": [
+          {
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
+            "veracidad": "rojo",
+            "valor": [
+              {
+                "nombre": "possible_maker(_4650)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4652)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4654)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(bellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "possible_maker(_4656)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "possible_maker(cellini)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
+                "valor": [
+                  {
+                    "nombre": "pairing(a,d,c,b)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,cellini,a,d,c,b)",
+                "veracidad": "rojo",
+                "valor": [
+                  {
+                    "nombre": "_8230=(a,d,c,b)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(a,d,c,b)=(a,d,c,b)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "_8350=(bellini,bellini,bellini,cellini)",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "(bellini,bellini,bellini,cellini)=(bellini,bellini,bellini,cellini)",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(a,(a,d,c,b),(bellini,bellini,bellini,cellini))",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "get_paired_chest(a,a,d,c,b,_8622)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "a=a",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "a=a",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "_8622=d",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "d=d",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "get_maker(d,bellini,bellini,bellini,cellini,_8950)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(d,bellini,bellini,bellini,cellini,cellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "cellini=cellini",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "cellini=cellini",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(b,(a,d,c,b),(bellini,bellini,bellini,cellini))",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "get_maker(b,bellini,bellini,bellini,cellini,_9392)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(b,bellini,bellini,bellini,cellini,bellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "get_paired_chest(b,a,d,c,b,_9520)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "b=a",
+                            "veracidad": "rojo",
+                            "valor": [
+                              {
+                                "nombre": "b=a",
+                                "veracidad": "rojo"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "b=b",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "b=b",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          },
+                          {
+                            "nombre": "_9520=c",
+                            "veracidad": "verde",
+                            "valor": [
+                              {
+                                "nombre": "c=c",
+                                "veracidad": "verde"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "get_maker(c,bellini,bellini,bellini,cellini,_9996)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(c,bellini,bellini,bellini,cellini,bellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "bellini=cellini",
+                        "veracidad": "rojo",
+                        "valor": [
+                          {
+                            "nombre": "bellini=cellini",
+                            "veracidad": "rojo"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "bellini=bellini",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "bellini=bellini",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "bellini=bellini",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde"
+                      }
+                    ]
+                  },
+                  {
+                    "nombre": "statement_content_holds(c,(a,d,c,b),(bellini,bellini,bellini,cellini))",
+                    "veracidad": "verde",
+                    "valor": [
+                      {
+                        "nombre": "get_maker(c,bellini,bellini,bellini,cellini,_10606)",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "get_maker(c,bellini,bellini,bellini,cellini,bellini)",
+                            "veracidad": "verde"
+                          }
+                        ]
+                      },
+                      {
+                        "nombre": "bellini=bellini",
+                        "veracidad": "verde",
+                        "valor": [
+                          {
+                            "nombre": "bellini=bellini",
+                            "veracidad": "verde"
+                          }
+                        ]
                       }
                     ]
                   },
@@ -434,799 +3194,83 @@
     "veracidad": "",
     "valor": [
       {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
+        "nombre": "catch((solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664),fail),_4676,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4676]),fail))",
         "veracidad": "rojo",
         "valor": [
           {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
+            "nombre": "solution_finder(_4650,_4652,_4654,_4656,_4658,_4660,_4662,_4664)",
             "veracidad": "rojo",
             "valor": [
               {
-                "nombre": "fabricante(_4650)",
+                "nombre": "possible_maker(_4650)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4652)",
+                "nombre": "possible_maker(_4652)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(cellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4654)",
+                "nombre": "possible_maker(_4654)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(bellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "fabricante(_4656)",
+                "nombre": "possible_maker(_4656)",
                 "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "fabricante(bellini)",
+                    "nombre": "possible_maker(cellini)",
                     "veracidad": "verde"
                   }
                 ]
               },
               {
-                "nombre": "check_solucion(bellini,cellini,bellini,bellini)",
-                "veracidad": "rojo",
+                "nombre": "pairing(_4658,_4660,_4662,_4664)",
+                "veracidad": "verde",
                 "valor": [
                   {
-                    "nombre": "contenido_b_es_verdadera(bellini,cellini,bellini,bellini)",
+                    "nombre": "pairing(a,d,c,b)",
+                    "veracidad": "verde"
+                  }
+                ]
+              },
+              {
+                "nombre": "is_consistent_scenario(bellini,bellini,bellini,cellini,a,d,c,b)",
+                "veracidad": "",
+                "valor": [
+                  {
+                    "nombre": "_8230=(a,d,c,b)",
                     "veracidad": "verde",
                     "valor": [
                       {
-                        "nombre": "contenido_b_es_verdadera(bellini,cellini,bellini,bellini)",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(bellini,cellini,bellini,cellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "bellini=bellini",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "bellini=bellini",
+                        "nombre": "(a,d,c,b)=(a,d,c,b)",
                         "veracidad": "verde"
                       }
                     ]
                   },
                   {
-                    "nombre": "contenido_a_es_verdadera(bellini,cellini,bellini,cellini)",
+                    "nombre": "_8350=(bellini,bellini,bellini,cellini)",
                     "veracidad": "verde",
                     "valor": [
                       {
-                        "nombre": "contenido_a_es_verdadera(bellini,cellini,bellini,cellini)",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  },
-                  {
-                    "nombre": "cellini=bellini",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "cellini=bellini",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(bellini,cellini,bellini,cellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "contenido_b_es_verdadera(bellini,cellini,bellini,cellini)",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "contenido_b_es_verdadera(bellini,cellini,bellini,cellini)",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(bellini,cellini,cellini,bellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "bellini=bellini",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "bellini=bellini",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  },
-                  {
-                    "nombre": "contenido_a_es_verdadera(bellini,cellini,cellini,bellini)",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "contenido_a_es_verdadera(bellini,cellini,cellini,bellini)",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  },
-                  {
-                    "nombre": "cellini=bellini",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "cellini=bellini",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(bellini,cellini,cellini,bellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "contenido_b_es_verdadera(bellini,cellini,cellini,bellini)",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "contenido_b_es_verdadera(bellini,cellini,cellini,bellini)",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(bellini,cellini,cellini,cellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "bellini=bellini",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "bellini=bellini",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  },
-                  {
-                    "nombre": "contenido_a_es_verdadera(bellini,cellini,cellini,cellini)",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "contenido_a_es_verdadera(bellini,cellini,cellini,cellini)",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  },
-                  {
-                    "nombre": "cellini=bellini",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "cellini=bellini",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(bellini,cellini,cellini,cellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "contenido_b_es_verdadera(bellini,cellini,cellini,cellini)",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "contenido_b_es_verdadera(bellini,cellini,cellini,cellini)",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,bellini,bellini,bellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "cellini=bellini",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "cellini=bellini",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,bellini,bellini,bellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "contenido_a_es_verdadera(cellini,bellini,bellini,bellini)",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "contenido_a_es_verdadera(cellini,bellini,bellini,bellini)",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,bellini,bellini,bellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "bellini=bellini",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "bellini=bellini",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  },
-                  {
-                    "nombre": "contenido_b_es_verdadera(cellini,bellini,bellini,bellini)",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "contenido_b_es_verdadera(cellini,bellini,bellini,bellini)",
+                        "nombre": "(bellini,bellini,bellini,cellini)=(bellini,bellini,bellini,cellini)",
                         "veracidad": "verde"
                       }
                     ]
@@ -1242,1491 +3286,21 @@
                     ]
                   },
                   {
-                    "nombre": "contenido_c_es_verdadera(cellini,bellini,bellini,bellini)",
+                    "nombre": "cellini=cellini",
                     "veracidad": "verde",
                     "valor": [
                       {
-                        "nombre": "contenido_c_es_verdadera(cellini,bellini,bellini,bellini)",
+                        "nombre": "cellini=cellini",
                         "veracidad": "verde"
                       }
                     ]
                   },
                   {
-                    "nombre": "bellini=bellini",
+                    "nombre": "format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[error(existence_error(procedure,statement_content_fails/3),context(is_consistent_scenario/8,_156))])",
                     "veracidad": "verde",
                     "valor": [
                       {
-                        "nombre": "bellini=bellini",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  },
-                  {
-                    "nombre": "contenido_d_es_verdadera(cellini,bellini,bellini,bellini)",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "contenido_d_es_verdadera(cellini,bellini,bellini,bellini)",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,bellini,bellini,cellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "cellini=bellini",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "cellini=bellini",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,bellini,bellini,cellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "contenido_a_es_verdadera(cellini,bellini,bellini,cellini)",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "contenido_a_es_verdadera(cellini,bellini,bellini,cellini)",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,bellini,bellini,cellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "bellini=bellini",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "bellini=bellini",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  },
-                  {
-                    "nombre": "contenido_b_es_verdadera(cellini,bellini,bellini,cellini)",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "contenido_b_es_verdadera(cellini,bellini,bellini,cellini)",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  },
-                  {
-                    "nombre": "bellini=bellini",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "bellini=bellini",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  },
-                  {
-                    "nombre": "contenido_c_es_verdadera(cellini,bellini,bellini,cellini)",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "contenido_c_es_verdadera(cellini,bellini,bellini,cellini)",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  },
-                  {
-                    "nombre": "cellini=bellini",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "cellini=bellini",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,bellini,bellini,cellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "contenido_d_es_verdadera(cellini,bellini,bellini,cellini)",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "contenido_d_es_verdadera(cellini,bellini,bellini,cellini)",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "verde",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,bellini,bellini,cellini)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "check_solucion(cellini,bellini,bellini,cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,bellini,cellini,bellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "cellini=bellini",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "cellini=bellini",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,bellini,cellini,bellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "contenido_a_es_verdadera(cellini,bellini,cellini,bellini)",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "contenido_a_es_verdadera(cellini,bellini,cellini,bellini)",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,bellini,cellini,bellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "bellini=bellini",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "bellini=bellini",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  },
-                  {
-                    "nombre": "contenido_b_es_verdadera(cellini,bellini,cellini,bellini)",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "contenido_b_es_verdadera(cellini,bellini,cellini,bellini)",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,bellini,cellini,cellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "cellini=bellini",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "cellini=bellini",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,bellini,cellini,cellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "contenido_a_es_verdadera(cellini,bellini,cellini,cellini)",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "contenido_a_es_verdadera(cellini,bellini,cellini,cellini)",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,bellini,cellini,cellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "bellini=bellini",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "bellini=bellini",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  },
-                  {
-                    "nombre": "contenido_b_es_verdadera(cellini,bellini,cellini,cellini)",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "contenido_b_es_verdadera(cellini,bellini,cellini,cellini)",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,cellini,bellini,bellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "cellini=bellini",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "cellini=bellini",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,cellini,bellini,bellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "contenido_a_es_verdadera(cellini,cellini,bellini,bellini)",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "contenido_a_es_verdadera(cellini,cellini,bellini,bellini)",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,cellini,bellini,cellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "cellini=bellini",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "cellini=bellini",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,cellini,bellini,cellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "contenido_a_es_verdadera(cellini,cellini,bellini,cellini)",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "contenido_a_es_verdadera(cellini,cellini,bellini,cellini)",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,cellini,cellini,bellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "cellini=bellini",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "cellini=bellini",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(bellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,cellini,cellini,bellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "contenido_a_es_verdadera(cellini,cellini,cellini,bellini)",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "contenido_a_es_verdadera(cellini,cellini,cellini,bellini)",
-                        "veracidad": "verde"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,cellini,cellini,cellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "cellini=bellini",
-                    "veracidad": "rojo",
-                    "valor": [
-                      {
-                        "nombre": "cellini=bellini",
-                        "veracidad": "rojo"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "nombre": "root",
-    "veracidad": "",
-    "valor": [
-      {
-        "nombre": "catch((encontrar_fabricantes(_4650,_4652,_4654,_4656),fail),_4668,(format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[_4668]),fail))",
-        "veracidad": "rojo",
-        "valor": [
-          {
-            "nombre": "encontrar_fabricantes(_4650,_4652,_4654,_4656)",
-            "veracidad": "rojo",
-            "valor": [
-              {
-                "nombre": "fabricante(_4650)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4652)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4654)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "fabricante(_4656)",
-                "veracidad": "verde",
-                "valor": [
-                  {
-                    "nombre": "fabricante(cellini)",
-                    "veracidad": "verde"
-                  }
-                ]
-              },
-              {
-                "nombre": "check_solucion(cellini,cellini,cellini,cellini)",
-                "veracidad": "rojo",
-                "valor": [
-                  {
-                    "nombre": "contenido_a_es_verdadera(cellini,cellini,cellini,cellini)",
-                    "veracidad": "verde",
-                    "valor": [
-                      {
-                        "nombre": "contenido_a_es_verdadera(cellini,cellini,cellini,cellini)",
+                        "nombre": "format(user_error,'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n',[error(existence_error(procedure,statement_content_fails/3),context(is_consistent_scenario/8,_156))])",
                         "veracidad": "verde"
                       }
                     ]

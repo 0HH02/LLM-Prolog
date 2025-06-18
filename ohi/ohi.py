@@ -84,7 +84,20 @@ class HeuristicInferenceOrchestrator:
         """
         prompt = extract_clauses_from_prolog_promt(prolog_code)
         all_clauses = []
-        response = ask_gemini_json(prompt)
+
+        config = {
+                "response_mime_type": "application/json",
+                "response_schema": {
+                    "type": "object",
+                    "properties": {
+                        "facts": {"type": "array", "items": {"type": "string"}},
+                        "rules": {"type": "array", "items": {"type": "string"}},
+                        "objetive": {"type": "array", "items": {"type": "string"}}
+                    },
+                    "required": ["facts", "rules", "objetive"]
+                }
+            }
+        response = ask_gemini_json(prompt, config=config)
         facts = response["facts"]
         rules = response["rules"]
 

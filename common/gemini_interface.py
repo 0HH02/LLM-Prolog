@@ -53,7 +53,7 @@ def parse_gemini_json_response(response_text: str) -> dict:
             print(f"Error al parsear la respuesta JSON de Gemini: {response_text}")
             return None
         
-def ask_gemini_json(prompt: str, task_hint: str = ""):
+def ask_gemini_json(prompt: str, task_hint: str = "", config: dict = None):
     """
     Función para hacer una pregunta a Gemini y obtener una respuesta en formato JSON.
     """
@@ -66,20 +66,8 @@ def ask_gemini_json(prompt: str, task_hint: str = ""):
         response = client.models.generate_content(
             model=GENERATION_MODEL,
             contents=prompt,
-            config={
-                "response_mime_type": "application/json",
-                "response_schema": {
-                    "type": "object",
-                    "properties": {
-                        "facts": {"type": "array", "items": {"type": "string"}},
-                        "rules": {"type": "array", "items": {"type": "string"}},
-                        "objetive": {"type": "array", "items": {"type": "string"}}
-                    },
-                    "required": ["facts", "rules", "objetive"]
-                }
-            },
+            config=config
         )
-        
         response_text = response.text
         if not response_text:
             print("Advertencia: Respuesta vacía o bloqueada por configuración de seguridad.")

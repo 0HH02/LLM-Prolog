@@ -75,21 +75,55 @@ def initial_analysis_promt(problem_description_nl):
         Hola, necesito tu ayuda para analizar y resolver un problema de lógica de manera sistemática. Por favor, sigue los siguientes pasos:
 
         1. Entendimiento del Problema: 
-        - Extrae todas las declaraciones lógicas o pistas proporcionadas, y anótalas claramente. Debes escribir cada premisa expresada en el problema, impícita o explícitamente. Cada sutileza que pueda ser modelada debe ser modelada. Ejemplo:
-            - Premisa 1
-            - Premisa 2
-            ...
+        - Responde a las siguientes preguntas. ¿De qué trata? ¿Quiénes son los personajes? ¿Cuáles son los objetos o variables?
+
+        2. Identificar y Aislar la Pregunta
+        - Encuentra la pregunta principal que debes responder y sepárala del resto del texto.
+
+        3. Busca las Afirmaciones
+        - Busca cada frase que declare un hecho. Pregúntate: "¿Esta oración me está dando una pieza de información sólida e incuestionable?"
+        - Cada afirmación debe ser una ley inmutable dentro del mundo del problema.
+        - Las premisas a menudo vienen en frases complejas. Tu trabajo es traducirlas a un lenguaje lógico y simple.
+            Frase original: "sEl coche rojo, que fue comprado después que el coche de Juan, no pertenece a María."
+            Premisas extraídas y simplificadas:
+            Hay un coche rojo.
+            El coche rojo se compró después del coche de Juan.
+            El coche rojo no es de María.
+        - Ciertas palabras suelen introducir premisas, mientras que otras suelen introducir conclusiones.
+            Típicas de PREMISAS: Dado que..., Sabiendo que..., Se asume que..., Es un hecho que..., Porque..., Puesto que...
+            Típicas de CONCLUSIONES (¡No son premisas!): Por lo tanto..., En consecuencia..., Así que..., Se deduce que..., Se concluye que...
+        - El Principio del "Mundo Cerrado": La única información que existe es la que te dan las premisas. Si no se menciona, no existe o no se puede asumir. Si el problema habla de perros y gatos, no puedes asumir que también hay un loro solo porque sería interesante. ¡No agregues información!
+        - Maneja las Negaciones y las Condicionales: Presta especial atención a las frases negativas y a las que usan "si..., entonces...". Son premisas muy poderosas.
+            "Ana no tiene el sombrero azul." es una premisa tan fuerte como "Ana tiene el sombrero rojo".
+            "Si llueve, entonces la calle se moja." es una sola premisa (una regla condicional). No la separes. Establece una relación directa entre dos eventos.
+        - Entre paréntesis haz anotaciones referentes al contenido de cada premisa cuando hagan referencias a otros objetos o a sí misma con el objetivo de esclarecer la intensionalidad de cada premisa.
+
+        A continuación, te presento el problema de lógica:
+        {problem_description_nl}
+        """
+
+def nl_to_prolog_promt(problem_description_nl, premises, preview_analysis):
+    return f"""
+        Como experto en lógica tienes que solucionar el siguiente problema:
+        {problem_description_nl}
+
+        Análisis previo:
+        {preview_analysis}
+
+        A continuación, te presento las premisas que usarás:
+        {premises}
+
+        Para ello sigue estas instrucciones:
+        1. Análisis e Inferencia Preliminar:
+        - Basándote en la información organizada, realiza inferencias lógicas paso a paso. Elimina posibilidades o deduce nuevos hechos. Si es aplicable, actualiza tu representación de la información con cada nueva inferencia hasta que se clarifiquen las relaciones.
+        
+        2. Hipótesis de Solución:
+        - A partir de tu análisis e inferencias, propón una hipótesis clara sobre cuál es la solución al problema de lógica.
+        
+        3. Comprobación Formal con Prolog:
         - Transforma cada premisa en una o más sentencias de prolog, de forma que cada una esté asociada con alguna sentencia.
         - Intenta que las sentencias de prolog sean lo más parecida a la premisa que modela.
         - Cada cláusula y cada palabra conectiva ("y", "o", "si") debe ser representada con total fidelidad en tu código, sin simplificaciones ni interpretaciones que alteren su significado estricto.
-
-        2. Análisis e Inferencia Preliminar:
-        - Basándote en la información organizada, realiza inferencias lógicas paso a paso. Elimina posibilidades o deduce nuevos hechos. Si es aplicable, actualiza tu representación de la información con cada nueva inferencia hasta que se clarifiquen las relaciones.
-        
-        3. Hipótesis de Solución:
-        - A partir de tu análisis e inferencias, propón una hipótesis clara sobre cuál es la solución al problema de lógica.
-        
-        4. Comprobación Formal con Prolog:
         - Vas a crear un programa en Prolog (hechos y reglas) basado en tu hipótesis de solución y las pistas originales. Este programa debe ser capaz de demostrar la validez de tu hipótesis a través de consultas.
         - Identifica y codifica primero las reglas globales que rigen el comportamiento de todos los agentes del sistema, pues estas definen el marco en el que se deben evaluar sus acciones individuales.
         - Modela cada pieza de evidencia o declaración de forma atómica y fiel a su descripción original, evitando crear relaciones o dependencias artificiales entre componentes que el problema no vincula explícitamente.
@@ -97,9 +131,6 @@ def initial_analysis_promt(problem_description_nl):
         - Esto es sumamente importante: La corrección semántica y sintáctica del programa Prolog es crucial, ya que la verdad de tu hipótesis se deduce de la capacidad del programa para probarla. Asegúrate de que el código esté bien escrito y refleje lógicamente el problema y tu solución propuesta.
         - Para modelar implicaciones lógicas en Prolog de forma declarativa, usa la negación para expresar que no puede darse el caso de que el antecedente sea cierto y el consecuente falso.
         - Comenta el resultado esperado del programa pero nunca hables como si ya se hubiera ejecutado.
-
-        A continuación, te presento el problema de lógica:
-        {problem_description_nl}
         """
 
 def extract_problem_clauses_promt(problem_description_nl, problem_reformulation):
