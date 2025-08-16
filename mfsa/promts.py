@@ -1,4 +1,5 @@
 def formalize_statement_promt(statement_nl, context_nl, premises):
+    premises_joined = "\n".join(premises)
     return f"""
         Traduce la siguiente declaración en lenguaje natural a una única cláusula de Horn formal.
         Omite detalles o datos que estén implicados en la resolución del problema porque la tarea final es solamente determinar la cláusula o afirmación que se quiere verificar.
@@ -13,7 +14,7 @@ def formalize_statement_promt(statement_nl, context_nl, premises):
 
         Contexto del problema (si ayuda): "{context_nl}"
 
-        Premisas sacadas hasta ahora: "{"\n".join(premises)}"
+        Premisas sacadas hasta ahora: "{premises_joined}"
 
         EJEMPLOS:
         sentence: All people who regularly drink coffee are dependent on caffeine.
