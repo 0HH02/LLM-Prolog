@@ -34,6 +34,7 @@ class MetaCognitionKnowledgeRefinementModule:
 
         name = data.get("nombre", "N/A")
         veracidad = data.get("veracidad", "")
+        safe_name = name.replace("\\", "\\\\")
 
         # Define node color based on 'veracidad'
         fill_color = "lightblue" # Default
@@ -43,7 +44,7 @@ class MetaCognitionKnowledgeRefinementModule:
             fill_color = "salmon"
 
         # Add the node to the graph
-        graph.node(current_node_id, label=f"{name.replace("\\", "\\\\")}\\n({veracidad})", fillcolor=fill_color)
+        graph.node(current_node_id, label=f"{safe_name}\\n({veracidad})", fillcolor=fill_color)
 
         # Add an edge from the parent node if it exists
         if parent_id:
