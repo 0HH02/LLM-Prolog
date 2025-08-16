@@ -1,4 +1,254 @@
 [
-  "Sócrates es un hombre. Todos los hombres son mortales. ¿Es Sócrates mortal?",
-  "La alarma de la casa suena si detecta un intruso o si hay un fallo en el sistema eléctrico. Los vecinos llamaron porque la alarma estaba sonando. Más tarde, la compañía eléctrica confirmó que no hubo ningún fallo en el sistema en toda la zona. ¿Qué se puede concluir sobre la causa de que sonara la alarma?"
+  {
+    "problem_description": "Sócrates es un hombre. Todos los hombres son mortales. ¿Es Sócrates mortal?",
+    "solution": "Sí, Sócrates es mortal. Dado que Sócrates es un hombre y todos los hombres son mortales, por silogismo lógico se concluye que Sócrates es mortal."
+  },
+  {
+    "problem_description": "La alarma de la casa suena si detecta un intruso o si hay un fallo en el sistema eléctrico. Los vecinos llamaron porque la alarma estaba sonando. Más tarde, la compañía eléctrica confirmó que no hubo ningún fallo en el sistema en toda la zona. ¿Qué se puede concluir sobre la causa de que sonara la alarma?",
+    "solution": "Se puede concluir que la alarma sonó porque detectó un intruso. Como se confirmó que no hubo fallo eléctrico y la alarma suena por intruso O fallo eléctrico, la única causa posible es la detección de un intruso."
+  },
+  {
+    "problem_description": "Esta adivinanza era enormemente popular cuando yo era pequeño, pero hoy parece menos conocida. Lo divertido de ella es que casi todo el mundo da la solución equivocada, pero insiste —a pesar de todos los argumentos que se le den— en que tiene razón. Me acuerdo de una vez, hace ya casi cincuenta años; que teníamos invitados en casa y alguien la contó y empezaron a discutirla horas y horas; los que habían contestado bien no podían convencer a los otros de que no tenían razón. El problema es el siguiente: Un hombre estaba mirando un retrato y alguien le preguntó: «¿De quién es esa fotografía?», a lo que él contestó, «Ni hermanos ni hermanas tengo, pero el padre de este hombre es el hijo de mi padre». («El padre de este hombre» quiere decir, claro, el padre del que está en la fotografía.) ¿De quién era la fotografía que estaba mirando el hombre?",
+    "solution": "Muchísima gente llega a la conclusión equivocada de que el hombre está mirando su propia fotografía porque se ponen en el lugar del hombre que está mirando la fotografía y razonan de esta manera: «Ya que no tengo ni hermanos ni hermanas, el hijo de mi padre tengo que ser yo. Por tanto estoy mirando mi fotografía.» La primera parte de este razonamiento es totalmente correcta; si no tengo ni hermanas ni hermanos el hijo de mi padre tengo que ser yo. Pero no se puede decir que «Yo» sea la solución del problema. Si la segunda parte del problema hubiera dicho «Este hombre es el hijo de mi padre», la solución del problema hubiera sido «Yo». Pero el problema no decía eso sino que decía «El padre de este hombre es el hijo de mi padre». De lo que se deduce que el padre de este hombre soy yo, yo soy el padre de este hombre, de aquí que este hombre tenga que ser mi hijo. Por tanto, la solución correcta a este problema es que el hombre está mirando una fotografía de su hijo. Al lector escéptico que aún no se haya convencido (y estoy seguro de que muchos no lo están) quizás le ayude ver las cosas un poco más gráficamente: (1) El padre de este hombre es el padre de mi hijo. Al sustituir la complicada frase «el padre de mi hijo» por la palabra «yo» nos queda: (2) El padre de este hombre soy yo. ¿Te has convencido ya?"
+  },
+  {
+    "problem_description": "Esta historia trata de una caravana que cruzaba el desierto del Sahara y una noche montó su campamento. Los personajes que nos interesan son tres, a los que llamaremos A, B y C. A odia a C y decide matarle echando un veneno en el agua de su cantimplora (por supuesto, C no podrá beber más agua que la de su cantimplora). Por otro lado, B también decide matar a C y, sin saber que el agua de C ya está envenenada, le hace un agujerito en la cantimplora para que el agua se vaya saliendo lentamente. Como resultado de ello, unos días después C muere de sed. ¿Quién es el asesino A o B? Según unos el asesino fue B ya que C nunca llegó a beber el veneno que le puso A, de manera que se habría muerto aunque A no le hubiera envenenado el agua. Según otros el verdadero asesino fue A ya que lo que hiciera B no afectaba para nada el resultado; una vez que A había envenenado el agua, C estaba envenenado, de manera que habría muerto aun cuando B no le hubiera agujereado la cantimplora. A propósito de esto, voy a contaros el cuento del leñador del Medio Este que llegó a un bosque en tala pidiendo trabajo, y el capataz le dijo, «No sé si éste será un buen trabajo para ti; aquí lo que hacemos es cortar árboles». «Pues eso es precisamente lo que yo hago», le respondió el leñador. «Vale, toma el hacha; vamos a ver cuánto tardas en cortar este árbol.» El leñador se acercó al árbol y lo tumbó de un solo hachazo. El capataz, asombrado, le dijo, «Muy bien, pero vamos a ver con ese otro grande de allí». El leñador se acercó al árbol y —¡Pom!, ¡Pom!— en dos hachazos lo había tirado, «¡Bárbaro, estupendo! ¡Claro que tienes el trabajo!, ¿pero cómo has aprendido a cortar así?». «¡Uff! Tengo cantidad de práctica, corté muchísimos en el bosque del Sahara.» El capataz se quedó pensando un instante: «El desierto del Sahara, querrás decir.» «Bueno, sí —respondió el leñador— ahora lo es.»",
+    "solution": "Dudo que no haya una solución que se pueda decir correcta o incorrecta. Me temo que en un problema de este tipo la opinión de uno es tan buena como la del otro. Personalmente yo creo que si alguien es responsable de la muerte de C sería A. Ahora bien, si yo fuera el abogado defensor de B habría hecho notar dos cosas: 1) El quitarle el agua envenenada a un hombre no es de ninguna manera matarle; 2) En cualquier caso el acto de B solamente habría servido para prolongar la vida de C (aun cuando esta no fuera en absoluto su intención), puesto que la muerte por envenenamiento es generalmente más rápida que la muerte por deshidratación. Pero el defensor de A me replicaría: «¿Cómo puede nadie que esté en sus cabales culpar a A de un crimen por envenenamiento cuando en realidad C no llegó a probar el veneno?» Este problema es un verdadero enigma. Lo complicado es que se puede ver desde tres puntos de vista, uno moral, otro legal y otro puramente científico en que entra la idea de causa. Desde el punto de vista moral evidentemente los dos eran culpables de intento de asesinato, pero la sentencia de asesinato real es mucho más drástica. Desde el punto de vista legal, yo no sé qué decidiría la ley; quizás jurados diferentes dieran veredictos diferentes. Desde el punto de vista científico la idea de causalidad presenta muchos problemas y creo que se podría escribir todo un libro sobre este acertijo."
+  },
+  {
+    "problem_description": "Hay una amplia variedad de adivinanzas relativas a una isla en la que ciertos habitantes llamados «caballeros» dicen siempre la verdad, y otros llamados «escuderos» mienten siempre. Se supone que todo habitante de la isla es o caballero o escudero. Empezaré con una adivinanza de este tipo que es muy conocida, para luego seguir con otras varias de mi propia cosecha. Según este viejo problema, tres de los habitantes —A, B y C— se encontraban en un jardín. Un extranjero pasó por allí y le preguntó a A, «¿Eres caballero o escudero?». A respondió, pero tan confusamente, que el extranjero no pudo enterarse de lo que decía. Entonces el extranjero preguntó a B, «¿Qué ha dicho A?». Y B le respondió: «A ha dicho que es escudero.» Pero en ese instante el tercer hombre, C, dijo, «¡No creas a B, que está mintiendo!». La pregunta es, ¿qué son B y C?",
+    "solution": "Es imposible que un caballero o un escudero digan: «Yo soy escudero», porque un caballero emitiría el enunciado falso de que él es escudero, y un escudero no emitiría el enunciado verdadero de que él es escudero. Por lo tanto, A nunca diría que era un escudero. Así, B mentía cuando dijo que A había dicho que él era escudero. Por lo tanto B es escudero. Puesto que C dijo que B estaba mintiendo, y B estaba ciertamente mintiendo, C dijo la verdad, de aquí que se tratara de un caballero. Así pues, B es un escudero y C un caballero. (Es imposible saber lo que es A.)"
+  },
+  {
+    "problem_description": "Hay una amplia variedad de adivinanzas relativas a una isla en la que ciertos habitantes llamados «caballeros» dicen siempre la verdad, y otros llamados «escuderos» mienten siempre. Se supone que todo habitante de la isla es o caballero o escudero. Empezaré con una adivinanza de este tipo que es muy conocida, para luego seguir con otras varias de mi propia cosecha.Supóngase que el extranjero, en lugar de preguntarle a A por lo que éste era, le dijese: «¿Cuántos caballeros hay entre vosotros?» De nuevo, la respuesta de A es ininteligible. Entonces el extranjero pregunta a B, «¿Qué ha dicho A?». Y B replica, «A ha dicho que hay un caballero entre nosotros». Y C por su parte dice, «¡No creas a B, que está mintiendo!». Ahora, ¿qué son B y C? ",
+    "solution": "La respuesta es la misma que la del problema anterior, aunque el razonamiento es un tanto diferente. Lo primero que hay que observar es que B y C deben ser de tipos opuestos, puesto que B contradice a C. Así pues, de entre los dos, uno es un caballero y el otro un escudero. Ahora bien, si A fuera caballero, entonces habría presentes dos caballeros, y por tanto A no hubiese mentido diciendo que había solamente uno. Por otra parte, si A fuera escudero, entonces sería cierto que había presente solamente un caballero; pero entonces A, siendo escudero, no podría haber emitido ese enunciado verdadero. Por lo tanto, A no pudo haber dicho que sólo había un caballero entre ellos. Así B transmitió falsamente el enunciado de A, y de este modo B es escudero y C caballero."
+  },
+  {
+    "problem_description": "Hay una amplia variedad de adivinanzas relativas a una isla en la que ciertos habitantes llamados «caballeros» dicen siempre la verdad, y otros llamados «escuderos» mienten siempre. Se supone que todo habitante de la isla es o caballero o escudero. Empezaré con una adivinanza de este tipo que es muy conocida, para luego seguir con otras varias de mi propia cosecha. En este problema hay sólo dos individuos, A y B, cada uno de los cuales es o caballero o escudero. A dice: «Uno al menos de nosotros es escudero.» ¿Qué son A y B?",
+    "solution": "Supóngase que A fuera escudero. Entonces el enunciado «Al menos uno de nosotros es un escudero» sería falso (puesto que los escuderos emiten enunciados falsos); de donde se sigue que ambos serían caballeros. Así, si A fuera escudero, tendría que ser también caballero, lo que es imposible. Por tanto A no es un escudero; es un caballero. Y por ello su enunciado debe ser verdadero; así, al menos uno de ellos es realmente un escudero. Puesto que A es caballero, entonces B debe ser el escudero. Así pues, A es caballero y B es escudero."
+  },
+  {
+    "problem_description": "Hay una amplia variedad de adivinanzas relativas a una isla en la que ciertos habitantes llamados «caballeros» dicen siempre la verdad, y otros llamados «escuderos» mienten siempre. Se supone que todo habitante de la isla es o caballero o escudero. Empezaré con una adivinanza de este tipo que es muy conocida, para luego seguir con otras varias de mi propia cosecha. Nuevamente tenemos tres personas, A, B, C, cada una de las cuales es o caballero o escudero. A y B dicen lo siguiente: A: Todos nosotros somos escuderos. B: Uno de nosotros, y sólo uno es un caballero. ¿Qué son A, B, C?",
+    "solution": "Para empezar, A tiene que ser escudero, porque si fuera caballero tendría que ser verdad que los tres son escuderos y, por tanto, que también A es escudero. Si A fuera caballero, tendría que ser escudero, lo cual es imposible. Así pues A es escudero. De donde se sigue que su enunciado era falso, y así hay de hecho al menos un caballero entre ellos. Ahora, supóngase que B fuera escudero. Entonces A y B serían ambos escuderos, y así C sería caballero (porque hay al menos un caballero entre ellos). Esto querría decir que había exactamente un caballero entre ellos, y por tanto que el enunciado de B sería verdadero. Así pues, tendríamos la imposibilidad de un escudero emitiendo un enunciado verdadero. Por tanto, B tiene que ser caballero. Ahora sabemos que A es escudero y que B es caballero. Puesto que B es caballero, su enunciado es verdadero, así hay exactamente un caballero entre ellos. Este caballero ha de ser B, de aquí que C haya de ser escudero. Por tanto, la respuesta es que A es escudero, B caballero y C escudero."
+  },
+  {
+    "problem_description": "Hay una amplia variedad de adivinanzas relativas a una isla en la que ciertos habitantes llamados «caballeros» dicen siempre la verdad, y otros llamados «escuderos» mienten siempre. Se supone que todo habitante de la isla es o caballero o escudero. Empezaré con una adivinanza de este tipo que es muy conocida, para luego seguir con otras varias de mi propia cosecha. Nuevamente tenemos tres personas, A, B, C, cada una de las cuales es o caballero o escudero. A y B dicen lo siguiente: A: Todos nosotros somos escuderos. B: Uno de nosotros, y sólo uno, es un escudero. ¿Puede determinarse lo que es B y C?",
+    "solution": "No puede determinarse lo que es B, pero puede probarse que C es caballero. Para empezar, A tiene que ser escudero por las mismas razones expuestas en el problema anterior; de aquí que también hay al menos un caballero entre ellos. Ahora bien, o B es caballero o escudero. Supóngase que es caballero. Entonces es verdadero que exactamente uno de ellos es un escudero. Este único escudero tiene que ser A, así C sería un caballero. De esta manera, si B es caballero, también lo es C. Por otra parte, si B es escudero, entonces C tiene que ser caballero, puesto que los tres no pueden ser escuderos (como hemos visto). Así pues, en uno y otro caso, C tiene que ser caballero."
+  },
+  {
+    "problem_description": "Hay una amplia variedad de adivinanzas relativas a una isla en la que ciertos habitantes llamados «caballeros» dicen siempre la verdad, y otros llamados «escuderos» mienten siempre. Se supone que todo habitante de la isla es o caballero o escudero. Empezaré con una adivinanza de este tipo que es muy conocida, para luego seguir con otras varias de mi propia cosecha. Volvemos a tener tres habitantes, A, B y C, cada uno de los cuales es o caballero o escudero. Se dice que dos personas son del mismo tipo si son ambos caballeros o ambos escuderos. A y B dicen lo siguiente: A: B es un escudero. B: A y C son del mismo tipo. ¿Qué es C?",
+    "solution": "Supóngase que A es caballero. Entonces su afirmación de que B es escudero ha de ser verdadera, así B es entonces escudero. De lo que se sigue que la afirmación de B de que A y C son del mismo tipo es falsa, por tanto A y C son de tipos diferentes. Y de ello se sigue que C tiene que ser escudero (puesto que A es caballero). Así, si A es caballero, entonces C es escudero. Por otra parte, supóngase que A es escudero. Entonces su afirmación de que B es escudero es falsa, de aquí que B sea caballero. Y de ello se sigue que la afirmación de B de que A y C son del mismo tipo es verdadera. Lo cual significa que C tiene que ser escudero (puesto que A lo es). Hemos mostrado que independientemente de que A sea caballero o escudero, C tiene que ser escudero. Por lo tanto C es escudero."
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  },
+  {
+    "problem_description": "",
+    "solution": ""
+  }
 ]

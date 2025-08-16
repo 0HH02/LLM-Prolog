@@ -6,6 +6,7 @@ from datetime import datetime
 CONFIG = {
     "force_run_mfsa": True,      # Si True, siempre ejecuta MFSA ignorando checkpoint.
     "force_run_misa_j": True,   # Si True, siempre ejecuta MISA-J/CFCS.
+    "force_ask_to_user": False, # Si True, se asegura de que el usuario confirme las premisas.
     "force_run_mmrc": True,     # Si True, siempre ejecuta MMRC.
     "force_run_ohi": True,      # Si True, siempre ejecuta OHI ignorando checkpoint.
     "save_checkpoints": True,    # Si True, guarda checkpoints después de ejecutar módulos.

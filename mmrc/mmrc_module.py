@@ -56,7 +56,7 @@ class MetaCognitionKnowledgeRefinementModule:
 
         return graph
     
-    def analyze_thought_tree(self, thought_tree: List[Any], problem_description: str, clauses: List[str], solver_errors: List[str] = None, history: Dict[str, Any] = None) -> Dict[str, Any]:
+    def analyze_thought_tree(self, solver_result: List[Any], problem_description: str, clauses: List[str], solver_errors: List[str] = None, history: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Analiza el árbol de pensamientos y genera una respuesta o análisis de errores.
         
@@ -69,8 +69,14 @@ class MetaCognitionKnowledgeRefinementModule:
         Returns:
             Dict con el análisis y la respuesta generada
         """
-        # Verificar si hay ramas exitosas
 
+        thought_tree = solver_result["ramas"]
+        if thought_tree == [] or thought_tree == "":
+            if solver_result["status"] == "success":
+                return self._generate_successful_response(solver_result["resultados"], problem_description, clauses, history)
+            else:
+                return self._analyze_failure(thought_tree, problem_description, clauses, solver_errors, history)
+        # Verificar si hay ramas exitosas
         successful_branches = self._find_successful_branches(thought_tree)
         
         if successful_branches:
@@ -104,7 +110,7 @@ class MetaCognitionKnowledgeRefinementModule:
         """
         successful_branches = []
         for branch in thought_tree:
-            if "CAUGHT_EXCEPTION" in branch.valor[0].nombre:
+            if "catch(" in branch.valor[0].nombre:
                 if branch.valor[0].valor[0].veracidad == "verde":
                     successful_branches.append(branch)
             else:
@@ -126,7 +132,11 @@ class MetaCognitionKnowledgeRefinementModule:
         Returns:
             Dict con la respuesta generada
         """
-        successful_branches =[branch.to_dict() for branch in successful_branches_clausule]
+        try:
+            successful_branches =[branch.to_dict() for branch in successful_branches_clausule]
+        except AttributeError:
+            print("Error al convertir las ramas exitosas a diccionarios")
+            successful_branches = successful_branches_clausule
         prompt = generate_successful_response_prompt(successful_branches, problem_description, clauses, history["responses"][-1]["content"])
         
         try:
@@ -169,7 +179,7 @@ class MetaCognitionKnowledgeRefinementModule:
             
             return {
                 "status": "failure_analysis",
-                "analysis": response,
+                "response": response,
                 "total_branches": len(thought_tree),
                 "promising_branches_count": len(promising_branches),
                 "promising_branches": promising_branches_dict

@@ -80,80 +80,143 @@ class PrologSolver:
         print(f"Programa Prolog: {rules}")
         return rules
     
-    def _ejecutar_prolog_con_traza_modificado(self, prolog_code, consulta):
+    def ejecutar_prolog_con_json(self, prolog_code, consulta):
         """
-        Ejecuta un código Prolog en SWI-Prolog, captura y devuelve la traza de stderr.
+        Ejecuta un código Prolog usando forall/2 para mayor robustez y devuelve
+        un diccionario con los resultados y la traza.
         """
-
         enriq_trace = r"""
+        :- use_module(library(http/json)).
         :- set_prolog_flag(trace_file, true).
         :- leash(-all).
-
         user:prolog_trace_interception(Port, Frame, _PC, continue) :-
-                (   prolog_frame_attribute(Frame, level, Lvl)
-                ->  Indent is Lvl * 2
-                ;   Indent = 0
-                ),
-                prolog_frame_attribute(Frame, goal,  Goal),
-                (   prolog_frame_attribute(Frame, clause, ClRef),
-                    clause_property(ClRef, file(File)),
-                    clause_property(ClRef, line_count(Line))
-                ->  true
-                ;   File = '<dynamic>', Line = 0
-                ),
-                format(user_error,
-                    '~N~*|~w: ~p @ ~w:~d~n',
-                    [Indent, Port, Goal, File, Line]).
+            ( prolog_frame_attribute(Frame, level, Lvl) -> Indent is Lvl * 2 ; Indent = 0 ),
+            prolog_frame_attribute(Frame, goal,  Goal),
+            ( prolog_frame_attribute(Frame, clause, ClRef),
+            clause_property(ClRef, file(File)),
+            clause_property(ClRef, line_count(Line))
+            -> true
+            ; File = '<dynamic>', Line = 0
+            ),
+            format(user_error, '~N~*|~w: ~p @ ~w:~d~n', [Indent, Port, Goal, File, Line]).
         """
+
+        var_names = sorted(list(set(re.findall(r'\b([A-Z_][a-zA-Z0-9_]*)\b', consulta))))
+        
+        # Se elimina el punto final de la consulta si existe
+        if consulta.endswith('.'):
+            consulta_limpia = consulta[:-1]
+        else:
+            consulta_limpia = consulta
+
+        goal_logic = ""
+        if var_names:
+            # Usar format para generar JSON simple en lugar de json_write_dict
+            var_format_parts = []
+            for v in var_names:
+                var_format_parts.append(f'\\"{v.lower()}\\":\\"~w\\"')
+            
+            format_string = "{" + ",".join(var_format_parts) + "}"
+            var_args = ",".join([v for v in var_names])
+            
+            json_action = f"format(user_output, '{format_string}~n', [{var_args}]), flush_output(user_output)"
+            
+            # ### CAMBIO CLAVE: Usar forall/2 ###
+            # forall((generador_de_soluciones), (accion_a_realizar)). Los paréntesis son importantes.
+            goal_logic = f"forall(({consulta_limpia}), ({json_action}))"
+        else:
+            # Para consultas sin variables, el comportamiento es encontrar una solución o ninguna.
+            # (Si_exito -> Entonces_imprime_true ; Si_no_exito -> no hagas nada)
+            json_action_no_vars = "format(user_output, '{\\\"solution\\\":true}~n', []), flush_output(user_output)"
+            goal_logic = f"(({consulta_limpia}) -> {json_action_no_vars} ; true)"
+
+        # Envolvemos la lógica principal en un catch para capturar errores de Prolog.
+        final_goal_logic = f"catch(({goal_logic}), E, (format(user_error, '~N### CAUGHT_PROLOG_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n', [E]), fail))"
 
         stdout_capture = ""
         stderr_capture = ""
-        swipl_executable = "swipl" 
+        swipl_executable = "swipl"
         temp_prolog_file = tempfile.NamedTemporaryFile(mode='w+', suffix='.pl', delete=False)
         temp_prolog_file_name = temp_prolog_file.name
+        
         try:
             temp_prolog_file.write(enriq_trace)
-            temp_prolog_file.write('\n') 
+            temp_prolog_file.write('\n')
             temp_prolog_file.write(prolog_code)
             temp_prolog_file.close()
-            prolog_file_path_escaped = temp_prolog_file_name.replace("'", "''")
+            prolog_file_path_escaped = temp_prolog_file.name.replace("'", "''")
             
-            # Modificado para imprimir excepciones a user_error (stderr)
-            goal_prolog = (
-                f"consult('{prolog_file_path_escaped}'), "          # carga el archivo
-                f"trace, "                          # inicia la traza
-                # Ejecuta la consulta, captura excepciones y continúa para ver la traza
-                f"catch(({consulta[:-1]}, fail), "
-                f"E, (format(user_error, "
-                f"'~N### CAUGHT_EXCEPTION ###~n~w~n### END_EXCEPTION ###~n', [E]), fail)), "
-                "halt."
+            final_goal = (
+                f"consult('{prolog_file_path_escaped}'), "
+                f"trace, "
+                f"{final_goal_logic}"
             )
+
+            # DEBUG: Imprime la meta final para poder probarla manualmente.
+            print("--- DEBUG: Meta de Prolog a ejecutar ---")
+            print(final_goal)
+            print("-----------------------------------------")
+
             process = subprocess.Popen(
-                [swipl_executable, "-q", "-g", goal_prolog, "-t", "halt"],
+                [swipl_executable, "-q", "-g", final_goal, "-t", "halt"],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
-                encoding='utf-8', errors='replace' 
+                encoding='utf-8', errors='replace'
             )
-            # Aumentar el timeout para trazas largas
-            stdout_capture, stderr_capture = process.communicate(timeout=60) 
+            stdout_capture, stderr_capture = process.communicate(timeout=60)
+            
+            lista_resultados = []
+            if stdout_capture:
+                # Intentar parsear el JSON completo primero
+                try:
+                    # Si todo el stdout es un JSON válido
+                    parsed_json = json.loads(stdout_capture.strip())
+                    if isinstance(parsed_json, list):
+                        lista_resultados.extend(parsed_json)
+                    else:
+                        lista_resultados.append(parsed_json)
+                except json.JSONDecodeError:
+                    # Si no, procesar línea por línea y concatenar si es necesario
+                    json_buffer = ""
+                    for line in stdout_capture.strip().split('\n'):
+                        line = line.strip()
+                        if line:
+                            json_buffer += line
+                            try:
+                                # Intentar parsear el buffer completo
+                                parsed = json.loads(json_buffer)
+                                lista_resultados.append(parsed)
+                                json_buffer = ""  # Limpiar buffer después de éxito
+                            except json.JSONDecodeError:
+                                # Continuar acumulando en el buffer
+                                continue
+                    
+                    # Si queda algo en el buffer al final, intentar parsearlo
+                    if json_buffer:
+                        try:
+                            parsed = json.loads(json_buffer)
+                            lista_resultados.append(parsed)
+                        except json.JSONDecodeError:
+                            print(f"Advertencia: No se pudo decodificar el JSON final: {json_buffer}")
+            
+            output_dict = {
+                "resultados": lista_resultados,
+                "traza": stderr_capture.strip(),
+                "errors": ""
+            }
+
         except subprocess.TimeoutExpired:
             process.kill()
             stdout_capture, stderr_capture = process.communicate()
-            print("La ejecución de Prolog excedió el tiempo límite (Timeout).")
-            stderr_capture += "\nERROR: Timeout during Prolog execution."
+            output_dict = { "resultados": [], "traza": stderr_capture, "errors": "ERROR: Timeout." }
         except Exception as e:
-            print(f"Error durante la ejecución de Prolog: {e}")
-            stderr_capture += f"\nERROR: Python exception during Prolog call: {e}"
+            output_dict = { "resultados": [], "traza": "", "errors": f"ERROR: Python exception: {e}" }
         finally:
             if os.path.exists(temp_prolog_file_name):
                 os.remove(temp_prolog_file_name)
 
-        if stdout_capture:
-            print("--- Salida Estándar de Prolog (stdout) ---")
-            print(stdout_capture) # Debería estar vacío o con pocos mensajes si todo va a user_error
-        
-        return stderr_capture
+        return output_dict
     
     def _procesar_traza(self, traza_str):
         # Inicializamos un array de Clausulas llamado ramas_de_pensamientos
@@ -332,14 +395,35 @@ class PrologSolver:
         consulta = f"{goal_clause_obj}"
 
         # Ejecutar Prolog y obtener la traza
-        raw_trace = self._ejecutar_prolog_con_traza_modificado(program_string, consulta)
-        raw_trace = "\n".join(raw_trace.split("\n")[1:-6])
+        dict_traza = self.ejecutar_prolog_con_json(program_string, consulta)
+        raw_trace = dict_traza["traza"]
+        print("--- Resultados ----")
+        print(dict_traza["resultados"])
+        print("--- Fin de resultados ----")
+        raw_trace = "\n".join(raw_trace.split("\n")[1:-6]) if raw_trace else ""
         print("--- Traza cruda de Prolog ---")
         print(raw_trace)
         print("--- Fin de traza cruda ---")
+        print("--- Errores ---")
+        print(dict_traza["errors"])
+        print("--- Fin de errores ---")
         
+
+        result = {
+            "status": "success" if dict_traza["resultados"] else "failed",
+            "resultados": dict_traza["resultados"],
+            "ramas": [],
+            "errors": dict_traza["errors"]
+        }
         # Procesar la traza
-        ramas = self._procesar_traza(raw_trace)
+        try:
+            ramas = self._procesar_traza(raw_trace)
+            result["ramas"] = ramas
+        except Exception as e:
+            error_msg = f"Error en MISA-J: {str(e)}"
+            print(f"ERROR: {error_msg}")
+            result["ramas"] = []
+            result["errors"] = "No se pudo procesar la traza."
         
         # Crear directorios si no existen
         solutions_dir = Path("solutions")
@@ -348,11 +432,14 @@ class PrologSolver:
         json_path = solutions_dir / f"ramas_de_pensamiento.json"
         with open(json_path, 'w', encoding='utf-8') as f:
             # Convertir cada objeto Clausula a diccionario antes de guardar
-            ramas_dict = [rama.to_dict() for rama in ramas]
+            ramas_dict = [rama.to_dict() for rama in result["ramas"]]
             json.dump(ramas_dict, f, indent=2, ensure_ascii=False)
 
-        return ramas
+        return result
 
 if __name__ == "__main__":
     solver = PrologSolver()
-    solver.solve(["contraseña(X, Y, Z) :- alfa(X), beta(Y), ganma(Z).","alfa(1).", "alfa(2).", "beta(1).", "ganma(Z) :- hola(Z).", "hola(1).", "hola(2)."], "contraseña(X,Y,Z).")
+    result = solver.solve([
+    "cofre(oro).", "cofre(plata).", "cofre(plomo).", "verdadera(enunciado_oro, UbicacionRetrato) :- UbicacionRetrato = oro.","verdadera(enunciado_plata, UbicacionRetrato) :- UbicacionRetrato \= plata.", "verdadera(enunciado_plomo, UbicacionRetrato) :- UbicacionRetrato \= oro.","regla_a_lo_sumo_uno_verdadero(UbicacionRetrato) :- findall(Enunciado, verdadera(Enunciado, UbicacionRetrato), EnunciadosVerdaderos), length(EnunciadosVerdaderos, NumeroVerdaderos), NumeroVerdaderos =< 1.","solucion(CofreDelRetrato) :- cofre(CofreDelRetrato), regla_a_lo_sumo_uno_verdadero(CofreDelRetrato)."
+  ], "solucion(Cofre).")
+    print(result)

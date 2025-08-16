@@ -29,3 +29,10 @@ benchmarks/references.txt
 
 # Soluciones
 solutions/
+
+
+# Checkpoints
+checkpoints/
+
+# Logs
+logs/

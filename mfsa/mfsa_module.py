@@ -10,7 +10,7 @@ class SemanticFormalizationAxiomatizationModule:
         # Podrías tener modelos Gemini específicos o configuraciones aquí
         # self.kge_model = genai.GenerativeModel("gemini-pro-vision") # O el que sea
 
-    def _llm_kge_initial_analysis(self, problem_description_nl: str) -> Tuple[str, str, str, List[str]]:
+    def _llm_kge_initial_analysis(self, problem_description_nl: str, ask_to_user: bool = False) -> Tuple[str, str, str, List[str]]:
         """
         Paso 1 del LLM-KGE: Comprensión, reificación, identificación de objetivo y ambigüedades.
         Devuelve: (reformulación_llm, objetivo_nl, entidades_relaciones_str, ambiguedades_detectadas)
@@ -33,7 +33,11 @@ class SemanticFormalizationAxiomatizationModule:
         print("===Premisas encontradas===")
         for premise in response["premises"]:
             print(premise)
-        user_clarification = input("Estas son las premisas que he encontrado. Si crees que me he saltado algunas puedes comentármelas si no presiona enter para continuar")
+        
+        if ask_to_user:
+            user_clariuser_clarificationfication = input("Estas son las premisas que he encontrado. Si crees que me he saltado algunas puedes comentármelas si no presiona enter para continuar")
+        else:
+            user_clarification = ""
         print("Continuando...")
         
         all_premises = "\n".join(response["premises"]) + "\nAclaración del Usuario: " + user_clarification
@@ -85,7 +89,7 @@ class SemanticFormalizationAxiomatizationModule:
 
     def formalize_problem(self, problem_description_nl: str, history: Dict[str, any] = None,
                           preselected_axiom_modules: Optional[List[str]] = None, 
-                          axiom_library_names: Optional[List[str]] = None) -> Dict:
+                          axiom_library_names: Optional[List[str]] = None, ask_to_user: bool = False) -> Dict:
         """
         Función principal del MFSA para traducir lenguaje natural a cláusulas formales.
         """
@@ -100,7 +104,7 @@ class SemanticFormalizationAxiomatizationModule:
                 self.kr_store.load_axiom_library(lib_name)
 
         # 1. LLM-KGE: Análisis inicial, identificación de objetivo NL, y detección de ambigüedades
-        initial_LLM_analysis = self._llm_kge_initial_analysis(problem_description_nl)
+        initial_LLM_analysis = self._llm_kge_initial_analysis(problem_description_nl, ask_to_user=ask_to_user)
 
         # 4. LLM-KGE: Extraer Cláusulas Específicas del Problema
         problem_clauses_extracted, objective = self.kr_store.update(problem_description_nl, initial_LLM_analysis)
