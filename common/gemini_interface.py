@@ -95,8 +95,13 @@ def ask_gemini_json(prompt: str, task_hint: str = "", config: dict = None, max_r
             print(f"\n-------------------------------------------------------------------")
             print(f"Respuesta JSON de Gemini: {response_text}")
             print(f"\n-------------------------------------------------------------------\n\n")
-            
-            return json.loads(response_text)
+
+            parsed_response = parse_gemini_json_response(response_text)
+            if parsed_response is not None:
+                return parsed_response
+            else:
+                print("Error al parsear la respuesta JSON de Gemini.")
+                raise ValueError("Error al parsear la respuesta JSON de Gemini.")
             
         except Exception as e:
             print(f"Error al llamar a la API de Gemini (intento {attempt + 1}/{max_retries + 1}): {e}")
