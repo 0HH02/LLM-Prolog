@@ -87,19 +87,24 @@ def run_main_with_problem(problem_description: str) -> str:
 
         goal_clauses_mfsa = current_kr_store.get_clauses_by_category("goal_clause")
         selected_clauses = current_kr_store.get_clauses_by_category("problem_clause")
-        
+
         # --- 2. MISA-J (Motor de Inferencia Simbólica Asistido por Justificación) ---
         checkpoint_misa_trace_name = f"misa_j_trace_cycle{cycle}"
         solver_errors = []  # Lista para capturar errores del solver
         thought_tree = {}
         if CONFIG["force_run_misa_j"]:
             print("\n--- Ejecutando MISA-J (CFCS) ---")
-            solver_result = misa_j_solver.solve(selected_clauses, goal_clauses_mfsa[0])
-            thought_tree = solver_result["ramas"]
-            solver_errors.append(solver_result["errors"])
-            if CONFIG["save_checkpoints"] and solver_result:
-                save_checkpoint(solver_result, checkpoint_misa_trace_name, problem_description)
-            
+            if goal_clauses_mfsa:
+                solver_result = misa_j_solver.solve(selected_clauses, goal_clauses_mfsa[0])
+                thought_tree = solver_result["ramas"]
+                solver_errors.append(solver_result["errors"])
+                if CONFIG["save_checkpoints"] and solver_result:
+                    save_checkpoint(solver_result, checkpoint_misa_trace_name, problem_description)
+            else:
+                solver_errors.append("No se encontraron cláusulas de objetivo (goal_clause)")
+                solver_result = {"ramas": [], "errors": solver_errors}
+                thought_tree = solver_result["ramas"]
+
         else:
             print("INFO: MISA-J omitido, traza cargada desde checkpoint.")
             solver_result = load_checkpoint(checkpoint_misa_trace_name, problem_description)
@@ -252,19 +257,24 @@ def main_original():
 
         goal_clauses_mfsa = current_kr_store.get_clauses_by_category("goal_clause")
         selected_clauses = current_kr_store.get_clauses_by_category("problem_clause")
-        
+
         # --- 2. MISA-J (Motor de Inferencia Simbólica Asistido por Justificación) ---
         checkpoint_misa_trace_name = f"misa_j_trace_cycle{cycle}"
         solver_errors = []  # Lista para capturar errores del solver
         thought_tree = {}
         if CONFIG["force_run_misa_j"]:
             print("\n--- Ejecutando MISA-J (CFCS) ---")
-            solver_result = misa_j_solver.solve(selected_clauses, goal_clauses_mfsa[0])
-            thought_tree = solver_result["ramas"]
-            solver_errors.append(solver_result["errors"])
-            if CONFIG["save_checkpoints"] and solver_result:
-                save_checkpoint(solver_result, checkpoint_misa_trace_name, problem_description)
-            
+            if goal_clauses_mfsa:
+                solver_result = misa_j_solver.solve(selected_clauses, goal_clauses_mfsa[0])
+                thought_tree = solver_result["ramas"]
+                solver_errors.append(solver_result["errors"])
+                if CONFIG["save_checkpoints"] and solver_result:
+                    save_checkpoint(solver_result, checkpoint_misa_trace_name, problem_description)
+            else:
+                solver_errors.append("No se encontraron cláusulas de objetivo (goal_clause)")
+                solver_result = {"ramas": [], "errors": solver_errors}
+                thought_tree = solver_result["ramas"]
+
         else:
             print("INFO: MISA-J omitido, traza cargada desde checkpoint.")
             solver_result = load_checkpoint(checkpoint_misa_trace_name, problem_description)
