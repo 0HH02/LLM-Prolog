@@ -107,7 +107,7 @@ def run_main_with_problem(problem_description: str) -> str:
             solver_errors.append(solver_result["errors"])
 
         # Verificar si thought_tree es None o thought_tree.valor está vacío
-        if thought_tree is []:
+        if not thought_tree:
             solver_errors.append("No se pudo generar un árbol de pensamiento válido")
         
         # --- 3. MMRC (Meta-cognición y Refinamiento del Conocimiento) ---
@@ -272,7 +272,7 @@ def main_original():
             solver_errors.append(solver_result["errors"])
 
         # Verificar si thought_tree es None o thought_tree.valor está vacío
-        if thought_tree is []:
+        if not thought_tree:
             solver_errors.append("No se pudo generar un árbol de pensamiento válido")
         
         # --- 3. MMRC (Meta-cognición y Refinamiento del Conocimiento) ---
