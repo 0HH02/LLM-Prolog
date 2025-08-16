@@ -70,20 +70,38 @@ def clear_checkpoint(module_name: str, problem_description: str):
     else:
         print(f"INFO: No se encontró checkpoint para eliminar: {filepath}")
 
-def clear_all_checkpoints():
-    """Elimina TODOS los archivos de checkpoint en el directorio de checkpoints."""
-    _ensure_checkpoint_dir() # Asegura que el directorio exista para no fallar si está vacío
-    if os.path.exists(CHECKPOINT_DIR):
-        count = 0
-        for filename in os.listdir(CHECKPOINT_DIR):
-            if filename.endswith(".pkl"): # O cualquier extensión que uses
-                filepath = os.path.join(CHECKPOINT_DIR, filename)
-                try:
-                    os.remove(filepath)
-                    count +=1
-                except Exception as e:
-                    print(f"ERROR: No se pudo eliminar el archivo de checkpoint {filepath}: {e}")
-        if count > 0 :
-            print(f"INFO: Se eliminaron {count} archivos de checkpoint de '{CHECKPOINT_DIR}'.")
-        else:
-            print(f"INFO: No se encontraron checkpoints para eliminar en '{CHECKPOINT_DIR}'.")
+def clear_all_checkpoints() -> int:
+    """Elimina TODOS los archivos de checkpoint en el directorio de checkpoints.
+
+    Returns:
+        int: número de archivos de checkpoint eliminados.
+
+    Nota: La versión original de esta función llamaba siempre a
+    ``_ensure_checkpoint_dir``. Esto creaba el directorio de checkpoints incluso
+    cuando no existía y no había nada que eliminar, lo cual era confuso y
+    dificultaba verificar si realmente existían checkpoints. Ahora simplemente
+    se omite esta creación automática y se retorna el número de archivos
+    eliminados.
+    """
+
+    if not os.path.exists(CHECKPOINT_DIR):
+        # Si no hay directorio, claramente no hay checkpoints que borrar.
+        print(f"INFO: No se encontraron checkpoints para eliminar en '{CHECKPOINT_DIR}'.")
+        return 0
+
+    count = 0
+    for filename in os.listdir(CHECKPOINT_DIR):
+        if filename.endswith(".pkl"):  # O cualquier extensión que uses
+            filepath = os.path.join(CHECKPOINT_DIR, filename)
+            try:
+                os.remove(filepath)
+                count += 1
+            except Exception as e:
+                print(f"ERROR: No se pudo eliminar el archivo de checkpoint {filepath}: {e}")
+
+    if count > 0:
+        print(f"INFO: Se eliminaron {count} archivos de checkpoint de '{CHECKPOINT_DIR}'.")
+    else:
+        print(f"INFO: No se encontraron checkpoints para eliminar en '{CHECKPOINT_DIR}'.")
+
+    return count
